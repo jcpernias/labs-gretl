@@ -1,0 +1,103 @@
+#+TITLE: Discriminación en la concesión de hipotecas
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: \newcommand*{\approve}{\Var{approve}}
+#+LATEX_HEADER: \newcommand*{\black  }{\Var{black  }}
+#+LATEX_HEADER: \newcommand*{\hispan }{\Var{hispan }}
+#+LATEX_HEADER: \newcommand*{\obrat  }{\Var{obrat  }}
+#+LATEX_HEADER: \newcommand*{\loanprc}{\Var{loanprc}}
+#+LATEX_HEADER: \newcommand*{\unem   }{\Var{unem   }}
+#+LATEX_HEADER: \newcommand*{\self   }{\Var{self   }}
+#+LATEX_HEADER: \newcommand*{\male   }{\Var{male   }}
+#+LATEX_HEADER: \newcommand*{\married}{\Var{married}}
+#+LATEX_HEADER: \newcommand*{\dep    }{\Var{dep    }}
+#+LATEX_HEADER: \newcommand*{\sch    }{\Var{sch    }}
+#+LATEX_HEADER: \newcommand*{\chist  }{\Var{chist  }}
+#+LATEX_HEADER: \newcommand*{\pubrec }{\Var{pubrec }}
+
+
+
+* Objetivo
+
+Se estima un modelo lineal de probabilidad para determinar si existió
+discriminación racial a la hora de conceder hipotecas en Boston
+en 1990.
+
+* Datos
+
+Los datos provienen del trabajo de W. C. Hunter y M. B. Walker (1996):
+"@@latex:\foreignlanguage{english}{The Cultural Affinity Hypothesis
+and Mortgage Lending Decisions}@@",
+/@@latex:\foreignlanguage{english}{Journal of Real Estate Finance and
+Economics}@@/, 13, 57-7.  El fichero ~loanapp.csv~ contiene las
+siguientes variables:
+
+- \approve: variable ficticia que toma el valor 1 para aquellos
+  solicitantes a los que se les concede un préstamo hipotecario.
+
+- \black, \hispan: variables ficticias con las que se codifica la
+  etnia de los solicitantes. Cada individuo se clasifica en uno de
+  tres grupos: negro (\black igual a 1), hispano (\hispan igual a 1)
+  o blanco (categoría por defecto).
+
+- \obrat: porcentaje de la renta mensual del solicitante que se
+  destina a otras obligaciones financieras.
+
+- \loanprc: importe del préstamo solicitado como fracción del precio
+  de la casa.
+
+- \unem: tasa de desempleo en el sector de actividad del solicitante.
+
+- \self: ficticia que toma el valor 1 si el solicitante trabaja por
+  cuenta propia.
+
+- \male: ficticia que toma el valor 1 si el solicitante es hombre.
+
+- \married: ficticia que toma el valor 1 si el solicitante está
+  casado.
+
+- \dep: número de personas dependientes del solicitante.
+
+- \sch: ficticia que toma el valor 1 si el solicitante completó la
+  educación secundaria.
+
+- \chist: ficticia que toma el valor 1 si el solicitante nunca se ha
+  retrasado más de 60 días en sus pagos.
+
+- \pubrec: ficticia que toma el valor 1 si el solicitante se ha
+  declarado en quiebra en el pasado.
+
+* Instrucciones
+
+Responda a las siguientes preguntas. Use un nivel de significación del
+$5\%$ para los contrastes.
+
+#+ATTR_LATEX: :options [a)]
+a) Estime un modelo lineal de probabilidad donde la variable
+   dependiente es \approve y las explicativas son \black e
+   \hispan. Presente la tabla de la regresión con errores típicos
+   robustos a heteroscedasticidad. Interprete las estimaciones de los
+   parámetros. ¿Son significativas individualmente las variables
+   explicativas?
+
+b) Contraste si son iguales los parámetros de las variables \black e
+   \hispan.
+
+c) Añada al modelo lineal de probabilidad las variables explicativas
+   \obrat, \loanprc, \unem, \male, \married, \dep, \self, \sch, \chist
+   y \pubrec. Presente las estimaciones de MCO junto con los errores
+   típicos robustos a heteroscedasticidad.  Contraste la significación
+   conjunta de las variables añadidas.
+
+d) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
+   con las estimaciones de los parámetros de \black e \hispan?
+   Contraste si los parámetros de estas dos variables son iguales.
+
+e) Los resultados obtenidos, ¿son evidencia de discriminación en
+   contra de las minorías raciales?
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:

@@ -1,0 +1,20 @@
+#+TITLE: Título
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+
+
+* Objetivo
+
+
+* Datos
+
+
+* Instrucciones
+
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:

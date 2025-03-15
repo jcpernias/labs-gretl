@@ -1,0 +1,385 @@
+#+TITLE: La mujer en el mercado laboral español
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\lsalario}{\Var{lsalario}}
+#+LATEX_HEADER: \newcommand*{\activ   }{\Var{activ   }}
+#+LATEX_HEADER: \newcommand*{\mujer   }{\Var{mujer   }}
+#+LATEX_HEADER: \newcommand*{\educ    }{\Var{educ    }}
+#+LATEX_HEADER: \newcommand*{\exper   }{\Var{exper   }}
+#+LATEX_HEADER: \newcommand*{\antig   }{\Var{antig   }}
+#+LATEX_HEADER: \newcommand*{\pub     }{\Var{pub     }}
+#+LATEX_HEADER: \newcommand*{\ong     }{\Var{ong     }}
+#+LATEX_HEADER: \newcommand*{\temp    }{\Var{temp    }}
+#+LATEX_HEADER: \newcommand*{\apr     }{\Var{apr     }}
+#+LATEX_HEADER: \newcommand*{\otro    }{\Var{otro    }}
+#+LATEX_HEADER: \newcommand*{\edad    }{\Var{edad    }}
+#+LATEX_HEADER: \newcommand*{\hijos   }{\Var{hijos   }}
+#+LATEX_HEADER: \newcommand*{\inmigr  }{\Var{inmigr  }}
+#+LATEX_HEADER: \newcommand*{\pareja  }{\Var{pareja  }}
+
+
+* Objetivo
+
+Describir el papel de las mujeres en el mercado laboral de España a
+principios de la segunda década del siglo XXI usando dos modelos de
+regresión. Con uno de ellos se estimará la magnitud de la *brecha
+salarial* que padecen las mujeres y, con el otro, se examinarán las
+diferencias en las *tasas de actividad* de hombres y mujeres.
+
+* Datos
+
+El Programa para la Evaluación Internacional de las Competencias de
+los Adultos (PIAAC) es una iniciativa de la OCDE para valorar el nivel
+de conocimientos y el grado y distribución de destrezas de la
+población adulta a lo largo de su vida laboral, entre los 16 y los 65
+años. Esta evaluación se encuadra en un marco comparativo coherente
+para poder establecer contrastes internacionales.
+
+Para estudiar la situación de la mujer en el mercado laboral español
+se utilizarán los datos del programa PIAAC de la OCDE. En comparación
+con otras bases de datos, los datos del PIAAC tienen la ventaja de
+proporcionar información tanto sobre la situación en el mercado
+laboral de los individuos como sobre los salarios de los que trabajan
+por cuenta ajena.
+
+
+** Variables originales
+
+El archivo ~esp.csv~ recopila una pequeña parte de los datos del PIAAC
+para España entre septiembre de 2011 y mayo de 2012. En concreto,
+contiene las siguientes variables:
+
+#+latex: \begin{otherlanguage}{english}
+
+- ~GENDER_R~: Person gender.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value* |
+  |---------+---------|
+  |       1 | Male    |
+  |       2 | Female  |
+  |---------+---------|
+  #+latex: \vspace*{1.5ex}
+
+- ~AGE_R~: Person age in years.
+
+- ~EARNHR~: Hourly earnings excluding bonuses for wage and salary
+  earners in euros.
+
+- ~YRSQUAL~: Highest level of education obtained imputed into
+  years of education.
+
+- ~C_D05~: Employment status.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value*                |
+  |---------+------------------------|
+  |       1 | Employed               |
+  |       2 | Unemployed             |
+  |       3 | Out of the labor force |
+  |---------+------------------------|
+  #+latex: \vspace*{1.5ex}
+
+- ~C_Q09~: Years of paid work during lifetime.
+
+- ~D_Q03~: Current work: economic sector.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value*                                                                                              |
+  |---------+------------------------------------------------------------------------------------------------------|
+  |       1 | The private sector (for example a company)                                                           |
+  |       2 | The public sector (for example the local government or a state school)                               |
+  |       3 | A non-profit organisation (for example a charity, professional association or religious organisation |
+  |---------+------------------------------------------------------------------------------------------------------|
+  #+latex: \vspace*{1.5ex}
+
+- ~D_Q05a2~: Current work: start of work for employer (year).
+
+- ~D_Q09~: Current work: type of contract.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value*                                    |
+  |---------+--------------------------------------------|
+  |       1 | An indefinite contract                     |
+  |       2 | A fixed term contract                      |
+  |       3 | A temporary employment agency contract     |
+  |       4 | An apprenticeship or other training scheme |
+  |       5 | No contract                                |
+  |       6 | Other                                      |
+  |---------+--------------------------------------------|
+  #+latex: \vspace*{1.5ex}
+
+- ~J_Q02a~: Living with spouse or partner.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value* |
+  |---------+---------|
+  |       1 | Yes     |
+  |       2 | No      |
+  |---------+---------|
+  #+latex: \vspace*{1.5ex}
+
+- ~J_Q03b~: Number of children.
+
+- ~J_Q04a~: Born in country.
+
+  #+latex: \vspace*{1.5ex}
+  #+ATTR_LATEX: :booktabs t :align cp{9cm}
+  | *Label* | *Value* |
+  |---------+---------|
+  |       1 | Yes     |
+  |       2 | No      |
+  |---------+---------|
+  #+latex: \vspace*{1.5ex}
+
+#+latex: \end{otherlanguage}
+
+** Transformación de las variables
+
+Antes de estimar los modelos de regresión, es necesario transformar y
+crear algunas variables a partir de las originales.
+
+*** Salarios
+
+La variable ~EARNHR~ contiene el salario por hora de los individuos
+que forman la muestra. Sólo aquellos que trabajan por cuenta ajena
+perciben un salario, por lo que la variable ~EARNHR~ tiene valores
+ausentes (/@@latex:\foreignlanguage{english}{missing values}@@/) en las
+observaciones correspondientes a desempleados, a trabajadores por
+cuenta propia y a inactivos.
+
+- Cree la variable ~lsalario~: logaritmo del salario por hora en
+  euros. Se construye a partir de la variable ~EARNHR~.
+
+*** Variables demográficas y situación familiar
+
+Cree las siguientes variables:
+
+- ~edad~: edad en años. Coincide con ~AGE_R~.
+
+- ~mujer~: variable ficticia que toma el valor 1 para las mujeres y 0
+  para los hombres. Se construye a partir de la variable ~GENDER_R~.
+
+- ~inmigr~: ficticia que toma el valor 1 si el trabajador nació fuera
+  de España. Se construye a partir de ~J_Q04a~.
+
+- ~hijos~: ficticia que toma el valor 1 si el trabajador tiene
+  hijos. Se construye a partir de ~J_Q03b~.
+
+- ~pareja~: ficticia que toma el valor 1 si el trabajador convive con
+  su pareja. Se construye a partir de ~J_Q02a~.
+
+*** Nivel educativo
+
+- Cree la variable ~educ~: años de educación. Coincide con la variable
+  ~YRSQUAL~.
+
+
+*** Situación laboral
+
+Cree las siguientes variables:
+
+- ~activ~: variable ficticia que toma el valor 1 para las personas que
+  pertenecen a la población activa. Se construye a partir de ~C_D05~.
+
+- ~exper~: años de experiencia laboral. Coincide con ~C_Q09~.
+
+- ~antig~: años de antigüedad en la empresa. La variable ~D_Q05a2~
+  registra el año en que la persona comenzó a trabajar para su actual
+  empresa. Para obtener la antigüedad en el año de la encuesta, 2012,
+  restamos el valor de ~D_Q05a2~ a 2012.
+
+
+*** Tipo de empresa
+
+Las empresas para las que trabajan los asalariados se clasifican en:
+privadas (categoría de referencia), públicas o sin ánimo de lucro.
+Cree las siguientes variables:
+
+- ~pub~: ficticia que toma el valor 1 para los trabajadores del sector
+  público. Se construye a partir de ~D_Q03~.
+
+- ~ong~: ficticia que toma el valor 1 para los trabajadores de
+  instituciones sin ánimo de lucro. Se construye a partir de ~D_Q03~.
+
+
+*** Tipo de contrato laboral
+
+Los contratos laborales de los asalariados se clasifican en:
+indefinido (categoría de referencia), temporal, aprendizaje y otros
+contratos.  Cree las siguientes variables:
+
+- ~temp~: contrato temporal. Ficticia que toma el valor 1 cuando
+  ~D_Q09~ es igual a 2 o a 3.
+
+- ~apr~: contrato de aprendizaje. Ficticia que toma el valor 1 cuando
+  ~D_Q09~ es igual a 4.
+
+- ~otro~: otra situación contractual. Ficticia que toma el valor 1
+  cuando ~D_Q09~ es igual a 5 o 6.
+
+
+* Ecuaciones de salarios
+
+En esta sección se plantea la estimación de *ecuaciones de salarios*:
+modelos econométricos que explican los salarios (usualmente en
+logaritmos) a partir de características de los trabajadores
+(cualificación académica, experiencia laboral, etc.) y de su puesto de
+trabajo (tipo de empresa, tipo de contrato, etc.)
+
+#+latex: \begin{tcolorbox}[colback=black!6!white,colframe=black]
+- Para estimar o de realizar contrastes de hipótesis, use métodos que
+  sean válidos aún en presencia de heteroscedasticidad.
+
+- Utilice un nivel de significación $\alpha = 5\%$ o,
+  equivalentemente, un nivel de confianza $1 - \alpha = 95\%$.
+#+latex: \end{tcolorbox}
+
+** Brecha salarial no ajustada
+
+La *brecha salarial no ajustada* mide la diferencia entre los salarios
+percibidos por las mujeres y los percibidos por los hombres sin tener
+en cuenta ninguna otra característica de los trabajadores. Se estima a
+partir de un modelo de regresión simple cuya variable dependiente es
+el logaritmo del salario, ~lsalario~, y la variable explicativa
+es ~mujer~:
+#+begin_export latex
+\begin{equation}\label{eq-mod1}
+  \lsalario =
+  \beta_0
+  + \beta_1 \mujer
+  + u
+\end{equation}
+#+end_export
+
+- ¿Cuál es la interpretación del parámetro $\beta_1$?
+
+- Estime los parámetros del modelo de la ecuación \eqref{eq-mod1} y
+  presente una tabla con los resultados.
+
+- Contraste la existencia de una brecha salarial desfavorable para las
+  mujeres.
+
+
+** Brecha salarial ajustada
+
+La *brecha salarial ajustada* tiene en cuenta otras variables que
+capturan características individuales y del puesto de trabajo. La
+estimaremos a partir del modelo de regresión múltiple:
+#+begin_export latex
+\begin{equation}\label{eq-mod2}
+  \begin{aligned}
+  \lsalario =\, &\beta_0
+    + \beta_1 \mujer
+    + \beta_2 \educ
+    + \beta_3 \exper
+    + \beta_4 \antig
+    \, + \\ &\beta_5 \pub
+    + \beta_6 \ong
+    + \beta_7 \temp
+    + \beta_8 \apr
+    + \beta_9 \otro
+    \, + \\ &\beta_{10} \edad
+    + \beta_{11} \hijos
+    + \beta_{12} \inmigr
+    + \beta_{13} \pareja
+    + u
+\end{aligned}
+\end{equation}
+#+end_export
+
+
+- Estime los parámetros del modelo de la ecuación \eqref{eq-mod2} y
+  presente una tabla con los resultados.
+
+- Contraste la significación conjunta de los parámetros $\beta_{2},
+  \beta_{2}, \dots, \beta_{13}$.
+
+- Interprete la estimación obtenida del parámetro $\beta_{12}$ y
+  determine si es significativo.
+
+- ¿Hay diferencias entre las estimaciones de la brecha salarial no
+  ajustada y de la ajustada?
+
+
+
+* Participación en el mercado laboral (Opcional e individual)
+
+En esta sección se estudiará la incorporación de la mujer al mercado
+de trabajo utilizando modelos lineales de probabilidad donde la
+variable dependiente es la variable ficticia ~activ~ que toma el
+valor 1 para las personas que participan en el mercado de trabajo.
+
+
+** Modelo de probabilidad lineal simple
+
+Se pueden medir las diferencias en las tasas de actividad de mujeres y
+hombres estimando el modelo de regresión simple:
+#+begin_export latex
+\begin{equation}\label{eq-mod3}
+  \activ = \alpha_0
+    + \alpha_1 \mujer
+    + v
+\end{equation}
+#+end_export
+
+- Estime los parámetros del modelo de la ecuación \eqref{eq-mod3} y
+  presente una tabla con los resultados.
+
+- Calcule, a partir de las estimaciones de los parámetros, las tasas
+  de actividad de hombres y mujeres.
+
+- Usando los resultados de la regresión, ¿qué diferencia hay entre las
+  tasas de actividad de hombres y mujeres?  ¿Es significativa esa
+  diferencia?
+
+
+** Modelo de probabilidad lineal múltiple
+
+Se añaden más variables explicativas a la ecuación \eqref{eq-mod3}:
+#+begin_export latex
+\begin{equation}\label{eq-mod4}
+\begin{aligned}
+  \activ =\, &\alpha_0
+    + \alpha_1 \mujer
+    + \alpha_2 \educ
+    + \alpha_3 \exper
+    \,+\\ & \alpha_4 edad
+    + \alpha_5 \hijos
+    + \alpha_6 \inmigr
+    + \alpha_7 \pareja
+    + v
+\end{aligned}
+\end{equation}
+#+end_export
+
+
+- Estime los parámetros del modelo de la ecuación \eqref{eq-mod4} y
+  presente una tabla con los resultados.
+
+- Contraste la significación conjunta de las variables añadidas en la
+  ecuación \eqref{eq-mod4}.
+
+- Interprete la estimación obtenida del parámetro $\alpha_{5}$ y
+  determine si es significativo.
+
+- ¿Son muy diferentes las estimaciones del parámetro $\alpha_1$ de la
+  ecuación \eqref{eq-mod3} y la ecuación \eqref{eq-mod4}? En caso de
+  que su respuesta sea afirmativa, ¿a qué se debe esa diferencia?
+
+- ¿Es posible estimar el modelo de la ecuación \eqref{eq-mod4} por
+  mínimos cuadrados ponderados factibles (MCPF)? Si su respuesta es
+  afirmativa obtenga las estimaciones MCPF y, si es negativa, explique
+  por qué no pueden obtenerse.
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:

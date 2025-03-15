@@ -1,0 +1,54 @@
+#+AUTHOR: Econometría I --- EC1027
+#+DATE: Curso 2024-2025
+
+#+OPTIONS: ':t -:t *:t ^:{} H:3 num:2 toc:nil |:t
+#+LANGUAGE: es
+
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [a4paper, 11pt]
+#+LATEX_HEADER: \usepackage[english, AUTO, es-nolists]{babel}
+#+LATEX_HEADER: \usepackage{kpfonts}
+#+LATEX_HEADER: \usepackage{FiraSans}
+#+LATEX_HEADER: \usepackage[scale=0.87]{FiraMono}
+#+LATEX_HEADER: \usepackage{microtype}
+#+LATEX_HEADER: \usepackage{upquote}
+#+LATEX_HEADER: \usepackage{parskip}
+
+#+LATEX_HEADER: % make section headings \sffamily
+#+LATEX_HEADER: \usepackage[sf,bf,pagestyles]{titlesec}
+#+LATEX_HEADER: % make headers \sffamily
+#+LATEX_HEADER: \renewpagestyle{plain}[\sffamily]{
+#+LATEX_HEADER:     \setfoot{}{\thepage}{}
+#+LATEX_HEADER:     }
+#+LATEX_HEADER: \pagestyle{plain}
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: % make titling elements \sffamily
+#+LATEX_HEADER: \pretitle{\begin{center}\sffamily\bfseries\huge}
+#+LATEX_HEADER: \preauthor{\begin{center}
+#+LATEX_HEADER:             \Large\sffamily \lineskip 0.5em%
+#+LATEX_HEADER:             \begin{tabular}[t]{c}}
+#+LATEX_HEADER: \predate{\begin{center}\sffamily\large}
+#+LATEX_HEADER: \usepackage{abstract}
+#+LATEX_HEADER: % make abstract title \sffamily
+#+LATEX_HEADER: \renewcommand\abstractnamefont{\sffamily}
+#+LATEX_HEADER: \usepackage{bm}
+
+#+LATEX_HEADER: \usepackage[fleqn,tbtags]{mathtools}
+#+LATEX_HEADER: \mathtoolsset{mathic}
+
+#+LATEX_HEADER: \usepackage{xspace}
+#+LATEX_HEADER: \usepackage[scale={0.72, 0.8}]{geometry}
+#+LATEX_HEADER: \usepackage[shortlabels]{enumitem}
+#+LATEX_HEADER: \setlist{noitemsep, listparindent=1em}
+
+#+LATEX_HEADER: \usepackage{tcolorbox}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{booktabs}
+
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \hypersetup{colorlinks = true, linkcolor=red!60!black, citecolor=.}
+#+LATEX_HEADER: \usepackage{bookmark}
+#+LATEX_HEADER: \usepackage{xurl}
+#+LATEX_HEADER: \urlstyle{tt}
+
+#+LATEX_HEADER: \newcommand*{\Var}[1]{\ensuremath{\mathit{#1}}\xspace}
