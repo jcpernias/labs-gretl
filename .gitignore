@@ -2,3 +2,4 @@
 .Auto
 *.bbl
 *.pdf
+*-instr.tex
