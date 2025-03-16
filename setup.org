@@ -1,5 +1,7 @@
 #+AUTHOR: Econometría I --- EC1027
 #+DATE: Curso 2024-2025
+#+STARTUP: indent
+
 
 #+OPTIONS: ':t -:t *:t ^:{} H:3 num:2 toc:nil |:t
 #+LANGUAGE: es
