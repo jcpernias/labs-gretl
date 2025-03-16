@@ -1,0 +1,31 @@
+#+TITLE: La función de consumo agregado
+#+SETUPFILE: ../setup.org
+
+#+cite_export: natbib ecta text
+#+bibliography: ./awm.bib
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+
+
+* Objetivo
+
+Estimar una función de consumo agregado para el área formada por los
+países que inicialmente formaron el área Euro utilizando datos
+trimestrales de los años 1977--1998.
+
+* Datos
+
+Se utilizan parte de la base de datos que compiló el Banco Central
+Europeo para estimar el Area Wide Model, un modelo econométrico que se
+usó para modelizar los principales agregados macroeconómicos del área
+formada por los países que constituyeron el área Euro. El modelo es
+descrito en [cite:@faganAreawideModelAWM2001].
+
+* Instrucciones
+
+
+#+print_bibliography:
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
