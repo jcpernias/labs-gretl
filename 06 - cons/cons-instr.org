@@ -9,9 +9,9 @@
 
 * Objetivo
 
-Estimar una función de consumo agregado para el área formada por los
-países que inicialmente formaron el área Euro utilizando datos
-trimestrales de los años 1970--1998.
+Estimar una función de consumo agregado para los países que
+inicialmente formaron el área Euro utilizando datos trimestrales de
+los años 1970--1998.
 
 * Datos
 
@@ -28,13 +28,13 @@ cubren el periodo que va desde el primer trimestre de 1970 hasta el
 segundo de 1998:
 
 
-** Transformación y de las variables
+** Transformación de las variables
 
-- Cree la variable ~c~ tomando el logaritmo del consumo privado,
-  ~PCR~.
+- Cree la variable ~c~ aplicando el logaritmo a la serie del consumo
+  privado, ~PCR~.
 
-- Cree la variable ~y~ calculando el logaritmo de la renta disponible
-  de las familias, ~PYR~.
+- Cree la variable ~y~ calculando el logaritmo de la serie de la renta
+  disponible de las familias, ~PYR~.
 
 
 ** Descripción de las variables
@@ -42,8 +42,8 @@ segundo de 1998:
 - Represente gráficamente y observe la evolución temporal de las
   series ~c~ e ~y~. ¿Son estacionarias?
 
-- Calcule los estadísticos descriptivos de las series ~c~ e ~y~. ¿Son
-  representativas las medias de estas variables?
+- Calcule los estadísticos descriptivos de las series ~c~ e ~y~. ¿Las
+  medias de estas variables son representativas?
 
 * Modelo en niveles
 
@@ -66,9 +66,9 @@ segundo de 1998:
 * Regresiones espurias
 
 Las regresiones donde las variables presentan fuertes tendencias
-pueden producir resultados aparentemente significativos, aún cuando no
-exista ninguna relación causal entre las variables. Podemos ilustrar
-esta situación reemplazando en la ecuación \eqref{eq:1} la variable
+pueden arrojar resultados aparentemente significativos, aun cuando no
+exista ninguna relación causal entre las variables. Esta situación
+puede ilustrarse reemplazando en la ecuación \eqref{eq:1} la variable
 $y_t$ por la variable $rw_t$, un *paseo aleatorio con deriva* que se
 creará con el generador de números aleatorios de Gretl.
 
@@ -92,16 +92,16 @@ creará con el generador de números aleatorios de Gretl.
   no puede explicar el consumo agregado en la zona euro y el parámetro
   $\alpha_1$ es $0$.
 
-  Estime los parámetros de la ecuación \eqref{eq:2} por MCO, examine
-  la bondad del ajuste de la regresión y compruebe la significación de
-  la variable $\mathit{rw}_t$.
+  Estime los parámetros de la ecuación \eqref{eq:2} por MCO, evalúe la
+  bondad del ajuste de la regresión y verifique la significación
+  estadística de la variable $\mathit{rw}_t$.
 
 
 * Modelo en diferencias
 
 - Calcule y represente gráficamente la primera diferencia de las
-  variables, ~c~ e ~y~. ¿Son estacionarias las variables en
-  diferencias?
+  variables, ~c~ e ~y~. ¿Las variables en diferencias son
+  estacionarias?
 
 - Estime por MCO los parámetros de la función de consumo agregado en
   diferencias:
@@ -113,7 +113,7 @@ creará con el generador de números aleatorios de Gretl.
   donde $v_t$ es un término de error. Comente brevemente los
   resultados obtenidos.
 
-- Obtenga un gráfico de series temporales de los residuos de la
+- Genere un gráfico de series temporales de los residuos de la
   estimación de \eqref{eq:3} y represente su *correlograma*. ¿Se
   comportan como un *ruido blanco*?
 
