@@ -1,21 +1,23 @@
-# logged commands
-open "/Users/jose/Projects/labs-gretl/06 - cons/ecbwp042.csv"
+set workdir "/Users/jose/Projects/labs-gretl/06 - cons/"
+open "cons.csv"
+
 c = log(PCR)
 y = log(PYR)
-w = log(WLN/PCD)
 
-smpl !missing(w) --restrict
-# gnuplot  c y --time-series --with-lines
-# gnuplot  w --time-series --with-lines
-ols c 0 y w
+diff c y
 
-genr time
-series e = randgen(N,0,0.004)
-series rw = 13 + 0.005 * time + cum(e)
+summary c y d_c d_y --simple
 
-ols c 0 rw w
+ols c 0 y
 
-diff c y w rw
+series e = randgen(N,0,0.007)
+rw = 13 + cum(e + 0.006)
+ols c 0 rw
 
-ols d_c 0 d_y d_w
-ols d_c 0 d_rw d_w
+diff rw
+
+ols d_c 0 d_y
+ols d_c 0 d_rw
+
+
+
