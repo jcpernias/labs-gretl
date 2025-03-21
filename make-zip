@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+import argparse
+import zipfile
+import os
+import sys
+import time
+
+def main():
+    parser = argparse.ArgumentParser(description = "Crea un archivo zip.")
+    parser.add_argument('-o', '--output', required = True,
+                        help = 'Ruta del archivo de salida .zip')
+    parser.add_argument('-d', '--dir', required = True,
+                        help = 'Nombre del directorio dentro del zip')
+    parser.add_argument('files', nargs='+',
+                        help = 'Lista de archivos a incluir en el zip')
+
+    args = parser.parse_args()
+
+    # Verificamos que los archivos existen
+    for filepath in args.files:
+        if not os.path.isfile(filepath):
+            print(f"Error: el archivo '{filepath}' no existe.")
+            sys.exit(1)
+
+    # Creamos el archivo zip
+    try:
+        with zipfile.ZipFile(args.output, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            info = zipfile.ZipInfo()
+            info.filename = args.dir + '/'
+            info.date_time = time.localtime(time.time())[:6]
+            info.compress_type = zipfile.ZIP_STORED
+            info.CRC = 0
+            zipf.mkdir(info, mode = 0o755)
+            for filepath in args.files:
+                arcname = os.path.join(args.dir, os.path.basename(filepath))
+                zipf.write(filepath, arcname=arcname)
+    except:
+        os.remove(args.output)
+        raise
+
+
+if __name__ == '__main__':
+    main()
