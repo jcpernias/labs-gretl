@@ -3,3 +3,4 @@
 *.bbl
 *.pdf
 *-instr.tex
+/local.mk
