@@ -2,7 +2,7 @@
 #+SETUPFILE: ../setup.org
 
 #+cite_export: natbib ecta text
-#+bibliography: ./awm.bib
+#+bibliography: awm.bib
 # Define macros for the variable names
 #+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
 
