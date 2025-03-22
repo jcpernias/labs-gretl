@@ -4,3 +4,4 @@
 *.pdf
 *-instr.tex
 /local.mk
+*.t2d

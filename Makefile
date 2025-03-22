@@ -3,7 +3,13 @@ SHELL := /bin/sh
 ## Directories
 ## ================================================================================
 
-rootdir := .
+src-dirs := \
+	01-vote \
+	02-bwght \
+	03-hprice1 \
+	04-loanapp \
+	05-wagegap \
+	06-cons
 
 
 ## Programs
@@ -20,44 +26,47 @@ Rscriptbin := /usr/local/bin/Rscript
 ## Variables
 ## ================================================================================
 EMACS := $(emacsbin) -Q -nw --batch
-
 org-to-pdf := --eval "(org-latex-export-to-pdf)"
+org-to-latex := --eval "(org-latex-export-to-latex)"
 
-src-dirs := \
-	01-vote \
-	02-bwght \
-	03-hprice1 \
-	04-loanapp \
-	05-wagegap \
-	06-cons
+LATEX_MESSAGES := no
+TEXI2DVI_FLAGS := --batch --pdf --build=tidy
+
+ifneq ($(LATEX_MESSAGES), yes)
+TEXI2DVI_FLAGS += -q
+endif
+
+TEXI2DVI := $(envbin) TEXI2DVI_USE_RECORDER=yes \
+	$(texi2dvibin) $(TEXI2DVI_FLAGS)
+
+
 
 bare-name = $(lastword $(subst -, ,$(1)))
 
 org-files := $(foreach dir,$(src-dirs),$(dir)/$(call bare-name,$(dir))-instr.org)
+tex-files := $(patsubst %.org,%.tex,$(org-files))
 pdf-files := $(patsubst %.org,%.pdf,$(org-files))
 
 zip-files := $(foreach dir,$(src-dirs),$(dir)/$(call bare-name,$(dir)).zip)
+
+build-dirs := $(join $(dir $(org-files)),\
+	$(foreach dir,$(src-dirs),$(dir)!$(call bare-name,$(dir))-instr.t2d))
 
 VPATH := $(src-dirs)
 
 
 all: $(zip-files)
 
-%.pdf: %.org setup.org setup-emacs.el
-	$(EMACS) --load=./setup-emacs.el --visit=$< $(org-to-pdf)
+.PRECIOUS: %.tex
+%.tex: %.org setup.org setup-emacs.el
+	$(EMACS) --load=./setup-emacs.el --visit=$< $(org-to-latex)
+
+.PRECIOUS: %.pdf
+%.pdf: %.tex
+	$(TEXI2DVI) --build-dir=$(@D) --output=$@ $<
 
 %.zip: %-instr.pdf
 	./make-zip -o $@ -d $(call bare-name,$(@D)) $^
-
-%.bbl: %.aux
-	bibtex $<
-
-## Cleaning rules
-## --------------------------------------------------------------------------------
-.PHONY: clean
-clean:
-	-@rm $(pdf-files)
-	-@rm $(zip-files)
 
 
 01-vote/vote.zip: vote.gdt
@@ -71,9 +80,17 @@ clean:
 05-wagegap/wagegap.zip: esp.csv
 
 06-cons/cons.zip: cons.csv
+06-cons/cons-instr.pdf: awm.bib
 
-# TODO: org compiles pdf and removes aux file. That file is needed to
-# rebuild the bibliography if the bib file changes. So, bibliography is
-# not updated when the bib file changes.
-06-cons/cons-instr.pdf: cons-instr.bbl
-06-cons/cons-instr.bbl: awm.bib
+
+## Cleaning rules
+## --------------------------------------------------------------------------------
+.PHONY: clean
+clean:
+	-@rm $(pdf-files)
+	-@rm $(tex-files)
+	-@rm $(zip-files)
+
+.PHONY: veryclean
+veryclean: clean
+	-@rm -r $(build-dirs)
