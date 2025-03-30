@@ -57,6 +57,14 @@ Cree las variables:
 
 * Modelo estático
 
+- Antes de proceder a la estimación del modelo estático, ajustaremos
+  la muestra para que comience en el primer trimestre de 1982. De esta
+  forma, aunque en etapas posteriores se introduzcan retardos, las
+  estimaciones obtenidas seguirán siendo comparables con las del
+  modelo estático, ya que se utilizará el mismo rango muestral en
+  todas las especificaciones. Use el menú /Muestra | Establecer rango
+  .../ para ajustar el periodo inicial.
+
 - Estime por mínimos cuadrados ordinarios, MCO, los parámetros de:
   #+begin_export latex
   \begin{equation}\label{eq:1}
