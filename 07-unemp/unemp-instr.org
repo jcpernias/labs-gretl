@@ -72,7 +72,7 @@ Cree las variables:
   \end{equation}
   #+end_export
   donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la tasa
-  de crecimiento porcentual del PIB real y $v_t$ es el término de
+  de crecimiento porcentual del PIB real y $u_t$ es el término de
   error.
 
 - Evalúe la bondad del ajuste y la significación de la variable
