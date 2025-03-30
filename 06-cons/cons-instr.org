@@ -25,7 +25,7 @@ de la zona euro. Dos de esas variables se incluyen en el fichero
 ~cons.csv~: ~PCR~ es el consumo privado y ~PYR~ la renta disponible de
 las familias. Ambas variables se miden en términos reales y los datos
 cubren el periodo que va desde el primer trimestre de 1970 hasta el
-segundo de 1998:
+segundo de 1998.
 
 
 ** Transformación de las variables
