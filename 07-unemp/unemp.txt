@@ -1,0 +1,152 @@
+gretl version 2025a
+Current session: 2025-03-30 15:31
+
+# logged commands
+? set workdir /Users/jose/local/share/gretl
+? open unemp/unemp.csv
+parsing /Users/jose/local/share/gretl/unemp/unemp.csv...
+using delimiter ','
+   longest line: 34 characters
+   number of columns = 3
+   number of variables: 2
+   number of non-blank lines: 176
+scanning for variable names...
+   line: ,PIBpm,u
+scanning for row labels and data...
+   first row label "1980Q1", last label "2023Q3"
+trying to parse row labels as dates...
+   1980: probably a year... quarter 1?
+taking date information from row labels
+
+Listing 3 variables:
+  0) const    1) PIBpm    2) u      
+
+? diff u
+Listing 4 variables:
+  0) const    1) PIBpm    2) u        3) d_u    
+
+? ldiff PIBpm
+Listing 5 variables:
+  0) const       1) PIBpm       2) u           3) d_u         4) ld_PIBpm  
+
+? gY = 100 * ld_PIBpm
+Generated series gY (ID 5)
+? diff gY
+Listing 7 variables:
+  0) const       1) PIBpm       2) u           3) d_u         4) ld_PIBpm  
+  5) gY          6) d_gY      
+
+? series covid = obs==2020:2
+Generated series covid (ID 7)
+? smpl 1983:1 2023:3
+Full data range: 1980:1 - 2023:3 (n = 175)
+Current sample: 1983:1 - 2023:3 (n = 163)
+
+# model 1
+? ols d_u 0 gY covid
+
+Model 1: OLS, using observations 1983:1-2023:3 (T = 163)
+Dependent variable: d_u
+
+             coefficient   std. error   t-ratio   p-value
+  -------------------------------------------------------
+  const       0.0292185    0.0482563     0.6055   0.5457 
+  gY         −0.0888752    0.0299963    −2.963    0.0035  ***
+  covid      −0.294266     0.823037     −0.3575   0.7212 
+
+Mean dependent var  −0.020665   S.D. dependent var   0.582810
+Sum squared resid    50.07338   S.E. of regression   0.559427
+R-squared            0.090006   Adjusted R-squared   0.078631
+F(2, 160)            7.912690   P-value(F)           0.000529
+Log-likelihood      −135.0957   Akaike criterion     276.1915
+Schwarz criterion    285.4727   Hannan-Quinn         279.9596
+rho                  0.650620   Durbin-Watson        0.697133
+
+# model 2
+? ols d_u 0 gY(0 to -5) covid
+
+Model 2: OLS, using observations 1983:1-2023:3 (T = 163)
+Dependent variable: d_u
+
+             coefficient   std. error   t-ratio    p-value 
+  ---------------------------------------------------------
+  const       0.347564     0.0464081      7.489    4.91e-12 ***
+  gY         −0.245281     0.0274277     −8.943    1.08e-15 ***
+  gY_1       −0.198615     0.0195282    −10.17     6.21e-19 ***
+  gY_2       −0.108133     0.0163326     −6.621    5.53e-10 ***
+  gY_3       −0.0266026    0.0160519     −1.657    0.0995   *
+  gY_4       −0.0338926    0.0160902     −2.106    0.0368   **
+  gY_5       −0.0145764    0.0157289     −0.9267   0.3555  
+  covid      −4.69539      0.753874      −6.228    4.24e-09 ***
+
+Mean dependent var  −0.020665   S.D. dependent var   0.582810
+Sum squared resid    27.11847   S.E. of regression   0.418280
+R-squared            0.507171   Adjusted R-squared   0.484914
+F(7, 155)            22.78720   P-value(F)           4.86e-21
+Log-likelihood      −85.11387   Akaike criterion     186.2277
+Schwarz criterion    210.9777   Hannan-Quinn         196.2760
+rho                  0.589380   Durbin-Watson        0.819806
+
+Excluding the constant, p-value was highest for variable 12 (gY_5)
+
+? mult = $coeff[2:7]
+Generated matrix mult
+? mult
+mult (6 x 1)
+
+    -0.24528 
+    -0.19861 
+    -0.10813 
+   -0.026603 
+   -0.033893 
+   -0.014576 
+
+? mult_ac = cum(mult)
+Generated matrix mult_ac
+? mult_ac
+mult_ac (6 x 1)
+
+    -0.24528 
+    -0.44390 
+    -0.55203 
+    -0.57863 
+    -0.61252 
+    -0.62710 
+
+? mult_lr = sum(mult)
+Generated scalar mult_lr = -0.627101
+? mult_lr
+-0.62710051
+? gyn = -$coeff[1]/mult_lr
+Generated scalar gyn = 0.55424
+? gyn
+0.55424024
+? M = mult ~ seq(0, 5)'
+Generated matrix M
+? gnuplot --matrix=M --with-lp --fit=none
+wrote /Users/jose/local/share/gretl/gpttmp01.plt
+# model 3
+? ols d_u 0 d_gY(0 to -4) gY(-5) covid
+
+Model 3: OLS, using observations 1983:1-2023:3 (T = 163)
+Dependent variable: d_u
+
+             coefficient   std. error   t-ratio   p-value 
+  --------------------------------------------------------
+  const        0.347564    0.0464081      7.489   4.91e-12 ***
+  d_gY        −0.245281    0.0274277     −8.943   1.08e-15 ***
+  d_gY_1      −0.443896    0.0416914    −10.65    3.27e-20 ***
+  d_gY_2      −0.552029    0.0485494    −11.37    3.62e-22 ***
+  d_gY_3      −0.578632    0.0512561    −11.29    6.02e-22 ***
+  d_gY_4      −0.612524    0.0532187    −11.51    1.52e-22 ***
+  gY_5        −0.627101    0.0552281    −11.35    3.99e-22 ***
+  covid       −4.69539     0.753874      −6.228   4.24e-09 ***
+
+Mean dependent var  −0.020665   S.D. dependent var   0.582810
+Sum squared resid    27.11847   S.E. of regression   0.418280
+R-squared            0.507171   Adjusted R-squared   0.484914
+F(7, 155)            22.78720   P-value(F)           4.86e-21
+Log-likelihood      −85.11387   Akaike criterion     186.2277
+Schwarz criterion    210.9777   Hannan-Quinn         196.2760
+rho                  0.589380   Durbin-Watson        0.819806
+

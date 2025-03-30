@@ -9,7 +9,8 @@ src-dirs := \
 	03-hprice1 \
 	04-loanapp \
 	05-wagegap \
-	06-cons
+	06-cons \
+	07-unemp
 
 
 ## Programs
@@ -81,6 +82,9 @@ all: $(zip-files)
 
 06-cons/cons.zip: cons.csv
 06-cons/cons-instr.pdf: awm.bib
+
+07-unemp/unemp.zip: unemp.csv
+07-unemp/unemp-instr.pdf: unemp.bib
 
 
 ## Cleaning rules
