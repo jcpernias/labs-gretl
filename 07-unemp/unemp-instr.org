@@ -109,7 +109,7 @@ la serie y se incorpora mediante una variable ficticia que toma valor
 - Estime por MCO los parámetros de:
   #+begin_export latex
   \begin{equation}\label{eq:2}
-    \Delta \unemp_t = \alpha + \beta\, \gY_t + \theta\, \covid + u_t,
+    \Delta \unemp_t = \alpha + \beta\, \gY_t + \theta\, \covid_t + u_t,
   \end{equation}
   #+end_export
   Comente los resultados obtenidos y compárelos con los de la
@@ -130,7 +130,7 @@ la serie y se incorpora mediante una variable ficticia que toma valor
     \beta_1\, \gY_{t-1} +
     \dots +
     \beta_5\, \gY_{t-5} +
-    \theta\, \covid + u_t,
+    \theta\, \covid_t + u_t,
   \end{equation}
   #+end_export
   ¿Qué significan los parámetros estimados? ¿Cómo responde la tasa de
