@@ -42,6 +42,7 @@ latexmkbin := /Library/TeX/texbin/latexmk
 ## Print info ----------------------------------------
 LATEX_MESSAGES := no
 PRINT_INFO := no
+USE_LUALATEX := no
 
 
 ## emacs ---------------------------------------------
@@ -64,6 +65,24 @@ TEXI2DVI := $(envbin) TEXINPUTS=$(build-dir)/:$(data-dir)/:$(root-dir)/: \
 	$(texi2dvibin) $(TEXI2DVI_FLAGS)
 
 
+## latexmk -----------------------------------------
+LATEX_ENGINE := -pdf
+ifeq ($(USE_LUALATEX), yes)
+LATEX_ENGINE := -lualatex
+endif
+
+LATEXMK_FLAGS := $(LATEX_ENGINE) -cd -nobibfudge
+# -emulate-aux-dir
+
+ifneq ($(LATEX_MESSAGES), yes)
+LATEXMK_FLAGS += -quiet
+endif
+
+LATEXMK := $(envbin) TEXINPUTS=$(build-dir)/:$(data-dir)/: \
+	BIBINPUTS=$(abspath $(root-dir)): \
+	$(latexmkbin) $(LATEXMK_FLAGS)
+
+
 ## Targets ----------------------------------------
 
 org-files := $(addprefix $(org-dir)/,$(src-files))
@@ -74,7 +93,7 @@ zip-files := $(addprefix $(zip-dir)/,$(patsubst %.org,%.zip,$(src-files)))
 
 tex-deps := $(root-dir)/setup.org $(root-dir)/setup-emacs.el
 
-pdf-deps := $(root-dir)/preamble.tex
+pdf-deps := $(build-dir)/preamble.tex
 
 VPATH := $(build-dirs)
 
@@ -99,9 +118,16 @@ $(build-dir)/%.tex: $(org-dir)/%.org $(tex-deps) | $(build-dir)
 		--eval '(org-to-latex "$(call dir-path,$@)")'
 
 
+$(build-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(build-dir)
+	$(LATEXMK) $<
+
 .PRECIOUS: $(pdf-dir)/%.pdf
-$(pdf-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(pdf-dir)
-	$(TEXI2DVI) --build-dir=$(<D) --output=$@ $<
+$(pdf-dir)/%.pdf: $(build-dir)/%.pdf | $(pdf-dir)
+	$(MV) $< $@
+
+$(build-dir)/preamble.tex: $(root-dir)/preamble.tex | $(build-dir)
+	$(CP) $< $@
+
 
 %.zip: %-instr.pdf
 	./make-zip -o $@ -d $(call bare-name,$(@D)) $^

@@ -6,12 +6,11 @@
 #+OPTIONS: ':t -:t *:t ^:{} H:3 num:2 toc:nil |:t
 #+LANGUAGE: es
 
+#+CITE_EXPORT: natbib ecta text
+#+BIBLIOGRAPHY: labs.bib
+
 #+LATEX_CLASS: article
 #+LATEX_CLASS_OPTIONS: [a4paper, 11pt]
 #+LATEX_HEADER: \input{preamble}
 #+LATEX_HEADER: \usepackage[english, spanish, es-nolists]{babel}
 #+LATEX_HEADER: \babelprovide[import, main]{AUTO}
-
-
-#+CITE_EXPORT: natbib ecta text
-#+BIBLIOGRAPHY: labs.bib
