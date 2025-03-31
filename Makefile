@@ -8,29 +8,11 @@ src-files := \
 	hprice1.org \
 	loanapp.org \
 	wagegap.org \
-	cons.org
+	cons.org \
+	unemp.org
 
 ## Directories
 ## ================================================================================
-
-<<<<<<< HEAD
-src-dirs := \
-	01-vote \
-	02-bwght \
-	03-hprice1 \
-	04-loanapp \
-	05-wagegap \
-	06-cons \
-	07-unemp
-||||||| parent of c0d06df (Build tex files from org sources)
-src-dirs := \
-	01-vote \
-	02-bwght \
-	03-hprice1 \
-	04-loanapp \
-	05-wagegap \
-	06-cons
-=======
 
 root-dir := .
 org-dir := $(root-dir)/org
@@ -40,7 +22,6 @@ pdf-dir := $(root-dir)/pdf
 R-dir := $(root-dir)/R
 tex-dir := $(root-dir)/tex
 zip-dir := $(root-dir)/zip
->>>>>>> c0d06df (Build tex files from org sources)
 
 
 ## Programs
