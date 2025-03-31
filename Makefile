@@ -88,6 +88,7 @@ pdf-files := $(addprefix $(pdf-dir)/,$(patsubst %.org,%.pdf,$(src-files)))
 zip-files := $(addprefix $(zip-dir)/,$(patsubst %.org,%.zip,$(src-files)))
 
 
+tex-deps := $(root-dir)/setup.org $(root-dir)/setup-emacs.el
 
 VPATH := $(build-dirs)
 
@@ -107,17 +108,13 @@ all: $(tex-files)
 
 
 .PRECIOUS: $(build-dir)/%.tex
-$(build-dir)/%.tex: $(org-dir)/%.org setup.org ./setup-emacs.el | $(build-dir)
+$(build-dir)/%.tex: $(org-dir)/%.org $(tex-deps) | $(build-dir)
 	$(EMACS) --load=./setup-emacs.el --visit=$< \
 		--eval '(org-to-latex "$(call dir-path,$@)")'
 
 
-# .PRECIOUS: %.tex
-# %.tex: %.org setup.org setup-emacs.el
-# 	$(EMACS) --load=./setup-emacs.el --visit=$< $(org-to-latex)
-
-.PRECIOUS: %.pdf
-%.pdf: %.tex
+.PRECIOUS: $(pdf-dir)/%.pdf
+$(pdf-dir)/%.pdf: $(build-dir)/%.tex $(root-dir)/preamble.tex | $(pdf-dir)
 	$(TEXI2DVI) --build-dir=$(@D) --output=$@ $<
 
 %.zip: %-instr.pdf
