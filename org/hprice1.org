@@ -2,7 +2,7 @@
 #+SETUPFILE: ../setup.org
 
 # Define macros for the variable names
-#+LATEX_HEADER: \newcommand*{\price}{\Var{price}}
+#+LATEX_HEADER: \newcommand*{\hprice}{\Var{price}}
 #+LATEX_HEADER: \newcommand*{\bedrooms}{\Var{bedrooms}}
 #+LATEX_HEADER: \newcommand*{\colonial}{\Var{colonial}}
 #+LATEX_HEADER: \newcommand*{\lotsize}{\Var{lotsize}}
@@ -25,7 +25,7 @@ Boston Globe/ durante el año 1990. Este conjunto de datos se usa en
 múltiples capítulos del manual de econometría de Wooldridge. Las
 variables disponibles en el fichero ~hprice1.gdt~ son:
 
-- \price: precios de venta de las casas, miles de dólares.
+- \hprice: precios de venta de las casas, miles de dólares.
 
 - \bedrooms: número de habitaciones.
 
@@ -43,11 +43,11 @@ $5\%$ para los contrastes.
 
 #+ATTR_LATEX: :options [a)]
 a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
-   ordinarios (MCO) donde la variable dependiente es \price, y las
+   ordinarios (MCO) donde la variable dependiente es \hprice, y las
    explicativas son \bedrooms, \colonial, \lotsize y \size:
    #+begin_export latex
    \begin{equation*}
-     \price_{i} =
+     \hprice_{i} =
      \beta_{0}
      + \beta_{1} \bedrooms_{i}
      + \beta_{2} \colonial_{i}
