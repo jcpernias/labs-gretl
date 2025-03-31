@@ -101,7 +101,7 @@ $(build-dir)/%.tex: $(org-dir)/%.org $(tex-deps) | $(build-dir)
 
 .PRECIOUS: $(pdf-dir)/%.pdf
 $(pdf-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(pdf-dir)
-	$(TEXI2DVI) --build-dir=$(@D) --output=$@ $<
+	$(TEXI2DVI) --build-dir=$(<D) --output=$@ $<
 
 %.zip: %-instr.pdf
 	./make-zip -o $@ -d $(call bare-name,$(@D)) $^
