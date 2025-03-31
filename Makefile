@@ -95,7 +95,7 @@ $(info zip-files: $(zip-files))
 endif
 
 
-all: $(pdf-files)
+all: $(zip-files)
 
 
 .PRECIOUS: $(build-dir)/%.tex
@@ -115,36 +115,25 @@ $(build-dir)/preamble.tex: $(root-dir)/preamble.tex | $(build-dir)
 	$(CP) $< $@
 
 
-%.zip: %-instr.pdf
-	./make-zip -o $@ -d $(call bare-name,$(@D)) $^
+$(zip-dir)/%.zip: $(pdf-dir)/%.pdf | $(zip-dir)
+	./make-zip -o $@ -d $(basename $(@F)) $^
 
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
-
-
 $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
 
-
-01-vote/vote.zip: vote.gdt
-
-02-bwght/bwght.zip: bwght.gdt
-
-03-hprice1/hprice1.zip: hprice1.gdt
-
-04-loanapp/loanapp.zip: loanapp.csv
-
-05-wagegap/wagegap.zip: esp.csv
-
-06-cons/cons.zip: cons.csv
-06-cons/cons-instr.pdf: awm.bib
-
-07-unemp/unemp.zip: unemp.csv
-07-unemp/unemp-instr.pdf: unemp.bib
+$(zip-dir)/vote.zip: $(data-dir)/vote.gdt
+$(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
+$(zip-dir)/hprice1.zip: $(data-dir)/hprice1.gdt
+$(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
+$(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
+$(zip-dir)/cons.zip: $(data-dir)/cons.csv
+$(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
 
 
 ## Create directories
 ## --------------------------------------------------------------------------------
 
-$(build-dir) $(pdf-dir):
+$(build-dir) $(pdf-dir) $(zip-dir):
 	mkdir $@
 
 
@@ -153,6 +142,8 @@ $(build-dir) $(pdf-dir):
 .PHONY: clean
 clean:
 	-@rm -r $(pdf-dir)
+	-@rm -r $(zip-dir)
+
 
 .PHONY: veryclean
 veryclean: clean
