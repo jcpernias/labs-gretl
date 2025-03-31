@@ -1,8 +1,6 @@
 #+TITLE: La función de consumo agregado
 #+SETUPFILE: ../setup.org
 
-#+cite_export: natbib ecta text
-#+bibliography: labs.bib
 # Define macros for the variable names
 #+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
 

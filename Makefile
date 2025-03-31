@@ -106,6 +106,11 @@ $(pdf-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(pdf-dir)
 %.zip: %-instr.pdf
 	./make-zip -o $@ -d $(call bare-name,$(@D)) $^
 
+$(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
+
+
+$(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
+
 
 01-vote/vote.zip: vote.gdt
 

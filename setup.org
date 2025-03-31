@@ -11,3 +11,7 @@
 #+LATEX_HEADER: \input{preamble}
 #+LATEX_HEADER: \usepackage[english, spanish, es-nolists]{babel}
 #+LATEX_HEADER: \babelprovide[import, main]{AUTO}
+
+
+#+CITE_EXPORT: natbib ecta text
+#+BIBLIOGRAPHY: labs.bib
