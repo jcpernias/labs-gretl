@@ -1,0 +1,128 @@
+#+TITLE: Gastos de campaña y resultados electorales
+#+SETUPFILE: ../setup.org
+
+#+LATEX_HEADER: \newcommand*{\state}{\Var{state}}
+#+LATEX_HEADER: \newcommand*{\district}{\Var{district}}
+#+LATEX_HEADER: \newcommand*{\voteDem}{\Var{vote\_dem}}
+#+LATEX_HEADER: \newcommand*{\expDem}{\Var{exp\_dem}}
+#+LATEX_HEADER: \newcommand*{\expRep}{\Var{exp\_rep}}
+#+LATEX_HEADER: \newcommand*{\strDem}{\Var{str\_dem}}
+
+
+* Objetivo
+
+A partir de datos de las elecciones al congreso de los Estados Unidos
+de 1988, se investiga la relación entre los gastos de campaña de los
+candidatos y sus resultados electorales.
+
+* Datos
+
+Los datos fueron recopilados por Jeffrey Wooldridge y utilizados en
+varios capítulos de /Introducción a la Econometría: un enfoque
+moderno/. Corresponden a 173 distritos electorales de Estados Unidos
+donde solo se presentaban un candidato del Partido Demócrata y otro
+del Partido Republicano. Se dispone de las siguientes variables:
+
+- \state: Estado donde se celebró la elección.
+
+- \district: Distrito electoral.
+
+- \voteDem: Porcentaje de votos obtenidos por el candidato demócrata
+  (el porcentaje que obtuvo el candidato republicano es $100 -
+  \voteDem$).
+
+- \expDem: Gastos de campaña del candidato demócrata (miles de
+  dólares).
+
+- \expRep: Gastos de campaña del candidato republicano (miles de
+  dólares).
+
+- \strDem: Fuerza del partido demócrata medida como el porcentaje de
+  votos obtenido por el candidato demócrata a la presidencia de los
+  Estados Unidos.
+
+
+Los datos se encuentran en el fichero ~vote.gdt~.
+
+* Instrucciones
+
+** Estadísticos descriptivos
+
+Obtenga los principales estadísticos descriptivos (media, desviación
+típica, mínimo, máximo) de las variables \voteDem, \expDem, \expRep y
+\strDem. Obtenga las correlaciones entre las variables \expDem,
+\expRep y \strDem. Use esos estadísticos para responder a las
+siguientes preguntas:
+
+#+ATTR_LATEX: :options [a)]
+a) En promedio, ¿obtuvieron más votos los candidatos demócratas o los
+   candidatos republicanos?
+
+b) ¿Gastaron más los candidatos demócratas o los candidatos
+   republicanos?
+
+c) De acuerdo con los estadísticos de \strDem, ¿qué partido obtuvo más
+   votos en las elecciones a la presidencia de los Estados Unidos?
+
+d) ¿Están relacionados los gastos de los candidatos en cada uno de los
+   distritos?  ¿De qué forma?
+
+** Modelo de regresión
+
+Considere el modelo de regresión lineal:
+#+begin_export latex
+\begin{equation*}
+  \voteDem =
+  \beta_{0}
+  + \beta_{1} \expDem
+  + \beta_{2} \expRep
+  + \beta_{3} \strDem
+  + u
+\end{equation*}
+#+end_export
+
+#+ATTR_LATEX: :options [a)]
+a) ¿Cuáles son los signos esperados de los parámetros $\beta_{1}$,
+   $\beta_{2}$ y $\beta_{3}$?
+
+b) Estime el modelo por Mínimos Cuadrados Ordinarios (MCO). ¿Los
+   signos obtenidos coinciden con los esperados?
+
+c) Interprete los parámetros de las variables de gastos.  ¿Tienen un
+   efecto significativo sobre los votos obtenidos? ¿Cuántos dólares
+   adicionales tendría que gastar por término medio un candidato para,
+   incrementar sus resultados electorales en 1 punto porcentual,
+   manteniendo constantes las demás variables?
+
+d) Obtenga un gráfico de los residuos (en el eje vertical) frente a
+   los valores predichos (en el eje horizontal).  ¿Muestra este
+   gráfico evidencias de mala especificación del modelo?
+
+
+** Contraste de hipótesis
+
+Considere la hipótesis de que los efectos de los gastos de los
+candidatos son iguales en valor absoluto pero tienen signo opuesto, de
+modo que se compensan exactamente.
+
+#+ATTR_LATEX: :options [a)]
+a) Plantee la hipótesis nula y la hipótesis alternativa en términos de
+   los parámetros del modelo de regresión presentado en la sección
+   [[*Modelo de regresión]].
+
+b) Contraste la hipótesis nula. ¿Es posible rechazarla a un nivel de
+   significación del $5\%$?
+
+c) En caso de no rechazarla, estime el modelo restringido que se
+   obtiene al imponer la hipótesis nula.
+
+
+** Conclusión
+
+¿Qué conclusiones pueden extraerse del análisis econométrico? ¿Existe
+alguna relación entre los gastos de campaña y los resultados
+electorales?
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:

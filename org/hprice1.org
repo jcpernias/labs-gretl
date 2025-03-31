@@ -1,0 +1,110 @@
+#+TITLE: El precio de venta de las casas
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: \newcommand*{\price}{\Var{price}}
+#+LATEX_HEADER: \newcommand*{\bedrooms}{\Var{bedrooms}}
+#+LATEX_HEADER: \newcommand*{\colonial}{\Var{colonial}}
+#+LATEX_HEADER: \newcommand*{\lotsize}{\Var{lotsize}}
+#+LATEX_HEADER: \newcommand*{\size}{\Var{size}}
+
+
+
+* Objetivo
+
+Se emplean modelos de regresión hedónica para analizar el precio de
+venta de las casas. Los modelos de regresión hedónica explican el
+precio de un conjunto de bienes mediante las diferencias en las
+características de cada uno de ellos.
+
+
+* Datos
+
+Los datos se obtuvieron de la sección inmobiliaria del periódico /The
+Boston Globe/ durante el año 1990. Este conjunto de datos se usa en
+múltiples capítulos del manual de econometría de Wooldridge. Las
+variables disponibles en el fichero ~hprice1.gdt~ son:
+
+- \price: precios de venta de las casas, miles de dólares.
+
+- \bedrooms: número de habitaciones.
+
+- \colonial: variable ficticia que toma el valor 1 para las casas con
+  estilo colonial.
+
+- \lotsize: tamaño del jardín, en metros cuadrados.
+
+- \size: tamaño de la casa, en metros cuadrados.
+
+* Instrucciones
+
+Responda a las siguientes preguntas. Use un nivel de significación del
+$5\%$ para los contrastes.
+
+#+ATTR_LATEX: :options [a)]
+a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
+   ordinarios (MCO) donde la variable dependiente es \price, y las
+   explicativas son \bedrooms, \colonial, \lotsize y \size:
+   #+begin_export latex
+   \begin{equation*}
+     \price_{i} =
+     \beta_{0}
+     + \beta_{1} \bedrooms_{i}
+     + \beta_{2} \colonial_{i}
+     + \beta_{3} \lotsize_{i}
+     + \beta_{4} \size_{i}
+     + u _{i}.
+   \end{equation*}
+   #+end_export
+   ¿Qué variables tienen un efecto significativo sobre el precio de
+   venta?  Interprete las estimaciones de los parámetros de \lotsize
+   y \size.
+
+b) <<item:b>>Obtenga los resultados de la estimación del modelo de
+   regresión del apartado anterior usando errores típicos robustos a
+   heteroscedasticidad. ¿Cambian las estimaciones de los parámetros?
+   ¿Es diferente la bondad del ajuste? ¿Cambia la significación de los
+   parámetros?
+
+c) De acuerdo con el contraste de Breusch-Pagan (Koenker), ¿hay
+   indicios de heteroscedasticidad? ¿Y si se usa el contraste de
+   White?  Entonces, ¿son válidos los resultados que se obtuvieron en
+   el apartado [[item:a]]? ¿Y los del apartado [[item:b]]?
+
+d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
+   el supuesto de que la varianza condicional del término de error es
+   proporcional a \lotsize:
+   #+begin_export latex
+   \begin{equation*}
+     E(u^{2}_{i} | \bm{x}_{i}) = \sigma^{2}\lotsize_{i}.
+   \end{equation*}
+   #+end_export
+   ¿Qué variables tienen efectos significativos? ¿Son similares las
+   estimaciones a las obtenidas con MCO? Obtenga los resultados de la
+   estimación MCP con errores típicos robustos a
+   heteroscedasticidad. ¿Hay algún cambio en la significación de las
+   variables? ¿Puede dar una explicación a esos cambios?
+
+e) (\emph{Individual}) Estime el modelo del apartado [[item:a]] usando
+   mínimos cuadrados ponderados factibles de acuerdo con el supuesto:
+   #+begin_export latex
+   \begin{equation*}
+     E(u^{2}_{i} | \bm{x}_{i}) = \sigma^{2}\exp\big(
+     \delta_{0}
+     + \delta_{1} \bedrooms_{i}
+     + \delta_{2} \colonial_{i}
+     + \delta_{3} \lotsize_{i}
+     + \delta_{4} \size_{i}
+     \big).
+   \end{equation*}
+   #+end_export
+   Utilice el procedimiento descrito en la sección /La
+   heteroscedasticidad debe ser estimada: MCG factibles/ en las
+   páginas 282 y siguientes del manual de Wooldridge. Obtenga los
+   resultados con errores típicos robustos a heteroscedasticidad. ¿Qué
+   conclusiones se pueden extraer ahora?
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
