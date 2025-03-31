@@ -51,20 +51,6 @@ EMACS := $(emacsbin) -Q -nw --batch
 # org-to-latex := --eval "(org-latex-export-to-latex)"
 
 
-## texi2dvi -----------------------------------------
-TEXI2DVI_FLAGS := --batch --pdf --build=tidy
-
-# -I $(dir $(abspath $(root-dir)))
-
-ifneq ($(LATEX_MESSAGES), yes)
-TEXI2DVI_FLAGS += -q
-endif
-
-TEXI2DVI := $(envbin) TEXINPUTS=$(build-dir)/:$(data-dir)/:$(root-dir)/: \
-	TEXI2DVI_USE_RECORDER=yes \
-	$(texi2dvibin) $(TEXI2DVI_FLAGS)
-
-
 ## latexmk -----------------------------------------
 LATEX_ENGINE := -pdf
 ifeq ($(USE_LUALATEX), yes)
