@@ -1,38 +1,36 @@
+set verbose off
+set workdir "./build"
+
 open "../data/hprice1.gdt"
 list X = bedrooms colonial lotsize size
 
 outfile hprice1-a.txt
-  ols price 0 X
+  ols price 0 X --simple-print
 end outfile
-
 
 # b)
 
 outfile hprice1-b.txt
-  ols price 0 X \
-  --robust
+  ols price 0 X --robust --simple-print
 end outfile
-
 
 # c)
 outfile hprice1-c1.txt
-  modtest --breusch-pagan --robust
+  modtest --breusch-pagan --robust --quiet
 end outfile
 
 outfile hprice1-c2.txt
-  modtest --white
+  modtest --white --quiet
 end outfile
 
 # d)
+w = 1 / lotsize
+
 outfile hprice1-d1.txt
-  w = 1 / lotsize
+  wls w price 0 X
 end outfile
 
 outfile hprice1-d2.txt
-wls w price 0 X
-end outfile
-
-outfile hprice1-d3.txt
   wls w price 0 X --robust
 end outfile
 
@@ -43,7 +41,7 @@ ols price 0 X --quiet
 lusq = log($uhat * $uhat)
 
 outfile hprice1-e1.txt
-  ols lusq 0 X
+  ols lusq 0 X --simple-print
 end outfile
 
 h = exp($yhat)
