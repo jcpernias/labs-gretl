@@ -47,8 +47,6 @@ USE_LUALATEX := no
 
 ## emacs ---------------------------------------------
 EMACS := $(emacsbin) -Q -nw --batch
-# org-to-pdf := --eval "(org-latex-export-to-pdf)"
-# org-to-latex := --eval "(org-latex-export-to-latex)"
 
 
 ## latexmk -----------------------------------------
@@ -58,15 +56,17 @@ LATEX_ENGINE := -lualatex
 endif
 
 LATEXMK_FLAGS := $(LATEX_ENGINE) -cd -nobibfudge
-# -emulate-aux-dir
 
 ifneq ($(LATEX_MESSAGES), yes)
 LATEXMK_FLAGS += -quiet
 endif
 
 LATEXMK := $(envbin) TEXINPUTS=$(build-dir)/:$(data-dir)/: \
-	BIBINPUTS=$(abspath $(root-dir)): \
 	$(latexmkbin) $(LATEXMK_FLAGS)
+
+## Rscript -----------------------------------------
+
+RSCRIPT := $(Rscriptbin)
 
 
 ## Targets ----------------------------------------
