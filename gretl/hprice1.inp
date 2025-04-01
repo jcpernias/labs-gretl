@@ -1,0 +1,30 @@
+
+open "../data/hprice1.gdt"
+list X = bedrooms colonial lotsize size
+
+# a)
+ols price 0 X
+
+# b)
+ols price 0 X --robust
+
+# c)
+modtest --breusch-pagan --robust
+
+modtest --white
+
+# d)
+w = 1 / lotsize
+wls w price 0 X
+
+wls w price 0 X --robust
+
+
+# e)
+ols price 0 X --quiet
+
+lusq = log($uhat * $uhat)
+ols lusq 0 X
+h = exp($yhat)
+w = 1 / h
+wls w price 0 X --robust
