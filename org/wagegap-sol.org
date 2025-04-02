@@ -39,9 +39,11 @@ Considere el  modelo de regresión simple:
 - ¿Cuál es la interpretación del parámetro $\beta_1$?
 #+end_tcolorbox
 
-El parámetro $\beta_{1}$ representa cuánto difiere el salario (en
-logaritmos) de las mujeres respecto al de los hombres, sin tener en
-cuenta ningún otro factor.
+El parámetro $\beta_{1}$ mide cuál es la diferencia relativa entre el
+salario medio de las mujeres y el de los hombres. Por término medio,
+el salario de una mujer es aproximadamente un
+@@latex:$100\beta_{1}\%$@@ mayor que el de un hombre. Cuando $\beta_1
+< 0$, existe una brecha salarial desfavorable para las mujeres.
 
 #+begin_tcolorbox
 - Estime los parámetros del modelo de la ecuación \eqref{eq-mod1} y
@@ -55,14 +57,32 @@ cuenta ningún otro factor.
   mujeres.
 #+end_tcolorbox
 
-Como su estimación es -0.1305 y es significativa, esto implica que, en
-promedio, las mujeres ganan menos que los hombres. Si transformamos
-esa diferencia a porcentaje, equivale aproximadamente a un \pct{12.3}
-menos (usando la fórmula $e^{\beta_1} - 1$).
+La hipótesis nula del contraste es $\beta_1 = 0$. No habría diferencia
+en los salarios de hombres y mujeres si $H_0$ es cierta. La hipótesis
+alternativa es que el salario de las mujeres es menor que el de los
+hombres lo que implica que $\beta_1 < 0$. La $H_1$ es unilateral, por
+lo que la región de rechazo se concentra en la cola negativa.
 
-El contraste de significación indica que esta brecha no es casual: el
-p-valor es prácticamente cero, así que hay evidencia estadística clara
-de una brecha salarial desfavorable para las mujeres.
+Para encontrar el valor crítico, en primer lugar, se busca el valor
+que deja el \pct{5} de probabilidad en la cola derecha de una $t$ con
+\num{2334} grados de libertad (en Gretl se pueden consultar las tablas
+estadísticas en el menú /Herramientas/). En segundo lugar, dado que la
+región de rechazo se halla en la cola izquierda, se cambia el signo al
+valor encontrado en las tablas. Por tanto, el valor crítico es $c =
+\num{-1.65}$.
+
+La regla de decisión consiste en comparar el cociente $t$ del
+parámetro $\beta_1$ con el valor crítico. Dado que éste se halla en la
+cola negativa, se rechazará la hipótesis nula si $t < c$. De acuerdo
+con los resultados de la regresión, el cociente $t = -6.14 < c =
+-1.65$, por lo que se rechaza la hipótesis nula para @@latex:$\alpha =
+5\%$@@.
+
+En conclusión, los resultados de las estimaciones muestran que las
+mujeres tienen un salario medio aproximadamente un \pct{13} inferior
+al de los hombres y que esta diferencia es estadísticamente
+significativa.
+
 
 ** Brecha salarial ajustada
 
@@ -98,24 +118,27 @@ Considere el modelo de regresión múltiple:
 
 #+begin_tcolorbox
 - Contraste la significación conjunta de los parámetros $\beta_{2},
-  \beta_{2}, \dots, \beta_{13}$.
+  \beta_{3}, \dots, \beta_{13}$.
 #+end_tcolorbox
 
 #+latex: \gretl{wagegap-c.txt}
 
-El test de significación conjunta de las variables adicionales (de
-$\beta_{2}$ a $\beta_{13}$) da un F muy alto y un p-valor
-prácticamente nulo, por lo que aportan información relevante para
-explicar el salario.
+Los resultados del contraste rechazan, para un nivel de significación
+del \pct{5}, la hipótesis $\beta_{2} = \beta_3 = \dots \beta_{13} =
+0$. En conclusión, sin considerar la ficticia \mujer, las restantes
+variables explicativas aportan información relevante para explicar el
+salario.
+
 
 #+begin_tcolorbox
 - Interprete la estimación obtenida del parámetro $\beta_{12}$ y
   determine si es significativo.
 #+end_tcolorbox
 
-Sobre el coeficiente $\beta_{12}$ (inmigrante), su valor es -0.120 y
-es claramente significativo. Esto indica que las personas inmigrantes
-ganan, en promedio, un 11,3% menos que las no inmigrantes, manteniendo
+El coeficiente $\beta_{12}$ es el parámetro de la ficticia \inmigr, su
+valor es \num{-0.120} y es claramente significativo (valor $p$
+inferior a \num{0.05}). Esto indica que el salario de los inmigrantes
+es, en promedio, un \pct{12} menor que el de los nativos, manteniendo
 constantes el resto de factores.
 
 #+begin_tcolorbox
@@ -123,16 +146,25 @@ constantes el resto de factores.
   ajustada y de la ajustada?
 #+end_tcolorbox
 
-Al introducir otras variables explicativas en el modelo (educación,
-antigüedad, sector público, inmigración, etc.), la estimación de la
-brecha de género en los salarios no solo se mantiene, sino que
-aumenta: el coeficiente de la variable mujer pasa a -0.1614. Esto
-sugiere que, cuando se tienen en cuenta las características
-observables, la penalización salarial por ser mujer es aún mayor. Es
-decir, parte de la brecha no ajustada se debía a que las mujeres
-tienen características asociadas a mayores salarios (como más
-educación, por ejemplo).
+Al introducir variables explicativas adicionales en el modelo la
+estimación de la brecha salarial de género no solo se mantiene, sino
+que se amplía hasta aproximadamente un \pct{16}.
 
+La *brecha no ajustada* compara los salarios medios entre hombres y
+mujeres sin tener en cuenta otras características. Por tanto, no
+considera que puedan existir diferencias sistemáticas entre ambos
+grupos (por ejemplo, en nivel educativo, antigüedad o tipo de
+contrato) que puedan explicar parte de la diferencia salarial
+observada.
+
+En cambio, al incorporar esas variables en el análisis, la *brecha
+ajustada* permite comparar los salarios de hombres y mujeres con un
+perfil similar (misma experiencia, misma cualificación, mismo tipo de
+contrato, etc.). El hecho de que esta brecha ajustada sea mayor que la
+no ajustada sugiere que, a igualdad de características, las mujeres
+son penalizadas en mayor medida. Es decir, no solo cobran menos, sino
+que sus cualificaciones parecen estar peor valoradas que las de los
+hombres.
 
 * Participación en el mercado laboral (Opcional e individual)
 
@@ -160,18 +192,27 @@ Modelo de regresión simple:
   de actividad de hombres y mujeres.
 #+end_tcolorbox
 
+Con las estimaciones anteriores podemos calcular la probabilidad de
+que los hombres y mujeres de la muestra participen en la población
+activa:
+#+begin_export latex
+\begin{align*}
+  &\text{Hombres:\ } \hat{\alpha}_{0} = 0.83; \\
+  &\text{Mujeres:\ } \hat{\alpha}_{0} + \hat{\alpha}_{1} = 0.72.
+\end{align*}
+#+end_export
+
 #+begin_tcolorbox
 - Usando los resultados de la regresión, ¿qué diferencia hay entre las
   tasas de actividad de hombres y mujeres?  ¿Es significativa esa
   diferencia?
 #+end_tcolorbox
 
-Aquí se analiza si hay diferencias en la tasa de actividad entre
-hombres y mujeres. El modelo estima una tasa media de actividad del
-82,8% para los hombres (constante) y una reducción de 11,2 puntos
-porcentuales si se trata de una mujer. La diferencia es clara y
-estadísticamente significativa. Por tanto, las mujeres tienen una
-participación laboral menor, en promedio.
+El parámetro $\alpha_1$ mide la diferencia en las tasas de actividad
+de hombres y mujeres. La tasa de actividad de las mujeres es
+\num{11.2} puntos porcentuales menor que la de los hombres y esta
+diferencia es estadísticamente significativa (valor $p$ prácticamente
+igual a 0).
 
 ** Modelo de probabilidad lineal múltiple
 
@@ -206,20 +247,22 @@ Modelo de regresión múltiple:
 
 #+latex: \gretl{wagegap-f.txt}
 
-El test F indica que las variables añadidas son significativas en
-conjunto, así que el modelo mejora al incluirlas.
+El valor del estadístico $F$ es muy grande y proporciona fuerte
+evidencia de que las variables añadidas mejoran la capacidad
+explicativa del modelo (valor $p$ prácticamente igual a \num{0}).
 
 #+begin_tcolorbox
 - Interprete la estimación obtenida del parámetro $\alpha_{5}$ y
   determine si es significativo.
 #+end_tcolorbox
 
-El coeficiente de la variable hijos es de 0.077 y también es
-significativo. En este caso, sorprendentemente, tener hijos parece
-asociarse positivamente con la probabilidad de participar, aunque
-podría depender de otras interacciones no recogidas aquí (por ejemplo,
-la edad de los hijos).
-
+El parámetro $\alpha_5$ mide la diferencia en la probabilidad de
+participar en la población activa dependiendo de si se tienen hijos
+o no.  El coeficiente estimado muestra que la probabilidad de
+pertenecer a la población activa es \num{7.7} puntos porcentuales
+mayor en el caso de las personas con hijos, /ceteris paribus/. El
+efecto de la variable \hijos es significativo (valor $p$ prácticamente
+\num{0}).
 
 #+begin_tcolorbox
 - ¿Son muy diferentes las estimaciones del parámetro $\alpha_1$ de la
@@ -227,10 +270,17 @@ la edad de los hijos).
   que su respuesta sea afirmativa, ¿a qué se debe esa diferencia?
 #+end_tcolorbox
 
-Al añadir otras variables al modelo, la penalización por ser mujer se
-reduce a 6,6 puntos, aunque sigue siendo significativa. Esto se debe a
-que parte de la menor participación se explica por diferencias en
-edad, número de hijos, experiencia, etc.
+Al añadir otras variables al modelo, la estimación de $\alpha_1$ se
+reduce a \num{6.6} puntos porcentuales, aunque sigue siendo
+estadísticamente significativa. Esto sugiere que habría factores
+observables (como, entre otros, la edad, el número de hijos o la
+experiencia laboral) que explicarían parte de la menor participación
+de las mujeres en el mercado laboral. Sin embargo, incluso después de
+tener en cuenta estas características, una parte sustancial de la
+diferencia en las tasas de actividad sigue asociada al hecho de ser
+mujer, lo que sugiere la presencia de factores adicionales,
+posiblemente de carácter estructural o social.
+
 
 #+begin_tcolorbox
 - ¿Es posible estimar el modelo de la ecuación \eqref{eq-mod4} por
@@ -239,15 +289,47 @@ edad, número de hijos, experiencia, etc.
   por qué no pueden obtenerse.
 #+end_tcolorbox
 
+
+En los modelos de probabilidad lineal se conoce cuál es la relación
+entre la varianza del término de error y las explicativas:
+#+begin_export latex
+\[
+\operatorname{var}(u_i|\bm{x}_i) = p(\bm{x}_i) \big(1 - p(\bm{x}_i)\big),
+\]
+#+end_export
+donde
+#+begin_export latex
+\[
+ p(\bm{x}_i) = \alpha_0 + \alpha_1 x_{1i} + \dots + \alpha_k x_{ki}.
+\]
+#+end_export
+Es decir, $p_i = p(\bm{x}_i)$ sería la probabilidad de que $y_i = 1$
+en función de los valores que toman las explicativas.
+
+No es posible utilizar MCP en este caso ya que las probabilidades
+dependen de los parámetros desconocidos $\alpha_0, \dots,
+\alpha_k$. En principio se podría usar MCPF, utilizando como
+ponderaciones la inversa de $\hat{h}_i = \hat{p}_i (1 - \hat{p}_i)$,
+donde
+#+begin_export latex
+\[
+ \hat{p}_i = \hat{\alpha}_0 + \hat{\alpha}_1 x_{1i} + \dots + \hat{\alpha}_k x_{ki}.
+\]
+#+end_export
+Es decir, $\hat{p}_i$ son los valores ajustados obtenidos a partir de
+la estimación MCO. Para que pueda aplicarse MCPF, $\hat{h}_i$ debe ser
+mayor que \num{0}. Esto, a su vez, requiere que $0 < \hat{p}_i < 1$.
+
+Después de obtener las estimaciones MCO de la ecuación \eqref{eq-mod4},
+se calcularon los valores ajustados.
+
 #+latex: \gretl{wagegap-g.txt}
 
-Respecto a estimar este modelo por mínimos cuadrados ponderados
-factibles (MCPF), en principio sería posible si se conoce o puede
-estimar una función para la varianza del término de error. Sin
-embargo, al tratarse de un modelo de probabilidad lineal, los valores
-predichos (phat) pueden salirse del rango [0,1], como ocurre aquí (hay
-valores mayores que 1). Esto sugiere que MCPF no es adecuado y que
-sería preferible un modelo no lineal como logit o probit.
+Los estadísticos descriptivos de la tabla anterior muestran que el
+valor mínimo de los valores ajustados es \num{0.065} y el valor máximo
+es \num{1.45}. Por tanto, no es posible aplicar MCPF, dado que en este
+caso no se cumple la condición que garantiza que la estimación de la
+varianza del término de error es siempre positiva.
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
