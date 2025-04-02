@@ -300,7 +300,7 @@ estimaremos a partir del modelo de regresión múltiple:
   presente una tabla con los resultados.
 
 - Contraste la significación conjunta de los parámetros $\beta_{2},
-  \beta_{2}, \dots, \beta_{13}$.
+  \beta_{3}, \dots, \beta_{13}$.
 
 - Interprete la estimación obtenida del parámetro $\beta_{12}$ y
   determine si es significativo.
