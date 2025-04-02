@@ -124,7 +124,7 @@ Considere el modelo de regresión múltiple:
 #+latex: \gretl{wagegap-c.txt}
 
 Los resultados del contraste rechazan, para un nivel de significación
-del \pct{5}, la hipótesis $\beta_{2} = \beta_3 = \dots \beta_{13} =
+del \pct{5}, la hipótesis $\beta_{2} = \beta_3 = \dots = \beta_{13} =
 0$. En conclusión, sin considerar la ficticia \mujer, las restantes
 variables explicativas aportan información relevante para explicar el
 salario.
