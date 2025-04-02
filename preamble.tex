@@ -114,6 +114,20 @@
 \newcommand*{\units}[2][@UNIT]{\SI{#2}{\csname #1\endcsname}}
 \makeatother
 
+% Gretl output
+% --------------------------------------------------------------------------------
+\usepackage{fbox}
+\usepackage{fancyvrb}
+%\fvset{fontsize=\footnotesize,frame=lines,framerule=0.4pt}
+\newcommand{\gretl}[2][]{%
+  \begin{center}%
+    \fbox*[tb]{\BVerbatimInput[%
+      fontsize=\footnotesize,%
+      frame=lines,%
+      framerule=0.4pt,%
+      #1]{#2}}%
+  \end{center}}
+
 
 % Plots
 % --------------------------------------------------------------------------------
@@ -127,6 +141,7 @@
 \usepackage{bookmark}
 \usepackage{xurl}
 \urlstyle{tt}
+
 
 \endinput
 

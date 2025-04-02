@@ -9,12 +9,6 @@
 #+LATEX_HEADER: \newcommand*{\size}{\Var{size}}
 
 
-#+LATEX_HEADER: \usepackage{fbox}
-#+LATEX_HEADER: \usepackage{fancyvrb}
-#+LATEX_HEADER: \fvset{fontsize=\footnotesize,frame=lines,framerule=0.4pt}
-#+LATEX_HEADER: \newcommand{\gretl}[2][]{\begin{center}\fbox*[tb]{\BVerbatimInput[#1]{#2}}\end{center}}
-
-
 #+begin_tcolorbox
 #+ATTR_LATEX: :options [a), series = questions]
 a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
