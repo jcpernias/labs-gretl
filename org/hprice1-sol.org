@@ -36,7 +36,29 @@ a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
    y \size.
 #+end_tcolorbox
 
+A continuación, se presentan los resultados de la estimación por
+mínimos cuadrados ordinarios.
+
 #+latex: \gretl{hprice1-a.txt}
+
+A un nivel de significación $\alpha = 5\%$, solo dos variables
+presentan un efecto estadísticamente significativo sobre el precio de
+las casas: el tamaño de la parcela, \lotsize, y la superficie de la
+casa, \size (los valores-$p$ son \num{0.002} y menos que $0.001$,
+respectivamente). Por el contrario, las variables \bedrooms y
+\colonial no tienen efectos estadísticamente significativos. Esto
+sugiere que, una vez que se controla el tamaño de la vivienda y de la
+parcela, ni el número de dormitorios ni el estilo arquitectónico
+aportan información adicional relevante para explicar el precio.
+
+A la hora de interpretar los coeficientes estimados, es preciso tener
+en cuenta que las unidades de la variable \hprice son miles de dólares
+y las de las variables \size y \lotsize son metros cuadrados. La
+estimación del parámetro de \lotsize indica que por cada metro
+cuadrado del tamaño de la parcela, el precio de la casa se incrementa
+en poco más de $22$ dólares. Por otro lado, el coeficiente de \size
+muestra que, en promedio, el precio de las casas aumenta en algo más
+de \num{1 300} dólares por cada metro cuadrado de superficie.
 
 #+begin_tcolorbox
 #+ATTR_LATEX: :options [a), resume = questions]
@@ -49,6 +71,21 @@ b) <<item:b>>Obtenga los resultados de la estimación del modelo de
 
 #+latex: \gretl{hprice1-b.txt}
 
+El uso de errores típicos robustos no afecta ni a las estimaciones de
+los parámetros ni a la bondad del ajuste medida por el $R^2$. El
+empleo de errores típicos robustos sí va a introducir diferencias en
+los cocientes $t$ y, por consiguiente, en los valores-$p$ que se
+muestran en la tabla de la regresión.
+
+Aunque la precisión de todos los coeficientes estimados se ve
+afectada, el cambio más notable corresponde a \lotsize, cuyo error
+típico se duplica. Como consecuencia, la significación de esta
+variable cambia dramáticamente con respecto a la estimación presentada
+en el apartado anterior. Este resultado sugiere que el supuesto de
+homoscedasticidad no se cumple y que la heteroscedasticidad afecta
+sobre todo a la estimación del parámetro de \lotsize. Por otro lado,
+el error típico de \size es ahora un poco más grande, pero esto no
+altera la significación de esta variable.
 
 #+begin_tcolorbox
 #+ATTR_LATEX: :options [a), resume = questions]
@@ -58,9 +95,21 @@ c) De acuerdo con el contraste de Breusch-Pagan (Koenker), ¿hay
    el apartado [[item:a]]? ¿Y los del apartado [[item:b]]?
 #+end_tcolorbox
 
+El contraste de Breusch-Pagan-Koenker, cuyos resultados aparecen a
+continuación, conduce a un fuerte rechazo de la hipótesis nula de
+homoscedasticidad.
 #+latex: \gretl{hprice1-c1.txt}
 
+La misma conclusión se obtiene con el contraste de White, cuyos
+resultados se muestran en la siguiente tabla.
 #+latex: \gretl{hprice1-c2.txt}
+
+Los dos contrastes indican que hay una fuerte evidencia de
+heteroscedasticidad y, por tanto, los errores típicos convencionales
+de MCO no son válidos. En consecuencia, las inferencias realizadas en
+el apartado [[item:a]] serían incorrectas. En cambio, los resultados del
+apartado [[item:b]], al haberse estimado con errores típicos robustos, sí
+son válidos en presencia de heteroscedasticidad.
 
 #+begin_tcolorbox
 #+ATTR_LATEX: :options [a), resume = questions]
@@ -79,9 +128,35 @@ d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    variables? ¿Puede dar una explicación a esos cambios?
 #+end_tcolorbox
 
+El estimador MCP pondera las observaciones según la inversa de la
+varianza del error. Como esta se supone que es proporcional a
+\lotsize, se emplean ponderaciones inversamente proporcionales a esta
+variable, $w = 1 / \lotsize$.
+
 #+latex: \gretl[lastline=13]{hprice1-d1.txt}
 
+Los resultados de la estimación MCP muestran que las variables \lotsize
+y \size tienen efectos significativos sobre el precio de venta de las
+casas. Los efectos de \bedrooms y \colonial se estiman de forma
+imprecisa y no hay evidencia de que sean distintos de $0$.
+
+Se observan diferencias entre las estimaciones de los parámetros
+obtenidas con MCP y las obtenidas con MCO. En particular, el efecto
+estimado de \lotsize es más del doble que el obtenido en el apartado
+[[item:a]].  En el caso de \size, el efecto estimado se reduce en un
+\pct{20}.
+
+La siguiente tabla muestra las estimaciones MCP empleando errores
+típicos robustos a heteroscedasticidad.
+
 #+latex: \gretl[lastline=14]{hprice1-d2.txt}
+
+En el caso de MCP, el uso de errores típicos robustos no se traduce en
+cambios drásticos. Aunque, en general, los errores típicos son algo
+mayores, no se altera la significación de las variables. Esto
+sugiere que la mayor parte de la heteroscedasticidad se habría
+corregido con las ponderaciones inversamente proporcionales al tamaño
+de la parcela.
 
 #+begin_tcolorbox
 #+ATTR_LATEX: :options [a), resume = questions]
@@ -105,11 +180,35 @@ e) (\emph{Individual}) Estime el modelo del apartado [[item:a]] usando
    conclusiones se pueden extraer ahora?
 #+end_tcolorbox
 
+A partir de los residuos de la estimación presentada en el
+apartado [[item:a]], $\hat{u}$, se construye la variable $\Var{lusq} =
+\log(\hat{u}^2)$. Esta se utiliza como variable dependiente en una
+regresión frente a las variables \bedrooms, \colonial, \lotsize
+y \size.
+
 #+latex: \gretl{hprice1-e1.txt}
+
+Se construye la variable $h$ aplicando la función exponencial a los
+valores ajustados de esta regresión. Finalmente, se estima el modelo
+del precio de las casas por MCPF, usando como ponderación $w = 1 / h$,
 
 #+latex: \gretl[lastline=14]{hprice1-e2.txt}
 
+Los resultados son bastante similares a los obtenidos en el apartado
+anterior. No se observan diferencias importantes ni en la estimación
+de los parámetros ni en la significación de las variables.  La mayor
+diferencia se encuentra en el parámetro de \bedrooms, lo cual se puede
+explicar por la escasa precisión con la que se estima el efecto de
+esta variable.
+
+En resumen, los resultados de las distintas estimaciones indican que
+el tamaño de la casa y de la parcela son importantes a la hora de
+determinar el precio al que se venden las viviendas, y que es esencial
+corregir la heteroscedasticidad para obtener conclusiones fiables
+sobre su significación estadística.
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
+
+#  LocalWords:  MCPF MCP
