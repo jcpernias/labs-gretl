@@ -13,4 +13,5 @@
 #+LATEX_CLASS_OPTIONS: [a4paper, 11pt]
 #+LATEX_HEADER: \input{preamble}
 #+LATEX_HEADER: \usepackage[english, spanish, es-nolists]{babel}
+#+LATEX_HEADER: \decimalpoint
 #+LATEX_HEADER: \babelprovide[import, main]{AUTO}
