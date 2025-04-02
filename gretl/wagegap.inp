@@ -1,0 +1,56 @@
+set verbose off
+set workdir "./build"
+
+open "../data/esp.csv"
+
+lsalario = log(EARNHR)
+edad = AGE_R
+mujer = GENDER_R == 2
+inmigr = J_Q04a == 2
+hijos = J_Q03b > 0
+pareja = J_Q02a == 1
+educ = YRSQUAL
+activ = C_D05 != 3
+exper = C_Q09
+antig = 2012 - D_Q05a2
+pub = D_Q03 == 2
+ong = D_Q03 == 3
+temp = D_Q09 == 2 || D_Q09 == 3
+apr = D_Q09 == 4
+otro = D_Q09 == 5 || D_Q09 == 6
+
+# 3.1 Brecha salarial no ajustada
+outfile wagegap-a.txt
+  ols lsalario 0 mujer --robust --simple-print
+end outfile
+
+# 3.2 Brecha salarial ajustada
+list X = educ exper antig pub ong temp apr otro edad hijos inmigr pareja
+outfile wagegap-b.txt
+  ols lsalario 0 mujer X --robust --simple-print
+end outfile
+
+outfile wagegap-c.txt
+  omit X --test-only --quiet
+end outfile
+
+
+# 4.1 MLP simple
+outfile wagegap-d.txt
+  ols activ 0 mujer --robust --simple-print
+end outfile
+
+# 4.2 MLP múltiple
+list X = educ exper hijos edad inmigr pareja
+outfile wagegap-e.txt
+  ols activ 0 mujer X --robust --simple-print
+end outfile
+
+outfile wagegap-f.txt
+  omit X --test-only --quiet
+end outfile
+
+phat = $yhat
+outfile wagegap-g.txt
+  summary phat --simple
+end outfile

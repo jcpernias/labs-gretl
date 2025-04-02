@@ -9,6 +9,7 @@ src-files := \
 	hprice1-sol.org \
 	loanapp.org \
 	wagegap.org \
+	wagegap-sol.org \
 	cons.org \
 	unemp.org
 
@@ -123,6 +124,7 @@ $(zip-dir)/%.zip: $(pdf-dir)/%.pdf | $(zip-dir)
 
 
 
+## hprice1 gretl output ----------------------------------------
 hprice1-gretl-output := $(addsuffix .txt,\
   $(addprefix $(build-dir)/hprice1-,a b c1 c2 d1 d2 e1 e2))
 
@@ -130,14 +132,30 @@ $(hprice1-gretl-output): hprice1-gretl-output.intermediate
 	@:
 
 .INTERMEDIATE: hprice1-gretl-output.intermediate
-hprice1-gretl-output.intermediate: gretl/hprice1.inp
+hprice1-gretl-output.intermediate: gretl/hprice1.inp $(data-dir)/hprice1.gdt
 	gretlcli -b -e $<
 
 $(pdf-dir)/hprice1-sol.pdf: $(hprice1-gretl-output)
 
+
+## wagegap gretl output ----------------------------------------
+wagegap-gretl-output := $(addsuffix .txt,\
+  $(addprefix $(build-dir)/wagegap-,a b c d e))
+
+$(wagegap-gretl-output): wagegap-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: wagegap-gretl-output.intermediate
+wagegap-gretl-output.intermediate: gretl/wagegap.inp $(data-dir)/esp.csv
+	gretlcli -b -e $<
+
+$(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
+
+# bibliography ---------------------------------------------------
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
 $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
 
+# data files -----------------------------------------------------
 $(zip-dir)/vote.zip: $(data-dir)/vote.gdt
 $(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
 $(zip-dir)/hprice1.zip: $(data-dir)/hprice1.gdt
