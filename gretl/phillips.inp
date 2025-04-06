@@ -1,4 +1,4 @@
-# set verbose off
+set verbose off
 set workdir ./build
 
 open ../data/phillips.csv
@@ -16,20 +16,47 @@ series covid = obs == obsnum(2020)
 
 smpl 1965 2023
 
-adf 3 infl --c --test-down=AIC
-adf 3 infl --c --difference --test-down=AIC
-adf 3 paroc --c --test-down=AIC
+gnuplot infl --time-series --with-lines --output=phillips-infl.pdf
+outfile phillips-adf-infl.txt
+  adf 3 infl --c --test-down=AIC
+end outfile
+
+gnuplot d_infl --time-series --with-lines --output=phillips-d_infl.pdf
+outfile phillips-adf-d_infl.txt
+  adf 3 infl --c --difference --test-down=AIC
+end outfile
+
+gnuplot paro --time-series --with-lines --output=phillips-paro.pdf
+outfile phillips-adf-paro.txt
+  adf 3 paro --c --test-down=AIC
+end outfile
+
+gnuplot paroc --time-series --with-lines --output=phillips-paroc.pdf
+outfile phillips-adf-paroc.txt
+  adf 3 paroc --c --test-down=AIC
+end outfile
 
 
-ols d_infl 0 covid paroc(0 to -3)
-ols d_infl 0 covid paroc(0 to -2)
-ols d_infl 0 covid paroc(0 to -1)
-ols d_infl 0 covid paroc
+outfile phillips-lags.txt
+  ols d_infl 0 covid paroc(0 to -3) --quiet
+  printf "Lags = 3. BIC = %3g\n", $bic
+  ols d_infl 0 covid paroc(0 to -2) --quiet
+  printf "Lags = 2. BIC = %3g\n", $bic
+  ols d_infl 0 covid paroc(0 to -1) --quiet
+  printf "Lags = 1. BIC = %3g\n", $bic
+  ols d_infl 0 covid paroc  --quiet
+  printf "Lags = 0. BIC = %3g\n", $bic
+end outfile
 
-ols d_infl 0 covid paroc(0 to -1) --robust
 
-ols d_infl 0 covid paroc(0 to -1) d_infl(-1) --robust
+outfile phillips-dyn.txt
+  ols d_infl 0 covid paroc(0 to -1) --robust
+end outfile
 
-ols d_infl 0 covid d_paroc paroc(-1) --robust
+outfile phillips-lr-mult.txt
+  ols d_infl 0 covid d_paroc paroc(-1) --robust
+end outfile
 
-ols d_infl 0 covid d_paroc --robust
+outfile phillips-lr-mult-0.txt
+  ols d_infl 0 covid d_paroc --robust
+end outfile
