@@ -241,9 +241,9 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 ** Curva de Phillips estática
 
 - Estime una curva de Phillips estática presentada en la ecuación
-  \eqref{eq:1} utilizando las variables =infl= y =paro=, Obtenga los
-  resultados de la regresión robustos a heteroscedasticidad y
-  autocorrelación.
+  \eqref{eq:1} utilizando las variables =infl= y =paro=. Incluya en la
+  estimación la variable =covid=. Obtenga los resultados de la
+  regresión robustos a heteroscedasticidad y autocorrelación.
 
 - Atendiendo a los resultados obtenidos con los contrastes de raíces
   unitarias, ¿se cumplen los supuestos que garantizan buenas
@@ -253,8 +253,10 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 ** Curva de Phillips con expectativas
 
 
-- Estime la ecuación \eqref{eq:3} para $L = 0, 1, 2, 3$. Asegúrese de
-  que todas las regresiones se estiman para el mismo periodo muestral.
+- Estime la ecuación \eqref{eq:3} para $L = 0, 1, 2, 3$. Además de los
+  retardos de =paroc=, incluya la ficticia =covid= como
+  explicativa. Asegúrese de que todas las regresiones se estiman para
+  el mismo periodo muestral.
 
 - Determine el número óptimo de retardos de acuerdo con el BIC
   (criterio de Schwarz).
@@ -265,13 +267,14 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 
 ** Estimación del multiplicador de largo plazo
 
-- Estime el modelo de la ecuación \eqref{eq:4}, de forma que se
-  estimen directamente los multiplicadores acumulativos y el
-  multiplicador de largo plazo. Obtenga los errores típicos robustos a
-  heteroscedasticidad y autocorrelación.
+- A partir del modelo seleccionado en la sección anterior, estime un
+  modelo como en la ecuación \eqref{eq:4} donde se obtienen
+  directamente los multiplicadores acumulativos y el multiplicador de
+  largo plazo (siga incluyendo =covid= en esta estimación). Utilice
+  errores típicos robustos a heteroscedasticidad y autocorrelación.
 
-- Usando los resultados de la regresión anterior, contraste al $5\%$
-  la hipótesis de que el multiplicador de largo plazo es 0. En caso de
+- Con los resultados de la regresión anterior, contraste al $5\%$ la
+  hipótesis de que el multiplicador de largo plazo es 0. En caso de
   que no se rechace, estime el modelo de la ecuación \eqref{eq:5} que
   impone la hipótesis $\delta_L = 0$.
 
