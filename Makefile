@@ -11,7 +11,8 @@ src-files := \
 	wagegap.org \
 	wagegap-sol.org \
 	cons.org \
-	unemp.org
+	unemp.org \
+	phillips.org
 
 
 ## Directories
@@ -23,6 +24,7 @@ build-dir := $(root-dir)/build
 data-dir := $(root-dir)/data
 pdf-dir := $(root-dir)/pdf
 R-dir := $(root-dir)/R
+gretl-dir := $(root-dir)/gretl
 tex-dir := $(root-dir)/tex
 zip-dir := $(root-dir)/zip
 
@@ -138,7 +140,7 @@ hprice1-gretl-output.intermediate: gretl/hprice1.inp $(data-dir)/hprice1.gdt
 $(pdf-dir)/hprice1-sol.pdf: $(hprice1-gretl-output)
 
 
-## wagegap gretl output ----------------------------------------
+## wagegap gretl output -----------------------------------------
 wagegap-gretl-output := $(addsuffix .txt,\
   $(addprefix $(build-dir)/wagegap-,a b c d e))
 
@@ -146,10 +148,16 @@ $(wagegap-gretl-output): wagegap-gretl-output.intermediate
 	@:
 
 .INTERMEDIATE: wagegap-gretl-output.intermediate
-wagegap-gretl-output.intermediate: gretl/wagegap.inp $(data-dir)/esp.csv
+wagegap-gretl-output.intermediate: $(gretl-dir)/wagegap.inp $(data-dir)/esp.csv
 	gretlcli -b -e $<
 
 $(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
+
+# phillips figure -----------------------------------------------
+$(pdf-dir)/phillips.pdf: $(build-dir)/phillips-fig.csv
+$(build-dir)/phillips-fig.csv: $(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
+	gretlcli -b -e $<
+
 
 # bibliography ---------------------------------------------------
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
@@ -163,6 +171,7 @@ $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
 $(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
+$(zip-dir)/phillips.zip: $(data-dir)/phillips.csv
 
 
 ## Create directories

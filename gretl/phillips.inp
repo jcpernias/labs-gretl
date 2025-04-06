@@ -1,0 +1,35 @@
+# set verbose off
+set workdir ./build
+
+open ../data/phillips.csv
+
+ldiff defl
+infl = 100 * ld_defl
+
+paroc = hpfilt(paro, 6.25)
+
+
+diff infl
+diff paroc
+
+series covid = obs == obsnum(2020)
+
+smpl 1965 2023
+
+adf 3 infl --c --test-down=AIC
+adf 3 infl --c --difference --test-down=AIC
+adf 3 paroc --c --test-down=AIC
+
+
+ols d_infl 0 covid paroc(0 to -3)
+ols d_infl 0 covid paroc(0 to -2)
+ols d_infl 0 covid paroc(0 to -1)
+ols d_infl 0 covid paroc
+
+ols d_infl 0 covid paroc(0 to -1) --robust
+
+ols d_infl 0 covid paroc(0 to -1) d_infl(-1) --robust
+
+ols d_infl 0 covid d_paroc paroc(-1) --robust
+
+ols d_infl 0 covid d_paroc --robust

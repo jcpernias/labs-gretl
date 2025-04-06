@@ -1,0 +1,283 @@
+#+TITLE: La curva de Phillips en España (1965--2023)
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\covid}{\Var{covid}}
+
+
+* Objetivo
+
+Se investigará la existencia de una relación de intercambio entre
+inflación y desempleo en España durante el periodo 1965--2023. Se
+estimará una curva de Phillips con expectativas y tasa natural de
+desempleo variable en el tiempo. También se explorarán las relaciones
+dinámicas entre la inflación y el desempleo.
+
+* La curva de Phillips
+
+** Curva de Phillips estática
+
+La curva de Phillips tradicional estipula una relación estática entre
+desempleo e inflación:
+#+begin_export latex
+\begin{equation}\label{eq:1}
+  \pi_t = \alpha + \beta u_t + \epsilon_t,
+\end{equation}
+#+end_export
+donde $\pi_t$ es la tasa de inflación, $u_t$ es la tasa de paro,
+$\epsilon_t$ es el término de error y $\alpha$ y $\beta$ son
+parámetros a estimar.
+
+Versiones más modernas de la curva de Phillips incorporan expectativas
+de inflación y tasas naturales de paro que varían en el tiempo.
+
+** La tasa natural de paro
+
+#+NAME: fig:paro
+#+CAPTION: Tasa de paro observada (trazo continuo) y tasa natural (trazo discontinuo). La tasa natural se ha obtenido aplicando el filtro de Hodrick-Prescott con $\lambda = 6.25$.
+#+ATTR_LATEX: :placement [tbh!]
+#+begin_figure
+#+begin_export latex
+\pgfplotsset{
+  siunitxlabels/.style={
+    /pgfplots/typeset ticklabel/.code={%
+      \pgfmathparse{\tick}$\num[zero-decimal-to-integer]{\pgfmathresult}$},
+  },
+}
+\begin{tikzpicture}
+  \begin{axis}[
+    siunitxlabels,
+    width = 12cm,
+    axis lines = middle,
+    ylabel = {Tasa de paro},
+    y label style={at={(axis description cs:-0.1, 1)},
+      anchor=north east, text width = 2cm},
+    grid = both,
+    major grid style = {line width = .2pt, draw = gray!50},
+    tick label style = {font = \footnotesize},
+    label style = {font = \small},
+    xtick = {1970, 1980, ..., 2020},
+    ytick = {0, 5, ..., 25},
+    tick align = center,
+  ]
+
+  % Paro observado
+  \addplot[
+    thick,
+  ] table[
+    col sep=comma,
+    x = obs,
+    y = paro,
+  ] {phillips-fig.csv};
+
+  % Tendencia
+  \addplot[
+    semithick,
+    dashed,
+  ] table[
+    col sep=comma,
+    x = obs,
+    y = paro_t,
+  ] {phillips-fig.csv};
+
+  \end{axis}
+\end{tikzpicture}
+#+end_export
+#+end_figure
+
+La tasa natural de desempleo es un concepto teórico y no es
+directamente observable. Para poder incorporarla en la estimación de
+la curva de Phillips es necesario usar alguna aproximación a partir de
+las tasas observadas de paro. Un método frecuentemente usado es el
+[[https://es.wikipedia.org/wiki/Filtro_de_Hodrick-Prescott][filtro de Hodrick y Prescott]], que descompone una serie en un
+componente de tendencia, que captura los movimientos a largo plazo, y
+un componente cíclico, que recoge las desviaciones con respecto a la
+tendencia de largo plazo.  La Figura [[fig:paro]] muestra la evolución
+de la tasa natural de desempleo y de la tasa de desempleo observado en
+España para el periodo 1965--2023.
+
+** Curva de Phillips con expectativas
+
+La curva de Phillips aumentada con expectativas se puede escribir
+como:
+#+begin_export latex
+\begin{equation}\label{eq:2}
+  \pi_t = \pi^e_t + \beta (u_t - u^n_t) + \epsilon_t,
+\end{equation}
+#+end_export
+donde $\pi^e_t$ son las expectativas de los agentes económicos sobre
+la inflación en el periodo $t$, y $u^n_t$ es la tasa natural de
+paro. La expresión entre paréntesis de la ecuación anterior es el
+desempleo cíclico, $u^c_t$:
+#+begin_export latex
+\begin{equation*}
+  u^c_t = u_t - u^n_t.
+\end{equation*}
+#+end_export
+Por otro lado, suponemos que las expectativas son adaptativas por lo
+que los agentes esperan que la inflación en el periodo $t$ sea igual a
+la del periodo anterior:
+#+begin_export latex
+\begin{equation*}
+  \pi^e_t = \pi_{t-1}.
+\end{equation*}
+#+end_export
+Utilizando este supuesto, se reescribe la ecuación \eqref{eq:2} como:
+#+begin_export latex
+\begin{equation*}
+  \pi_t - \pi_{t-1}= \beta u^c_t + \epsilon_t.
+\end{equation*}
+#+end_export
+
+
+** Modelo dinámico
+
+Ampliaremos, por último, la curva de Phillips con expectativas para
+incorporar una especificación dinámica que permita que cambios en la
+tasa de desempleo afecten a la inflación en más de un periodo:
+#+begin_export latex
+\begin{equation}\label{eq:3}
+  \Delta\pi_t = \alpha +
+  \beta_0 u^c_{t} +
+  \beta_1 u^c_{t-1} +
+  \dots +
+  \beta_L u^c_{t-L} +
+  \epsilon_t.
+\end{equation}
+#+end_export
+La ecuación anterior muestra que cambios en el desempleo cíclico,
+$u^c_t$, provocan cambios en la tasa de inflación en el periodo en que
+se producen y en los $L$ periodos siguientes.
+
+** Efectos a largo plazo
+
+Además de estimar los multiplicadores dinámicos, $\beta_0, \beta_1,
+\dots, \beta_L$, se pueden estimar directamente los multiplicadores
+acumulativos, $\delta_0, \delta_1, \dots, \delta_{L-1}$, y el
+multiplicador de largo plazo, $\delta_L$. Para ello, se reparametriza
+el modelo de la ecuación \eqref{eq:3} como:
+#+begin_export latex
+\begin{equation}\label{eq:4}
+  \Delta\pi_t =
+  \alpha +
+  \delta_0 \Delta u^c_{t} +
+  \delta_1 \Delta u^c_{t-1} +
+  \dots +
+  \delta_{L-1} \Delta u^c_{t-L+1} +
+  \delta_L u^c_{t-L} +
+  \epsilon_t.
+\end{equation}
+#+end_export
+En el contexto de la estimación de la curva de Phillips, una hipótesis
+interesante es que no exista una relación a largo plazo entre
+inflación y desempleo. En ese caso $\delta_L = 0$, hipótesis que puede
+contrastarse directamente a partir de la estimación de los parámetros
+de la ecuación \eqref{eq:4}. En caso de que la hipótesis no sea
+rechazada, se pueden obtener estimaciones más eficientes estimando el
+modelo de regresión que impone $\delta_L = 0$:
+#+begin_export latex
+\begin{equation}\label{eq:5}
+  \Delta\pi_t = \alpha +
+  \delta_0 \Delta u^c_{t} +
+  \delta_1 \Delta u^c_{t-1} +
+  \dots +
+  \delta_{L-1} \Delta u^c_{t-L+1} +
+  \epsilon_t.
+\end{equation}
+#+end_export
+
+* Datos
+
+El archivo =phillips.csv= contiene series anuales referidas a la
+economía española durante los años 1960 a 2023.
+
+-  =defl=: deflactor del PIB, base 2015.
+
+-  =paro=: tasa de paro observada.
+
+Las series provienen de la base de datos [[https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/bdmacro.aspx][BDMACRO]] que mantiene la
+Secretaría de Estado de Presupuestos y Gastos del Ministerio de
+Hacienda.
+
+* Instrucciones
+
+** Transformación de las variables
+
+Cree las siguientes variables:
+
+- =infl=: tasa de inflación en tantos por 100 calculada a partir de
+  la diferencia del logaritmo del deflactor del PIB.
+
+- =d_infl=: diferencia de =infl=.
+
+- =covid=: variable ficticia con valor $1$ el año 2020 y $0$ en los
+  restantes años.
+
+- =paroc=: tasa de paro cíclico calculada a partir de la aplicación
+  del filtro de Hodrick-Prescott ($\lambda = 6.25$) a la tasa de
+  desempleo observada. En Gretl, se obtiene añadiendo una nueva variable definida como =paroc = hpfilt(paro, 6.25)=.
+
+- =d_paroc=: diferencia de =paroc=.
+
+Una vez creadas las variables, *establezca el rango muestral al periodo comprendido entre los años 1965--2023*.
+
+
+** Contrastes de raíces unitarias
+
+Contraste la existencia de una raíz unitaria en las variables =infl=,
+=dinfl=, =paro= y =paroc=. En todos los casos:
+
+#+ATTR_LATEX: :options [a)]
+1. Determine mediante la inspección de un gráfico de series
+   temporales si es necesario incluir una tendencia lineal en la
+   regresión de Dickey-Fuller.
+
+2. Seleccione con el AIC el número de retardos a incluir en la
+   regresión de Dickey-Fuller usando como máximo 3 retardos.
+
+
+
+** Curva de Phillips estática
+
+- Estime una curva de Phillips estática presentada en la ecuación
+  \eqref{eq:1} utilizando las variables =infl= y =paro=, Obtenga los
+  resultados de la regresión robustos a heteroscedasticidad y
+  autocorrelación.
+
+- Atendiendo a los resultados obtenidos con los contrastes de raíces
+  unitarias, ¿se cumplen los supuestos que garantizan buenas
+  propiedades asintóticas de MCO con series temporales? La estimación
+  de la curva de Phillips estática, ¿puede ser una regresión espuria?
+
+** Curva de Phillips con expectativas
+
+
+- Estime la ecuación \eqref{eq:3} para $L = 0, 1, 2, 3$. Asegúrese de
+  que todas las regresiones se estiman para el mismo periodo muestral.
+
+- Determine el número óptimo de retardos de acuerdo con el BIC
+  (criterio de Schwarz).
+
+- Obtenga los errores típicos robustos a heteroscedasticidad y
+  autocorrelación del modelo seleccionado con el BIC.
+
+
+** Estimación del multiplicador de largo plazo
+
+- Estime el modelo de la ecuación \eqref{eq:4}, de forma que se
+  estimen directamente los multiplicadores acumulativos y el
+  multiplicador de largo plazo. Obtenga los errores típicos robustos a
+  heteroscedasticidad y autocorrelación.
+
+- Usando los resultados de la regresión anterior, contraste al $5\%$
+  la hipótesis de que el multiplicador de largo plazo es 0. En caso de
+  que no se rechace, estime el modelo de la ecuación \eqref{eq:5} que
+  impone la hipótesis $\delta_L = 0$.
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Hodrick Prescott

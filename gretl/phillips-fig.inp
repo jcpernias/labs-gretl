@@ -1,0 +1,13 @@
+set verbose off
+set workdir ./build
+
+open ../data/phillips.csv
+
+paro_c = hpfilt(paro, 6.25)
+paro_t = paro - paro_c
+
+ldiff defl
+infl = 100 * ld_defl
+
+smpl 1965 2023
+store phillips-fig.csv  paro infl paro_t
