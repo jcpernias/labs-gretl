@@ -39,25 +39,31 @@ outfile phillips-static.txt
   ols infl 0 covid paro --robust
 end outfile
 
+scalar Lstar = -3
+scalar BICstar = $huge
 outfile phillips-lags.txt
-  ols d_infl 0 covid paroc(0 to -3) --quiet
-  printf "Lags = 3. BIC = %3g\n", $bic
-  ols d_infl 0 covid paroc(0 to -2) --quiet
-  printf "Lags = 2. BIC = %3g\n", $bic
-  ols d_infl 0 covid paroc(0 to -1) --quiet
-  printf "Lags = 1. BIC = %3g\n", $bic
-  ols d_infl 0 covid paroc  --quiet
-  printf "Lags = 0. BIC = %3g\n", $bic
+  loop for (L = Lstar; L <= 0; L += 1)
+    ols d_infl 0 covid paroc(0 to L) --quiet
+    printf "Lags = %d; BIC = %.6g\n", -L, $bic
+    if $bic < BICstar
+       Lstar = L
+       BICstar = $bic
+    endif
+  endloop
+
+  printf "\nL* = %d; BIC* = %.6g\n", -Lstar, BICstar
 end outfile
+
 
 outfile phillips-dyn.txt
-  ols d_infl 0 covid paroc(0 to -1) --robust
+  ols d_infl 0 covid paroc(0 to Lstar) --robust
 end outfile
 
+scalar Ld = Lstar + 1
 outfile phillips-lr-mult.txt
-  ols d_infl 0 covid d_paroc paroc(-1) --robust
+  ols d_infl 0 covid d_paroc(0 to Ld) paroc(Lstar) --robust
 end outfile
 
 outfile phillips-lr-mult-0.txt
-  ols d_infl 0 covid d_paroc --robust
+  ols d_infl 0 covid d_paroc(0 to Ld) --robust
 end outfile
