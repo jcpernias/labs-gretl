@@ -1,0 +1,143 @@
+#+TITLE: La curva de Phillips en España (1965--2023) --- Soluciones
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\covid}{\Var{covid}}
+
+#+latex: \setcounter{section}{3}
+
+* Instrucciones
+
+#+latex: \setcounter{subsection}{1}
+
+
+** Contrastes de raíces unitarias
+
+#+begin_tcolorbox
+Contraste la existencia de una raíz unitaria en las variables =infl=,
+=dinfl=, =paro= y =paroc=. En todos los casos:
+
+#+ATTR_LATEX: :options [a)]
+1. Determine mediante la inspección de un gráfico de series
+   temporales si es necesario incluir una tendencia lineal en la
+   regresión de Dickey-Fuller.
+
+2. Seleccione con el AIC el número de retardos a incluir en la
+   regresión de Dickey-Fuller usando como máximo 3 retardos.
+#+end_tcolorbox
+
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:phillips-infl.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{phillips-adf-infl.txt}
+#+end_minipage
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:phillips-d_infl.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{phillips-adf-d_infl.txt}
+#+end_minipage
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:phillips-paro.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{phillips-adf-paro.txt}
+#+end_minipage
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:phillips-paroc.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{phillips-adf-paroc.txt}
+#+end_minipage
+
+
+** Curva de Phillips estática
+
+#+begin_tcolorbox
+- Estime una curva de Phillips estática presentada en la ecuación (1)
+  utilizando las variables =infl= y =paro=. Incluya en la estimación
+  la variable =covid=. Obtenga los resultados de la regresión robustos
+  a heteroscedasticidad y autocorrelación.
+#+end_tcolorbox
+
+#+latex: \gretl{phillips-static.txt}
+
+#+begin_tcolorbox
+- Atendiendo a los resultados obtenidos con los contrastes de raíces
+  unitarias, ¿se cumplen los supuestos que garantizan buenas
+  propiedades asintóticas de MCO con series temporales? La estimación
+  de la curva de Phillips estática, ¿puede ser una regresión espuria?
+#+end_tcolorbox
+
+** Curva de Phillips con expectativas
+
+
+#+begin_tcolorbox
+- Estime la ecuación (3) para $L = 0, 1, 2, 3$. Además de los
+  retardos de =paroc=, incluya la ficticia =covid= como
+  explicativa. Asegúrese de que todas las regresiones se estiman para
+  el mismo periodo muestral.
+
+- Determine el número óptimo de retardos de acuerdo con el BIC
+  (criterio de Schwarz).
+#+end_tcolorbox
+
+#+latex: \gretl{phillips-lags.txt}
+
+#+begin_tcolorbox
+- Obtenga los errores típicos robustos a heteroscedasticidad y
+  autocorrelación del modelo seleccionado con el BIC.
+#+end_tcolorbox
+
+#+latex: \gretl{phillips-dyn.txt}
+
+
+** Estimación del multiplicador de largo plazo
+
+#+begin_tcolorbox
+- A partir del modelo seleccionado en la sección anterior, estime un
+  modelo como en la ecuación (4) donde se obtienen directamente los
+  multiplicadores acumulativos y el multiplicador de largo plazo (siga
+  incluyendo =covid= en esta estimación). Utilice errores típicos
+  robustos a heteroscedasticidad y autocorrelación.
+#+end_tcolorbox
+
+#+latex: \gretl{phillips-lr-mult.txt}
+
+#+begin_tcolorbox
+- Con los resultados de la regresión anterior, contraste al $5\%$ la
+  hipótesis de que el multiplicador de largo plazo es 0. En caso de
+  que no se rechace, estime el modelo de la ecuación (5) que impone la
+  hipótesis $\delta_L = 0$.
+#+end_tcolorbox
+
+#+latex: \gretl{phillips-lr-mult-0.txt}
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Hodrick Prescott

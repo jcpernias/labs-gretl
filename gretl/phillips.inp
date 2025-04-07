@@ -8,7 +8,6 @@ infl = 100 * ld_defl
 
 paroc = hpfilt(paro, 6.25)
 
-
 diff infl
 diff paroc
 
@@ -36,6 +35,9 @@ outfile phillips-adf-paroc.txt
   adf 3 paroc --c --test-down=AIC
 end outfile
 
+outfile phillips-static.txt
+  ols infl 0 covid paro --robust
+end outfile
 
 outfile phillips-lags.txt
   ols d_infl 0 covid paroc(0 to -3) --quiet
@@ -47,7 +49,6 @@ outfile phillips-lags.txt
   ols d_infl 0 covid paroc  --quiet
   printf "Lags = 0. BIC = %3g\n", $bic
 end outfile
-
 
 outfile phillips-dyn.txt
   ols d_infl 0 covid paroc(0 to -1) --robust

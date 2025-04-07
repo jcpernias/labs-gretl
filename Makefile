@@ -12,7 +12,8 @@ src-files := \
 	wagegap-sol.org \
 	cons.org \
 	unemp.org \
-	phillips.org
+	phillips.org \
+	phillips-sol.org
 
 
 ## Directories
@@ -134,7 +135,8 @@ $(hprice1-gretl-output): hprice1-gretl-output.intermediate
 	@:
 
 .INTERMEDIATE: hprice1-gretl-output.intermediate
-hprice1-gretl-output.intermediate: gretl/hprice1.inp $(data-dir)/hprice1.gdt
+hprice1-gretl-output.intermediate: \
+	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.gdt
 	gretlcli -b -e $<
 
 $(pdf-dir)/hprice1-sol.pdf: $(hprice1-gretl-output)
@@ -148,15 +150,35 @@ $(wagegap-gretl-output): wagegap-gretl-output.intermediate
 	@:
 
 .INTERMEDIATE: wagegap-gretl-output.intermediate
-wagegap-gretl-output.intermediate: $(gretl-dir)/wagegap.inp $(data-dir)/esp.csv
+wagegap-gretl-output.intermediate: \
+	$(gretl-dir)/wagegap.inp $(data-dir)/esp.csv
 	gretlcli -b -e $<
 
 $(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
 
 # phillips figure -----------------------------------------------
 $(pdf-dir)/phillips.pdf: $(build-dir)/phillips-fig.csv
-$(build-dir)/phillips-fig.csv: $(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
+$(build-dir)/phillips-fig.csv: \
+	$(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
 	gretlcli -b -e $<
+
+# phillips gretl output -----------------------------------------
+phillips-gretl-output := $(addsuffix .txt,\
+		$(addprefix $(build-dir)/phillips-, \
+		adf-infl adf-d_infl adf-paro adf-paroc \
+		static lags dyn lr-mult lr-mult-0)) \
+	$(addsuffix .pdf,\
+		$(addprefix $(build-dir)/phillips-,infl d_infl paro paroc)))
+
+$(phillips-gretl-output): phillips-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: phillips-gretl-output.intermediate
+phillips-gretl-output.intermediate: \
+	$(gretl-dir)/phillips.inp $(data-dir)/phillips.csv
+	gretlcli -b -e $<
+
+$(pdf-dir)/phillips-sol.pdf: $(phillips-gretl-output)
 
 
 # bibliography ---------------------------------------------------
