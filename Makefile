@@ -163,12 +163,14 @@ $(build-dir)/phillips-fig.csv: \
 	gretlcli -b -e $<
 
 # phillips gretl output -----------------------------------------
-phillips-gretl-output := $(addsuffix .txt,\
+phillips-gretl-output := \
+	$(addsuffix .txt,\
 		$(addprefix $(build-dir)/phillips-, \
-		adf-infl adf-d_infl adf-paro adf-paroc \
-		static lags dyn lr-mult lr-mult-0)) \
+			adf-infl adf-d_infl adf-paro adf-paroc \
+			static lags dyn lr-mult lr-mult-0)) \
 	$(addsuffix .pdf,\
-		$(addprefix $(build-dir)/phillips-,infl d_infl paro paroc)))
+		$(addprefix $(build-dir)/phillips-,infl d_infl paro paroc))
+
 
 $(phillips-gretl-output): phillips-gretl-output.intermediate
 	@:
