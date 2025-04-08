@@ -12,6 +12,7 @@ src-files := \
 	wagegap-sol.org \
 	cons.org \
 	unemp.org \
+	unemp-sol.org \
 	phillips.org \
 	phillips-sol.org
 
@@ -155,6 +156,27 @@ wagegap-gretl-output.intermediate: \
 	gretlcli -b -e $<
 
 $(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
+
+# unemp gretl output -----------------------------------------
+unemp-gretl-output := \
+	$(addsuffix .txt,\
+		$(addprefix $(build-dir)/unemp-, \
+			static covid dl dyn-mult lr-mult cum-mult nat-rate)) \
+	$(addsuffix .pdf,\
+		$(addprefix $(build-dir)/unemp-,\
+			d_unemp gY gYalt uhat corrgm-1))
+
+
+$(unemp-gretl-output): unemp-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: unemp-gretl-output.intermediate
+unemp-gretl-output.intermediate: \
+	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
+	gretlcli -b -e $<
+
+$(pdf-dir)/unemp-sol.pdf: $(unemp-gretl-output)
+
 
 # phillips figure -----------------------------------------------
 $(pdf-dir)/phillips.pdf: $(build-dir)/phillips-fig.csv

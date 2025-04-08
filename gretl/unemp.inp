@@ -1,0 +1,68 @@
+set verbose off
+set workdir ./build
+
+open ../data/unemp.csv
+
+ldiff PIBpm
+diff unemp
+gY = 100 * ld_PIBpm
+
+# Time series plots
+gnuplot d_unemp --time-series --with-lines --output=unemp-d_unemp.pdf
+gnuplot gY --time-series --with-lines --output=unemp-gY.pdf
+
+covid2 = obs>=2020:1 && obs<=2020:2
+PIBpm_alt = covid2 ? NA: PIBpm
+ldiff PIBpm_alt
+gYalt = 100 * ld_PIBpm_alt
+gnuplot gYalt --time-series --with-lines --output=unemp-gYalt.pdf
+
+# Static regression
+smpl 1982:1 2023:3
+outfile unemp-static.txt
+  ols d_unemp 0 gY
+end outfile
+
+# Time series plot and correlogram of the residuals
+uhat = $uhat
+gnuplot uhat --time-series --with-lines --output=unemp-uhat.pdf
+corrgm uhat 10 --acf-only --plot=unemp-corrgm-1.pdf
+
+# Static regression + Intervention
+covid = obs==2020:2
+
+outfile unemp-covid.txt
+  ols d_unemp 0 gY covid
+end outfile
+
+# Distributed lags model
+outfile unemp-dl.txt
+  ols d_unemp 0 gY(0 to -5) covid
+end outfile
+
+# Long-run multiplier computation
+mult = $coeff[2:7]
+outfile unemp-dyn-mult.txt
+  loop idx = 0..5
+    printf "Lag %d: %6.3f\n", idx,  mult[idx + 1]
+  endloop
+end outfile
+
+mult_lp = sum(mult)
+outfile unemp-lr-mult.txt
+  printf "\nLong-run multiplier: %.3f\n", mult_lp
+end outfile
+
+# Cumulative multipliers
+mult_ac = cum(mult)
+outfile unemp-cum-mult.txt
+  loop idx = 0..5
+    printf "Lag %d: %6.3f\n", idx,  mult_ac[idx + 1]
+  endloop
+end outfile
+
+# Natural rate of growth
+gYn = -$coeff[1] / mult_lp
+outfile unemp-nat-rate.txt
+  printf "\nNatural rate of growth: %.3f\n", gYn
+end outfile
