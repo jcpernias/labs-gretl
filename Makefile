@@ -11,6 +11,7 @@ src-files := \
 	wagegap.org \
 	wagegap-sol.org \
 	cons.org \
+	cons-sol.org \
 	unemp.org \
 	unemp-sol.org \
 	phillips.org \
