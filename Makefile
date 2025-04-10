@@ -16,7 +16,8 @@ src-files := \
 	unemp-sol.org \
 	phillips.org \
 	phillips-sol.org \
-	exports.org
+	exports.org \
+	exports-sol.org
 
 
 ## Directories

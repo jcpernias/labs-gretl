@@ -1,0 +1,92 @@
+#+TITLE: Exportaciones y crecimiento económico --- Soluciones
+
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+
+
+#+latex: \setcounter{section}{2}
+
+* Instrucciones
+
+** Transformación de las variables
+
+#+begin_tcolorbox
+- Cree las variables =lx= y =ly= correspondientes al logaritmo de las
+  exportaciones y del PIB, respectivamente.
+
+- A partir de las diferencias de =lx= y =ly=, cree las variables =gx=
+  y =gy= que son, respectivamente, las tasas de crecimiento trimestral
+  de las exportaciones y del PIB en tantos por 100.
+
+- Cree =covid=, una variable de impulso para el inicio del
+  confinamiento de la pandemia de la COVID-19 que sólo toma el valor 1
+  en el segundo trimestre de 2020. *Además, añada la primera
+  diferencia de =covid= a la base de datos*.
+#+end_tcolorbox
+
+** Contrastes de raíces unitarias
+
+#+begin_tcolorbox
+- Contraste la presencia de raíces unitarias en las variables =lx=,
+  =gx=, =ly= y =gy=.
+
+- ¿Qué problemas podrían aparecer si se estima un modelo de regresión
+  de =ly= con =lx= como variable explicativa? Si, en lugar de usar las
+  variables en niveles, se emplean las tasas de crecimiento =gy= y
+  =gx=, ¿seguirían presentándose los mismos problemas?
+#+end_tcolorbox
+
+** Selección del número de retardos
+
+#+begin_tcolorbox
+- Determine el número óptimo de retardos en un modelo de retardos
+  distribuidos con variable dependiente =gy= y variable explicativa
+  =gx=. *Incluya en todas las regresiones que realice la primera
+  diferencia de =covid=*.
+
+- Presente los resultados de la estimación del modelo seleccionado en
+  el punto anterior. Emplee errores típicos robustos a
+  heteroscedasticidad y autocorrelación.
+
+- Incluya en el modelo un retardo de la variable dependiente. ¿Es
+  necesario incluir este retardo?
+#+end_tcolorbox
+
+** Multiplicadores dinámicos
+
+#+begin_tcolorbox
+- Obtenga los multiplicadores acumulados y el multiplicador de largo
+  plazo. Si es posible, obtenga sus errores típicos.
+
+- Interprete los multiplicadores dinámicos, los acumulados y, en
+  especial, los multiplicadores de corto y largo plazo.
+#+end_tcolorbox
+
+
+** Cambio estructural
+
+#+begin_tcolorbox
+- Finalmente, examine la existencia de un cambio estructural que
+  comience con la Gran Recesión. Con este propósito, cree una variable
+  de intervención de tipo escalón que tome el valor 1 en el primer
+  trimestre de 2008 y en todos los posteriores. Cree también la
+  interacción de esta variable ficticia con la variable =gx=.
+
+- Añada la variable de escalón y su interacción con =gx= y sus
+  retardos al modelo de retardos distribuidos que obtuvo en la sección
+  [[*Selección del número de retardos]]. Estime este modelo ampliado por
+  MCO usando errores típicos robustos a heteroscedasticidad y
+  autocorrelación.
+
+- Contraste la significación de los términos añadidos en el punto
+  anterior. Interprete los resultados obtenidos.
+#+end_tcolorbox
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  PIB COVID
