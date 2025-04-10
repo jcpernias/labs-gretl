@@ -38,6 +38,55 @@
   =gx=, ¿seguirían presentándose los mismos problemas?
 #+end_tcolorbox
 
+#+ATTR_LATEX: :scale 0.75
+[[file:exports-ly.pdf]]
+
+#+ATTR_LATEX: :options [b]{0.45\textwidth}
+#+begin_minipage
+Hola.
+#+end_minipage
+#+ATTR_LATEX: :options [t]{0.55\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+latex: \gretl{exports-adf-ly.txt}
+#+end_minipage
+
+#+ATTR_LATEX: :options [b]{0.45\textwidth}
+#+begin_minipage
+Hola
+#+end_minipage
+#+ATTR_LATEX: :options [t]{0.55\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+latex: \gretl{exports-adf-gy.txt}
+#+end_minipage
+
+
+#+ATTR_LATEX: :scale 0.75
+[[file:exports-ly.pdf]]
+
+
+#+ATTR_LATEX: :options [b]{0.45\textwidth}
+#+begin_minipage
+Hola.
+#+end_minipage
+#+ATTR_LATEX: :options [t]{0.55\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+latex: \gretl{exports-adf-lx.txt}
+#+end_minipage
+
+#+ATTR_LATEX: :options [b]{0.45\textwidth}
+#+begin_minipage
+Hola.
+#+end_minipage
+#+ATTR_LATEX: :options [t]{0.55\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+latex: \gretl{exports-adf-gx.txt}
+#+end_minipage
+
+
 ** Selección del número de retardos
 
 #+begin_tcolorbox
@@ -54,6 +103,12 @@
   necesario incluir este retardo?
 #+end_tcolorbox
 
+#+latex: \gretl{exports-lags.txt}
+
+#+latex: \gretl{exports-dl.txt}
+
+#+latex: \gretl{exports-ardl.txt}
+
 ** Multiplicadores dinámicos
 
 #+begin_tcolorbox
@@ -63,6 +118,12 @@
 - Interprete los multiplicadores dinámicos, los acumulados y, en
   especial, los multiplicadores de corto y largo plazo.
 #+end_tcolorbox
+
+#+latex: \gretl{exports-mult.txt}
+
+#+latex: \gretl{exports-dyn-mult.txt}
+
+#+latex: \gretl{exports-cum-mult.txt}
 
 
 ** Cambio estructural
@@ -83,6 +144,10 @@
 - Contraste la significación de los términos añadidos en el punto
   anterior. Interprete los resultados obtenidos.
 #+end_tcolorbox
+
+#+latex: \gretl{exports-chow.txt}
+
+#+latex: \gretl{exports-chow2.txt}
 
 
 # Local Variables:

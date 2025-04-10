@@ -208,6 +208,28 @@ phillips-gretl-output.intermediate: \
 $(pdf-dir)/phillips-sol.pdf: $(phillips-gretl-output)
 
 
+# exports gretl output -----------------------------------------
+exports-gretl-output := \
+	$(addsuffix .txt,\
+		$(addprefix $(build-dir)/exports-, \
+			adf-lx adf-gx adf-ly adf-gy \
+			lags dl dyn-mult ardl mult cum-mult chow)) \
+	$(addsuffix .pdf,\
+		$(addprefix $(build-dir)/exports-,ly lx))
+
+
+$(exports-gretl-output): exports-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: exports-gretl-output.intermediate
+exports-gretl-output.intermediate: \
+	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
+	gretlcli -b -e $<
+
+$(pdf-dir)/exports-sol.pdf: $(exports-gretl-output)
+
+
+
 # bibliography ---------------------------------------------------
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
 $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib

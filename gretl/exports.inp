@@ -1,0 +1,73 @@
+set verbose off
+set workdir ./build
+
+open ../data/exports.csv
+
+lx = log(exports)
+ly = log(PIBpm)
+gy = 100 * diff(ly)
+gx = 100 * diff(lx)
+
+d_gy = diff(gy)
+d_gx = diff(gx)
+
+covid = obs == 2020:2
+diff covid
+s08 = obs >= 2008:1
+gx08 = s08 * gx
+
+smpl 1983:1 2023:3
+
+gnuplot ly --time-series --with-lines --output=exports-ly.pdf
+outfile exports-adf-ly.txt
+  adf 8 ly --c --test-down=AIC
+end outfile
+outfile exports-adf-gy.txt
+  adf 8 gy --c --test-down=AIC
+end outfile
+
+gnuplot lx --time-series --with-lines --output=exports-lx.pdf
+outfile exports-adf-lx.txt
+  adf 8 lx --ct --test-down=AIC
+end outfile
+outfile exports-adf-gx.txt
+  adf 8 gx --c --test-down=AIC
+end outfile
+
+outfile exports-lags.txt
+  loop L=-8..0
+    ols gy 0 gx(0 to L) d_covid --robust --quiet
+    printf "Lags: %2d; BIC = %.3f\n", -L, $bic
+  endloop
+end outfile
+
+outfile exports-dl.txt
+  ols gy 0 gx(0 to -2) d_covid --robust
+end outfile
+
+outfile exports-dyn-mult.txt
+  mult = seq(0, 2)' ~ $coeff[2:4] ~ $stderr[2:4]
+  eval mult
+end outfile
+
+
+outfile exports-ardl.txt
+  ols gy 0 gx(0 to -2) gy(-1) d_covid --robust
+end outfile
+
+outfile exports-mult.txt
+  ols gy 0 d_gx(0 to -1) gx(-2) d_covid --robust
+end outfile
+
+outfile exports-cum-mult.txt
+  mult = seq(0, 2)' ~ $coeff[2:4] ~ $stderr[2:4]
+  eval mult
+end outfile
+
+outfile exports-chow.txt
+  ols gy 0 s08 gx(0 to -2) gx08(0 to -2) d_covid --robust
+end outfile
+
+outfile exports-chow2.txt
+  omit gx gx_1 gx_2
+end outfile
