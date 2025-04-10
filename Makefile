@@ -15,7 +15,8 @@ src-files := \
 	unemp.org \
 	unemp-sol.org \
 	phillips.org \
-	phillips-sol.org
+	phillips-sol.org \
+	exports.org
 
 
 ## Directories
@@ -219,6 +220,7 @@ $(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
 $(zip-dir)/phillips.zip: $(data-dir)/phillips.csv
+$(zip-dir)/exports.zip: $(data-dir)/exports.csv
 
 
 ## Create directories
