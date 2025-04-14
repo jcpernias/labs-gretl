@@ -27,7 +27,6 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
    regresión de Dickey-Fuller usando como máximo 3 retardos.
 #+end_tcolorbox
 
-
 #+ATTR_LATEX: :options [c]{0.45\textwidth}
 #+begin_minipage
 #+latex: \vspace{0pt}
@@ -72,6 +71,24 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 #+latex: \gretl{phillips-adf-paroc.txt}
 #+end_minipage
 
+No se observan claras tendencias crecientes o decrecientes a lo largo
+de todo el periodo en los gráficos de la inflación, =inf=, la
+diferencia de la inflación, =d_inf=, la tasa de paro observada,
+=paro=, y el paro cíclico, =paroc=, por lo que se incluye únicamente
+un término constante en las regresiones de Dickey-Fuller.
+
+Se establece un número máximo de 3 retardos a considerar en las
+regresiones del contraste. De acuerdo con el AIC, no se incluye ningún
+retardo en los casos de la inflación y su primera diferencia, mientras
+que se selecciona 1 retardo en el caso de =paro= y 3 retardos en el
+caso de =paroc=.
+
+Los resultados de los contrastes no permiten rechazar, al 5% de
+significación, la existencia de una raíz unitaria en las series =infl=
+y =paro=. La hipótesis de una raíz unitaria se rechaza en los casos de
+la primera diferencia de la inflación, =d_inf=, y del paro cíclico,
+=paroc=.
+
 
 ** Curva de Phillips estática
 
@@ -91,6 +108,12 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   de la curva de Phillips estática, ¿puede ser una regresión espuria?
 #+end_tcolorbox
 
+Las variables =infl= y =paro= presentan raíces unitarias por lo que
+se incumple el supuesto *ST.1'*, que requiere la estacionariedad y la
+dependencia débil de las series incluidas en la regresión. En esas
+condiciones, es muy probable que los resultados de la estimación sean
+espurios y no reflejen una relación genuina entre las variables.
+
 ** Curva de Phillips con expectativas
 
 
@@ -103,6 +126,9 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 - Determine el número óptimo de retardos de acuerdo con el BIC
   (criterio de Schwarz).
 #+end_tcolorbox
+
+El valor del BIC se minimiza cuando solo se incluye 1 retardo en el
+modelo.
 
 #+latex: \gretl{phillips-lags.txt}
 
@@ -124,6 +150,10 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   robustos a heteroscedasticidad y autocorrelación.
 #+end_tcolorbox
 
+Para obtener directamente la estimación de los multiplicadores
+acumulados, se sustituyen todos los retardos de =paroc= excepto el
+último por retardos de su primera diferencia, =d_paroc=.
+
 #+latex: \gretl{phillips-lr-mult.txt}
 
 #+begin_tcolorbox
@@ -132,6 +162,17 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   que no se rechace, estime el modelo de la ecuación (5) que impone la
   hipótesis $\delta_L = 0$.
 #+end_tcolorbox
+
+En la regresión mostrada en el punto anterior, se obtuvo una
+estimación del multiplicador de largo plazo, $\hat{\delta}_1 = 0.09$,
+y de su error típico, $\hat{\sigma}_{\hat{\delta}_1} = 0.13$. El
+estadístico $t$ resultante es $0.66$, por lo que no se rechaza al 5%
+la hipótesis de que el multiplicador de largo plazo es igual a 0
+(valor $p = 0.51$).
+
+La siguiente tabla muestra la estimación del modelo bajo la hipótesis
+nula de ausencia de efectos de largo plazo del paro cíclico sobre la
+inflación.
 
 #+latex: \gretl{phillips-lr-mult-0.txt}
 
