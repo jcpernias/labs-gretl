@@ -17,7 +17,8 @@ src-files := \
 	phillips.org \
 	phillips-sol.org \
 	exports.org \
-	exports-sol.org
+	exports-sol.org \
+	traffic2.org
 
 
 ## Directories
@@ -229,6 +230,27 @@ exports-gretl-output.intermediate: \
 $(pdf-dir)/exports-sol.pdf: $(exports-gretl-output)
 
 
+# traffic2 gretl output -----------------------------------------
+traffic2-gretl-output := \
+	$(addsuffix .txt,\
+		$(addprefix $(build-dir)/traffic2-, \
+			adf-l_total adf-unem \
+			mco seas rho1 bgaux bgaux-hc bgaux-ar2 bg-ar2 pw)) \
+	$(addsuffix .pdf,\
+		$(addprefix $(build-dir)/traffic2-,l_total unem))
+
+
+$(traffic2-gretl-output): traffic2-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: traffic2-gretl-output.intermediate
+traffic2-gretl-output.intermediate: \
+	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
+	gretlcli -b -e $<
+
+$(pdf-dir)/traffic2.pdf: $(traffic2-gretl-output)
+
+
 
 # bibliography ---------------------------------------------------
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
@@ -244,6 +266,7 @@ $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
 $(zip-dir)/phillips.zip: $(data-dir)/phillips.csv
 $(zip-dir)/exports.zip: $(data-dir)/exports.csv
+$(zip-dir)/traffic2.zip: $(data-dir)/traffic2.csv
 
 
 ## Create directories

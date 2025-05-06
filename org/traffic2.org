@@ -1,0 +1,430 @@
+#+TITLE: Accidentes de tráfico y leyes de circulación
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\total}{\Var{total}}
+#+LATEX_HEADER: \newcommand*{\unem}{\Var{unem}}
+#+LATEX_HEADER: \newcommand*{\weekends}{\Var{weekends}}
+#+LATEX_HEADER: \newcommand*{\beltlaw}{\Var{beltlaw}}
+#+LATEX_HEADER: \newcommand*{\speedlaw}{\Var{speedlaw}}
+#+LATEX_HEADER: \newcommand*{\feb}{\Var{dm2}}
+#+LATEX_HEADER: \newcommand*{\mar}{\Var{dm3}}
+#+LATEX_HEADER: \newcommand*{\apr}{\Var{dm4}}
+#+LATEX_HEADER: \newcommand*{\may}{\Var{dm5}}
+#+LATEX_HEADER: \newcommand*{\jun}{\Var{dm6}}
+#+LATEX_HEADER: \newcommand*{\jul}{\Var{dm7}}
+#+LATEX_HEADER: \newcommand*{\aug}{\Var{dm8}}
+#+LATEX_HEADER: \newcommand*{\sep}{\Var{dm9}}
+#+LATEX_HEADER: \newcommand*{\oct}{\Var{dm10}}
+#+LATEX_HEADER: \newcommand*{\nov}{\Var{dm11}}
+#+LATEX_HEADER: \newcommand*{\dec}{\Var{dm12}}
+
+
+* Objetivos
+
+
+Evaluar los efectos de la introducción de leyes en California sobre el
+número de accidentes de tráfico. En concreto, se examinan los casos de
+la obligatoriedad del uso del cinturón de seguridad y la modificación
+de los límites de velocidad.
+
+* Datos
+
+El archivo =traffic2.csv= contiene 108 observaciones mensuales que
+cubren el periodo que va desde enero de 1981 hasta diciembre
+de 1989. Este archivo incluye información sobre accidentes
+automovilísticos en California y algunas otras variables relacionadas:
+
+- =total=: número total de accidentes de tráfico.
+
+- =weekends=: número de días de fin de semana (viernes, sábados y
+  domingos) en cada mes.
+
+- =unem=: tasa de desempleo en California (porcentaje).
+
+- =beltlaw=: ficticia que toma el valor $1$ desde enero de 1986,
+  cuando se introdujo la obligación de usar el cinturón de seguridad.
+
+- =speedlaw=: ficticia que toma el valor $1$ desde mayo de 1987,
+  cuando se elevó el límite de velocidad en California de $50$ a $65$
+  millas por hora.
+
+
+Para llevar a cabo el análisis de las siguientes secciones es
+necesario crear las siguientes variables:
+
+- =l_total=: logaritmo del número total de accidentes (en Gretl se
+  obtiene con el menú =Añadir | Logaritmos de las variables
+  seleccionadas=).
+
+- =time=: tendencia lineal que toma valores $1, 2, \dots, 108$ (se
+  obtiene con el menú =Añadir | Tendencia temporal=).
+
+- =dm2, dm3, ..., dm12=: variables ficticias estacionales. La variable
+  =dm2= solo toma el valor $1$ en los meses de febrero, =dm3= solo es
+  $1$ en las observaciones que corresponden a marzo, etc. (se crean
+  con =Añadir | Variables ficticias estacionales=).
+
+
+Finalmente restringiremos la muestra al periodo comprendido entre
+junio de 1981 y diciembre de 1989, reservando 6 observaciones para
+retardos en los contrastes de raíz unitaria y en las regresiones.
+
+
+* Contrastes de raíces unitarias
+
+Se contrasta la presencia de raíces unitarias en las variables
+=l_total= y =unem=. No es necesario realizar los contrastes para las
+restantes variables, ya que su variación depende del calendario. En
+las regresiones del contraste se incluye una tendencia lineal y se usa
+el AIC para determinar el número óptimo de retardos, considerando como
+máximo 6 retardos.
+
+** Logaritmo del número de accidentes
+
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:traffic2-l_total.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{traffic2-adf-l_total.txt}
+#+end_minipage
+
+El gráfico muestra una evolución ascendente del número de accidentes
+totales durante el periodo analizado, lo que justifica la inclusión de
+una tendencia lineal en la regresión utilizada para el contraste. El
+AIC se minimiza cuando se incluyen dos retardos. El estadístico $t$
+del contraste de Dickey-Fuller aumentado es $-3.60$, valor inferior
+que el valor crítico de $-3.43$ para un nivel de significación del
+$5\%$. En consecuencia, se rechaza la hipótesis nula de raíz unitaria
+para la variable =l_total=.
+
+** Tasa de paro
+
+#+ATTR_LATEX: :options [c]{0.45\textwidth}
+#+begin_minipage
+#+latex: \vspace{0pt}
+#+ATTR_LATEX: :scale 0.5
+[[file:traffic2-unem.pdf]]
+#+end_minipage
+#+ATTR_LATEX: :options [c]{0.55\textwidth}
+#+begin_minipage
+#+latex: \gretl{traffic2-adf-unem.txt}
+#+end_minipage
+
+En la regresión del contraste se incluyen tanto una tendencia lineal,
+dado que el gráfico muestra una marcada tendencia decreciente del
+desempleo, como 6 retardos de la variable dependiente, número
+seleccionado con el AIC.  La hipótesis nula de raíz unitaria se
+rechaza a un nivel de significación del $5\%$ ya que el valor del
+contraste, $-3.61$, es inferior al valor crítico, $-3.43$.
+
+En conclusión, no hay evidencias de raíces unitarias en las variables
+=l_total= y =unem=. Por otro lado, se ha detectado una tendencia
+creciente en el número de accidentes totales y una tendencia
+decreciente en la tasa de desempleo. Por consiguiente, para evitar
+obtener resultados espurios, se incluirá una tendencia lineal en las
+regresiones de las siguientes secciones.
+
+* Regresión
+
+Para determinar la influencia sobre los accidentes de tráfico de las
+leyes aprobadas durante el periodo muestral, se plantea el siguiente
+modelo de regresión:
+#+begin_export latex
+\begin{equation*}
+  \begin{multlined}
+    \log(\total_t) =
+    \beta_{0} +
+    \beta_{1}\, \beltlaw_{t} +
+    \beta_{2}\, \speedlaw_{t} +
+    \beta_{3}\, \unem_{t} +
+    \beta_{4}\, \weekends_{t} + \\
+    \beta_{5}\, t +
+    \beta_{6}\, \feb_{t} +
+    \beta_{8}\, \mar_{t} +
+    \beta_{9}\, \apr_{t} +
+    \beta_{10}\, \may_{t} +
+    \beta_{11}\, \jun_{t} +
+    \beta_{12}\, \jul_{t} + \\
+    \beta_{13}\, \aug_{t} +
+    \beta_{14}\, \sep_{t} +
+    \beta_{15}\, \oct_{t} +
+    \beta_{16}\, \nov_{t} +
+    \beta_{17}\, \dec_{t} +
+    u_{t},
+  \end{multlined}
+\end{equation*}
+#+end_export
+donde $u_t$ es el término de error. A continuación se muestran los
+resultados de la estimación MCO con errores típicos robustos a
+autocorrelación y heteroscedasticidad.
+
+#+latex: \gretl{traffic2-mco.txt}
+
+A partir de estas estimaciones, se responde a las siguientes
+preguntas:
+
+#+ATTR_LATEX: :options [parsep=0.5ex, itemsep=0.5ex]
+1. /¿Qué interpretación tiene la estimación del parámetro $\beta_5$?/
+
+   De acuerdo con la estimación de $\beta_5$, el número de accidentes
+   totales crece un $0.13\%$ cada mes, manteniendo constantes los
+   efectos de las restantes variables.
+
+2. /¿Qué interpretación tienen las variables estacionales ficticias?
+   En concreto, ¿cuál es la interpretación del parámetro de $\feb$?
+   ¿Y el de $\aug$?/
+
+   Los parámetros de las variables ficticias muestran la diferencia
+   media entre el número de accidentes en cada mes y los accidentes
+   ocurridos en enero del mismo año (enero es la categoría omitida en
+   la regresión). La estimación del parámetro de =dm2= muestra que el
+   número de accidentes en febrero suele ser un $2.5\%$ inferior al
+   número de accidentes de enero. El valor de la pendiente de =dm8=
+   indica que, por término medio, en agosto hay un $6.9\%$ más de
+   accidentes que en enero del mismo año, /ceteris paribus/.
+
+3. /Contraste la significación conjunta de las variables
+   estacionales. ¿Qué conclusión se extrae de este contraste?/
+
+   #+begin_export latex
+   \vspace*{1ex}
+   \gretl{traffic2-seas.txt}
+   \vspace*{1ex}
+   #+end_export
+
+   El valor del contraste $F$ es $8.76$ con un valor $p$ prácticamente
+   igual a 0, por lo que se rechaza la hipótesis nula de que todos los
+   parámetros de las variables estacionales sean iguales a 0 aun nivel
+   de significación del $5\%$. Por tanto, estas variables ficticias
+   capturan las variaciones estacionales presentes en las variables
+   incluidas en la regresión.
+
+4. /Interprete y evalúe la significación individual de los parámetros
+   de $\weekends$ y $\unem$/.
+
+   El parámetro de \weekends es positivo, lo que mostraría que el
+   número de accidentes tiende a ser mayor en aquellos meses en que
+   hay más días de fin de semana. Sin embargo, el efecto es pequeño y
+   no significativo al $5\%$ (el valor $p$ es $0.26$).
+
+   Las estimaciones del modelo de regresión muestran que los
+   accidentes disminuyen en los periodos con mayor desempleo. En
+   concreto, los accidentes disminuyen un $1.9\%$ por cada punto
+   porcentual que se incremente la tasa de desempleo, /ceteris
+   paribus/. El efecto es significativamente distinto de $0$ (el valor
+   $p$ es inferior al $1\%$).
+
+5. /De acuerdo con nuestros objetivos, las variable más importantes
+   son $\beltlaw$ y $\speedlaw$. Interprete y determine la
+   significación individual de sus parámetros. ¿Cómo pueden explicarse
+   los signos obtenidos?/
+
+   El coeficiente estimado para la variable \beltlaw indica que la
+   introducción de la ley que obligaba al uso del cinturón de
+   seguridad se asocia con un incremento del \pct{9.4} en el número de
+   accidentes, manteniendo constante el efecto del resto de
+   variables. El valor $p$ asociado al parámetro es prácticamente
+   cero, por lo que resulta estadísticamente significativo para
+   $\alpha = 5\%$.
+
+   Por su parte, la pendiente correspondiente a \speedlaw sugiere que
+   el aumento del límite de velocidad se relaciona con una reducción
+   del \pct{5.7} en los accidentes. Este efecto también es
+   estadísticamente significativo para un nivel de significación del
+   \pct{5}, dado que el valor $p = 0.0002 < \alpha$.
+
+   Aunque el signo positivo del coeficiente de \beltlaw puede parecer
+   contrario a la intuición, sería compatible con la hipótesis de que
+   los conductores adoptan conductas más arriesgadas si perciben que
+   están más protegidos en caso de accidente. En ese caso, la
+   obligación del uso del cinturón de seguridad se traduciría en un
+   aumento en la frecuencia de accidentes.
+
+   De manera análoga, el signo negativo estimado para \speedlaw podría
+   deberse a una mayor precaución por parte de los conductores tras la
+   elevación del límite de velocidad, conscientes de que un accidente
+   a mayor velocidad puede tener consecuencias más graves.
+
+6. /¿Es razonable el supuesto de exogeneidad estricta de las
+   explicativas de esta regresión? ¿Por qué?/
+
+   El supuesto de exogeneidad estricta de las variables explicativas
+   resulta razonable en este contexto. La especificación no incluye
+   retardos de la variable dependiente, y no parece imprescindible
+   incorporar retardos de las variables explicativas, aunque esta
+   posibilidad podría explorarse mediante extensiones del
+   modelo. Además, no existen indicios de que el número de accidentes
+   influya en los valores futuros de las variables
+   explicativas. Muchas de ellas están determinadas por el calendario
+   o el paso del tiempo, por lo que no se verían afectadas por la
+   evolución pasada de los accidentes. Tampoco hay razones sólidas
+   para pensar que los accidentes incidan sobre las tasas futuras de
+   desempleo. En cuanto a la legislación sobre tráfico, si bien podría
+   responder a la evolución de los accidentes, este efecto no sería
+   sistemático ni inmediato, ya que las leyes no se aprueban ni
+   modifican continuamente en función de pequeñas fluctuaciones en las
+   cifras de siniestralidad.
+
+* Contrastes de autocorrelación
+
+Se han propuesto muchos contrastes para detectar la violación del
+supuesto de no autocorrelación. En esta sección consideramos tres
+alternativas, aunque, solo es recomendable con carácter general la
+propuesta de Breusch y Godfrey.
+
+** Contraste Durbin-Watson
+
+A pesar de ser uno de los primeros contrastes de autocorrelación
+ampliamente utilizados, el contraste de Durbin-Watson presenta varias
+limitaciones que desaconsejan su uso en la práctica:
+
+- Sólo es válido si se cumple el supuesto de normalidad del término de
+  error.
+
+- No es válido si no se cumple el supuesto de exogeneidad estricta de
+  las variables explicativas. En concreto, no es aplicable en modelos
+  con variable dependiente retardada.
+
+- No es posible extender el contraste a patrones de autocorrelación
+  más complejos que un AR(1).
+
+- La distribución bajo la hipótesis nula es difícil de obtener y
+  depende de muchos detalles del modelo (número de observaciones,
+  presencia de constante, número de regresores, etc.). Aunque hay
+  tablas de valores críticos, estas presentan zonas de indeterminación
+  que impiden decidir con certeza si se debe rechazar o no la
+  hipótesis nula.
+
+
+Todas estas razones y la existencia de contrastes que no sufren de esos
+problemas hacen que no sea recomendable el uso del contraste de
+Durbin-Watson.
+
+** Coeficiente de autocorrelación de los residuos
+
+Un contraste asintótico para detectar autocorrelación de orden 1 puede
+basarse en una regresión de los residuos MCO sobre su primer retardo:
+#+begin_export latex
+\[
+  \hat{u}_{t} = \alpha + \rho \hat{u}_{t - 1} + \text{error}.
+\]
+#+end_export
+Bajo la hipótesis nula de no autocorrelación, se tiene que $\rho = 0$,
+hipótesis que puede contrastarse mediante un test $t$ de significación
+individual. Este procedimiento es válido siempre que los regresores
+del modelo original sean estrictamente exógenos, lo que lo hace
+aplicable en contextos donde el contraste de Durbin-Watson no lo es.
+
+En el caso de la regresión sobre el número de accidentes de tráfico en
+California, se ha estimado la siguiente regresión auxiliar:
+
+#+latex: \gretl{traffic2-rho1.txt}
+
+Según estos resultados, no se rechaza la hipótesis nula de ausencia de
+autocorrelación, ya que el estadístico $t$ toma el valor $1.95$, que
+no supera el valor crítico al nivel del \pct{5}.
+
+Aunque este tipo de contraste puede extenderse a esquemas de
+autocorrelación de orden superior y adaptarse para ser robusto frente
+a heteroscedasticidad, su validez sigue dependiendo críticamente del
+supuesto de exogeneidad estricta.  Por esta razón, su uso no es
+recomendable en general.
+
+
+** Contraste Breusch-Godfrey
+
+Breusch y Godfrey propusieron un contraste de autocorrelación basado
+en el principio de multiplicadores de Lagrange. A diferencia de otras
+propuestas, este contraste es asintóticamente válido incluso si no se
+cumple el supuesto de exogeneidad estricta de los regresores o si el
+término de error no sigue una distribución normal.
+
+En su versión más simple, se contrasta la hipótesis nula de no
+autocorrelación frente a la alternativa de que los errores siguen un
+proceso AR(1). Para calcular el estadístico de contraste, se estima
+una regresión auxiliar en la que los residuos del modelo original se
+utilizan como variable dependiente, mientras que como regresores se
+incluyen las variables explicativas originales junto con un retardo de
+los propios residuos. Bajo la hipótesis nula, el coeficiente del
+retardo de los residuos debe ser cero, lo que puede evaluarse mediante
+un contraste $t$ de significación individual.
+
+En el caso de los accidentes de tráfico de California, la regresión
+auxiliar estimada es:
+
+#+latex: \gretl{traffic2-bgaux.txt}
+
+El cociente $t$ del retardo de los residuos es $3.9$ y el valor $p$
+correspondiente es $0.0002$, lo que permite rechazar la hipótesis nula
+de ausencia de autocorrelación para $\alpha = \pct{5}$.
+
+Si se sospecha que la varianza condicional del término de error no es
+constante, puede usarse un contraste $t$ robusto a
+heteroscedasticidad:
+
+#+latex: \gretl{traffic2-bgaux-hc.txt}
+
+También en este caso, el valor $p$ es inferior a $\alpha = 5\%$ por lo
+que se rechaza la hipótesis nula de no autocorrelación a un nivel de
+significación del \pct{5}.
+
+El contraste Breusch-Godfrey se puede extender para contrastar
+autocorrelación de orden superior añadiendo retardos adicionales de
+los residuos a la regresión auxiliar. Por ejemplo, la siguiente
+especificación permite contrastar autocorrelación de orden 2:
+
+#+latex: \gretl{traffic2-bgaux-ar2.txt}
+
+El contraste de autocorrelación se lleva a cabo examinando la
+significación conjunta de los retardos de los residuos mediante un
+estadístico $F$ robusto a heteroscedasticidad:
+
+#+latex: \gretl{traffic2-bg-ar2.txt}
+
+De acuerdo con estos resultados, se rechaza la hipótesis de no
+autocorrelación a un nivel de significación del \pct{5}.
+
+En todas las variantes del contraste de Breusch-Godfrey aplicadas en
+este análisis, los valores obtenidos para los estadísticos de
+contraste son suficientemente elevados como para rechazar la hipótesis
+nula, lo que sugiere evidencia robusta de autocorrelación en los
+residuos del modelo.
+
+* Estimación eficiente
+
+Si las variables explicativas son estrictamente exógenas y se conoce
+la estructura de la autocorrelación, es posible obtener un estimador
+más eficiente que MCO en presencia de autocorrelación. El estimador de
+mínimos cuadrados generalizados factibles, MCGF, consiste en
+transformar el modelo para eliminar la autocorrelación y estimar por
+MCO el modelo transformado. Si se supone que los errores siguen un
+proceso AR(1), la transformación se realiza mediante cuasi diferencias
+utilizando una estimación previa del parámetro autorregresivo (ver la
+sección 12.3 del libro de Wooldridge).
+
+
+Existen diferentes propuestas para obtener el estimador MCGF. A
+continuación se reproducen los resultados obtenidos con el
+procedimiento de Prais-Winsten, que utiliza una transformación de las
+variables que conserva todas las observaciones de la muestra
+original. En el caso de la regresión de los accidentes de tráfico las
+estimaciones son muy parecidas a las obtenidas con MCO.
+
+#+latex: \gretl{traffic2-pw.txt}
+
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Gretl Fuller Dickey beltlaw speedlaw MCG AR cuasi
+#  LocalWords:  ceteris paribus Breusch Godfrey Durbin Watson MCGF
+#  LocalWords:  Wooldridge Prais Winsten
