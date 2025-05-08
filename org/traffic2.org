@@ -100,8 +100,8 @@ totales durante el periodo analizado, lo que justifica la inclusión de
 una tendencia lineal en la regresión utilizada para el contraste. El
 AIC se minimiza cuando se incluyen dos retardos. El estadístico $t$
 del contraste de Dickey-Fuller aumentado es $-3.60$, valor inferior
-que el valor crítico de $-3.43$ para un nivel de significación del
-$5\%$. En consecuencia, se rechaza la hipótesis nula de raíz unitaria
+al valor crítico de $-3.43$ para un nivel de significación del
+\pct{5}. En consecuencia, se rechaza la hipótesis nula de raíz unitaria
 para la variable =l_total=.
 
 ** Tasa de paro
@@ -201,10 +201,10 @@ preguntas:
 
    El valor del contraste $F$ es $8.76$ con un valor $p$ prácticamente
    igual a 0, por lo que se rechaza la hipótesis nula de que todos los
-   parámetros de las variables estacionales sean iguales a 0 aun nivel
-   de significación del $5\%$. Por tanto, estas variables ficticias
-   capturan las variaciones estacionales presentes en las variables
-   incluidas en la regresión.
+   parámetros de las variables estacionales sean iguales a 0 para un
+   nivel de significación del $5\%$. Por tanto, estas variables
+   ficticias capturan las variaciones estacionales presentes en las
+   variables incluidas en la regresión.
 
 4. /Interprete y evalúe la significación individual de los parámetros
    de $\weekends$ y $\unem$/.
@@ -219,12 +219,12 @@ preguntas:
    concreto, los accidentes disminuyen un $1.9\%$ por cada punto
    porcentual que se incremente la tasa de desempleo, /ceteris
    paribus/. El efecto es significativamente distinto de $0$ (el valor
-   $p$ es inferior al $1\%$).
+   $p$ es inferior al \pct{5}).
 
-5. /De acuerdo con nuestros objetivos, las variable más importantes
-   son $\beltlaw$ y $\speedlaw$. Interprete y determine la
-   significación individual de sus parámetros. ¿Cómo pueden explicarse
-   los signos obtenidos?/
+5. /De acuerdo con los objetivos expuestos anteriormente, las
+   variables más importantes son $\beltlaw$ y $\speedlaw$. Interprete
+   y determine la significación individual de sus parámetros. ¿Cómo
+   pueden explicarse los signos obtenidos?/
 
    El coeficiente estimado para la variable \beltlaw indica que la
    introducción de la ley que obligaba al uso del cinturón de
@@ -242,8 +242,8 @@ preguntas:
 
    Aunque el signo positivo del coeficiente de \beltlaw puede parecer
    contrario a la intuición, sería compatible con la hipótesis de que
-   los conductores adoptan conductas más arriesgadas si perciben que
-   están más protegidos en caso de accidente. En ese caso, la
+   los conductores adoptan comportamientos más arriesgados si perciben
+   que están más protegidos en caso de accidente. En ese caso, la
    obligación del uso del cinturón de seguridad se traduciría en un
    aumento en la frecuencia de accidentes.
 
@@ -257,7 +257,7 @@ preguntas:
 
    El supuesto de exogeneidad estricta de las variables explicativas
    resulta razonable en este contexto. La especificación no incluye
-   retardos de la variable dependiente, y no parece imprescindible
+   retardos de la variable dependiente, y no parece necesario
    incorporar retardos de las variables explicativas, aunque esta
    posibilidad podría explorarse mediante extensiones del
    modelo. Además, no existen indicios de que el número de accidentes
@@ -299,8 +299,8 @@ limitaciones que desaconsejan su uso en la práctica:
   depende de muchos detalles del modelo (número de observaciones,
   presencia de constante, número de regresores, etc.). Aunque hay
   tablas de valores críticos, estas presentan zonas de indeterminación
-  que impiden decidir con certeza si se debe rechazar o no la
-  hipótesis nula.
+  que, frecuentemente, impiden decidir con certeza si se debe rechazar
+  o no la hipótesis nula.
 
 
 Todas estas razones y la existencia de contrastes que no sufren de esos
