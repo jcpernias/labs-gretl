@@ -20,8 +20,10 @@ smpl 1983:1 2023:3
 
 gnuplot ly --time-series --with-lines --output=exports-ly.pdf
 outfile exports-adf-ly.txt
-  adf 8 ly --c --test-down=AIC
+  adf 8 ly --ct --test-down=AIC
 end outfile
+
+gnuplot gy --time-series --with-lines --output=exports-gy.pdf
 outfile exports-adf-gy.txt
   adf 8 gy --c --test-down=AIC
 end outfile
@@ -30,6 +32,8 @@ gnuplot lx --time-series --with-lines --output=exports-lx.pdf
 outfile exports-adf-lx.txt
   adf 8 lx --ct --test-down=AIC
 end outfile
+
+gnuplot gx --time-series --with-lines --output=exports-gx.pdf
 outfile exports-adf-gx.txt
   adf 8 gx --c --test-down=AIC
 end outfile
@@ -45,9 +49,13 @@ outfile exports-dl.txt
   ols gy 0 gx(0 to -2) d_covid --robust
 end outfile
 
+
 outfile exports-dyn-mult.txt
-  mult = seq(0, 2)' ~ $coeff[2:4] ~ $stderr[2:4]
-  eval mult
+  printf "Dynamic multipliers (and standard errors)\n"
+  printf "-----------------------------------------\n"
+  loop l=0..2
+    printf "Lag: %d -> %.3f (%.3f)\n", l, $coeff[l+2], $stderr[l+2]
+  endloop
 end outfile
 
 
@@ -60,8 +68,11 @@ outfile exports-mult.txt
 end outfile
 
 outfile exports-cum-mult.txt
-  mult = seq(0, 2)' ~ $coeff[2:4] ~ $stderr[2:4]
-  eval mult
+  printf "Cumulative multipliers (and standard errors)\n"
+  printf "--------------------------------------------\n"
+  loop l=0..2
+    printf "Lag: %d -> %.3f (%.3f)\n", l, $coeff[l+2], $stderr[l+2]
+  endloop
 end outfile
 
 outfile exports-chow.txt
@@ -69,5 +80,5 @@ outfile exports-chow.txt
 end outfile
 
 outfile exports-chow2.txt
-  omit gx gx_1 gx_2
+  omit s08 gx08(0 to -2) --quiet
 end outfile

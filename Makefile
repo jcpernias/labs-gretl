@@ -216,7 +216,7 @@ exports-gretl-output := \
 			adf-lx adf-gx adf-ly adf-gy \
 			lags dl dyn-mult ardl mult cum-mult chow)) \
 	$(addsuffix .pdf,\
-		$(addprefix $(build-dir)/exports-,ly lx))
+		$(addprefix $(build-dir)/exports-,ly gy lx gx))
 
 
 $(exports-gretl-output): exports-gretl-output.intermediate
