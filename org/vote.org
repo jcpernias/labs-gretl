@@ -42,7 +42,7 @@ del Partido Republicano. Se dispone de las siguientes variables:
   Estados Unidos.
 
 
-Los datos se encuentran en el fichero ~vote.gdt~.
+Los datos se encuentran en el fichero ~vote.csv~.
 
 * Instrucciones
 

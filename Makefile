@@ -257,7 +257,7 @@ $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
 $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
 
 # data files -----------------------------------------------------
-$(zip-dir)/vote.zip: $(data-dir)/vote.gdt
+$(zip-dir)/vote.zip: $(data-dir)/vote.csv
 $(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
 $(zip-dir)/hprice1.zip: $(data-dir)/hprice1.gdt
 $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
