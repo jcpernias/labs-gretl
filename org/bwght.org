@@ -26,9 +26,20 @@ Los datos fueron utilizados por J. Mullahy (1997):
 "@@latex:\foreignlanguage{english}{Instrumental-Variable Estimation of
 Count Data Models: Applications to Models of Cigarette Smoking
 Behavior}@@", /@@latex:\foreignlanguage{english}{Review of Economics
-and Statistics}@@/, 79, 596-593. Entre otras variables, contiene los
-pesos de 1388 recién nacidos durante el año 1988 en Estados
-Unidos. Las variables disponibles son:
+and Statistics}@@/, 79, 596-593. El archivo ~bwght.csv~ contiene,
+entre otras variables, los pesos de 1388 recién nacidos durante el año
+1988 en Estados Unidos. Las variables disponibles son:
+
+- \weight: peso al nacer, en onzas.
+- \cigs: número de cigarrillos que la madre fumaba al día durante el embarazo.
+- \male: variable ficticia, 1 si el recién nacido es hombre.
+- \white: variable ficticia, 1 si el recién nacido es blanco.
+- \parity: La [[https://es.wikipedia.org/wiki/Gravidez_y_paridad][paridad]] es el número de veces que una mujer ha dado a
+  luz a un bebé que ha llegado a una edad gestacional viable. En la
+  práctica, las madres primerizas, $\parity = 1$, suelen tener recién
+  nacidos con un peso algo menor que el de mujeres que ya han tenido
+  partos previos.
+- \faminc: renta familiar, en miles de dólares.
 
 ** Transformación de variables
 
@@ -79,9 +90,9 @@ Considere el modelo de regresión lineal:
 #+ATTR_LATEX: :options [a)]
 a) ¿Cuáles es el signo esperado de $\beta_{1}$?
 
-b) Estime el modelo por Mínimos Cuadrados Ordinarios (MCO). Interprete
-   las estimaciones. ¿Es posible dar una interpretación causal al
-   modelo de regresión simple?
+b) Estime el modelo por Mínimos Cuadrados Ordinarios. Interprete las
+   estimaciones. ¿Es posible dar una interpretación causal al modelo
+   de regresión simple?
 
 c) ¿Se obtienen resultados diferentes si se usa $\log(\weightkg)$ como
    variable dependiente?
