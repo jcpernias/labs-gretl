@@ -13,17 +13,16 @@
 * Objetivo
 
 Se emplean modelos de regresión hedónica para analizar el precio de
-venta de las casas. Los modelos de regresión hedónica explican el
-precio de un conjunto de bienes mediante las diferencias en las
-características de cada uno de ellos.
+venta de las casas. Este tipo de modelos explica el precio de un bien
+como función de sus características observables.
 
 
 * Datos
 
-Los datos se obtuvieron de la sección inmobiliaria del periódico /The
+Los datos proceden de la sección inmobiliaria del periódico /The
 Boston Globe/ durante el año 1990. Este conjunto de datos se usa en
 múltiples capítulos del manual de econometría de Wooldridge. Las
-variables disponibles en el fichero ~hprice1.gdt~ son:
+variables disponibles en el fichero ~hprice1.csv~ son:
 
 - \hprice: precios de venta de las casas, miles de dólares.
 
@@ -34,17 +33,19 @@ variables disponibles en el fichero ~hprice1.gdt~ son:
 
 - \lotsize: tamaño del jardín, en metros cuadrados.
 
-- \size: tamaño de la casa, en metros cuadrados.
+- \size: tamaño de la vivienda, en metros cuadrados.
 
 * Instrucciones
 
-Responda a las siguientes preguntas. Use un nivel de significación del
-$5\%$ para los contrastes.
+Responda a las preguntas que aparecen a continuación. Use un nivel de
+significación del $5\%$ para los contrastes.
+
+** Estimación MCO
 
 #+ATTR_LATEX: :options [a)]
-a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
-   ordinarios (MCO) donde la variable dependiente es \hprice, y las
-   explicativas son \bedrooms, \colonial, \lotsize y \size:
+a) Estime un modelo de regresión por mínimos cuadrados ordinarios
+   (MCO) donde la variable dependiente es \hprice, y las explicativas
+   son \bedrooms, \colonial, \lotsize y \size:
    #+begin_export latex
    \begin{equation*}
      \hprice_{i} =
@@ -57,20 +58,30 @@ a) <<item:a>>Estime un modelo de regresión por mínimos cuadrados
    \end{equation*}
    #+end_export
    ¿Qué variables tienen un efecto significativo sobre el precio de
-   venta?  Interprete las estimaciones de los parámetros de \lotsize
-   y \size.
+   venta?  Interprete las estimaciones de los parámetros.
 
-b) <<item:b>>Obtenga los resultados de la estimación del modelo de
-   regresión del apartado anterior usando errores típicos robustos a
+b) Obtenga los resultados de la estimación del modelo de regresión del
+   apartado anterior usando errores típicos robustos a
    heteroscedasticidad. ¿Cambian las estimaciones de los parámetros?
-   ¿Es diferente la bondad del ajuste? ¿Cambia la significación de los
-   parámetros?
+   ¿Varía la bondad del ajuste? ¿Se altera la significación de la
+   regresión? ¿Se modifica la significación individual de las
+   variables?
 
-c) De acuerdo con el contraste de Breusch-Pagan (Koenker), ¿hay
-   indicios de heteroscedasticidad? ¿Y si se usa el contraste de
-   White?  Entonces, ¿son válidos los resultados que se obtuvieron en
-   el apartado [[item:a]]? ¿Y los del apartado [[item:b]]?
+** Contrastes de heteroscedasticidad
 
+
+#+ATTR_LATEX: :options [a), start = 3]
+c) Contraste el supuesto de heteroscedasticidad usando el contraste de
+   Breusch-Pagan (Koenker).
+d) Utilice también el contraste de White y la alternativa propuesta
+   por Wooldridge.
+e) ¿Hay indicios de heteroscedasticidad? ¿Son válidos los resultados
+   que se obtuvieron con MCO? ¿Es necesario el uso de errores típicos
+   robustos?
+
+** Mínimos cuadrados ponderados
+
+#+ATTR_LATEX: :options [a), start = 6]
 d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    el supuesto de que la varianza condicional del término de error es
    proporcional a \lotsize:
@@ -85,8 +96,8 @@ d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    heteroscedasticidad. ¿Hay algún cambio en la significación de las
    variables? ¿Puede dar una explicación a esos cambios?
 
-e) (\emph{Individual}) Estime el modelo del apartado [[item:a]] usando
-   mínimos cuadrados ponderados factibles de acuerdo con el supuesto:
+e) Aplique el método de mínimos cuadrados ponderados factibles de
+   acuerdo con el supuesto:
    #+begin_export latex
    \begin{equation*}
      E(u^{2}_{i} | \bm{x}_{i}) = \sigma^{2}\exp\big(
@@ -98,13 +109,15 @@ e) (\emph{Individual}) Estime el modelo del apartado [[item:a]] usando
      \big).
    \end{equation*}
    #+end_export
-   Utilice el procedimiento descrito en la sección /La
+   Siga el procedimiento descrito en la sección /La
    heteroscedasticidad debe ser estimada: MCG factibles/ en las
    páginas 282 y siguientes del manual de Wooldridge. Obtenga los
    resultados con errores típicos robustos a heteroscedasticidad. ¿Qué
-   conclusiones se pueden extraer ahora?
+   conclusiones se pueden extraer?
 
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
+
+#  LocalWords:  Breusch Koenker Wooldridge

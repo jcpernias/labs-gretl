@@ -141,7 +141,7 @@ $(hprice1-gretl-output): hprice1-gretl-output.intermediate
 
 .INTERMEDIATE: hprice1-gretl-output.intermediate
 hprice1-gretl-output.intermediate: \
-	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.gdt
+	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.csv
 	gretlcli -b -e $<
 
 $(pdf-dir)/hprice1-sol.pdf: $(hprice1-gretl-output)
@@ -259,7 +259,7 @@ $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
 # data files -----------------------------------------------------
 $(zip-dir)/vote.zip: $(data-dir)/vote.csv
 $(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
-$(zip-dir)/hprice1.zip: $(data-dir)/hprice1.gdt
+$(zip-dir)/hprice1.zip: $(data-dir)/hprice1.csv
 $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
 $(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv

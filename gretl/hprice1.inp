@@ -1,7 +1,7 @@
 set verbose off
 set workdir "./build"
 
-open "../data/hprice1.gdt"
+open "../data/hprice1.csv"
 list X = bedrooms colonial lotsize size
 
 outfile hprice1-a.txt
