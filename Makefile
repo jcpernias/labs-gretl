@@ -10,7 +10,6 @@ src-files := \
 	wagegap \
 	wagegap-sol \
 	cons \
-	cons-sol \
 	unemp \
 	unemp-sol \
 	phillips \
