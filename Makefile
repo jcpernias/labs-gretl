@@ -6,7 +6,6 @@ src-files := \
 	vote \
 	bwght \
 	hprice1 \
-	hprice1-sol \
 	loanapp \
 	wagegap \
 	wagegap-sol \
@@ -82,10 +81,10 @@ RSCRIPT := $(Rscriptbin)
 
 
 ## Targets ----------------------------------------
-
 org-files := $(addprefix $(org-dir)/,$(addsuffix .org,$(src-files)))
 tex-files := $(addprefix $(build-dir)/,$(addsuffix .tex,$(src-files)))
-pdf-files := $(addprefix $(pdf-dir)/,$(addsuffix .pdf,$(src-files)))
+pdf-files := $(addprefix $(pdf-dir)/,\
+	$(addsuffix .pdf,$(src-files) $(addsuffix -ans, $(ans-files))))
 zip-files := $(addprefix $(zip-dir)/,\
 	$(addsuffix .zip,$(filter-out %-sol,$(src-files))))
 
@@ -107,14 +106,27 @@ $(info pdf-files: $(pdf-files))
 $(info zip-files: $(zip-files))
 endif
 
+# $(call ans-tex,texfile) -> write to a file
+define ans-tex
+\RequirePackage{etoolbox}
+\providebool{answers}
+\booltrue{answers}
+\input{$(realpath $(build-dir))/$1}
+endef
 
-all: $(zip-files) $(filter %-sol.pdf,$(pdf-files))
+
+all: $(zip-files) $(filter %-sol.pdf,$(pdf-files)) $(filter %-ans.pdf,$(pdf-files))
 
 ## From .org to .tex
 .PRECIOUS: $(build-dir)/%.tex
 $(build-dir)/%.tex: $(org-dir)/%.org $(tex-deps) | $(build-dir)
 	$(EMACS) --load=./setup-emacs.el --visit=$< \
 		--eval '(org-to-latex "$(call dir-path,$@)")'
+
+## From .tex to -ans.tex
+.PRECIOUS: $(build-dir)/%-ans.tex
+$(build-dir)/%-ans.tex: $(build-dir)/%.tex
+	$(file > $@,$(call ans-tex,$*))
 
 ## From .tex to .pdf
 $(build-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(build-dir)
