@@ -74,8 +74,31 @@
 
 % Color
 % --------------------------------------------------------------------------------
-\usepackage{xcolor}
+\usepackage[svgnames]{xcolor}
 \usepackage{tcolorbox}
+
+% ------------------------------------------------------------
+% Answers
+% ------------------------------------------------------------
+\usepackage{verbatim}   % for the comment environment
+
+\tcbuselibrary{breakable, skins}
+
+\usepackage{etoolbox}
+\providebool{answers}
+
+\ifbool{answers}{%
+  \newtcolorbox{answer}{coltext=Black!70, colframe=SlateGray!70!Black,%
+    colback=LightSteelBlue!5!White, notitle, boxrule=0.5pt,%
+    fontupper=\small, breakable, skin=enhanced, parbox=false,%
+    before upper=\csname @totalleftmargin\endcsname0pt}}{%
+  \newenvironment{answer}{\expandafter\comment}{\expandafter\endcomment}}
+
+\ifbool{answers}{%
+  \newcommand*{\ClearPage}{\clearpage}}{%
+  \newcommand*{\ClearPage}{\relax}}
+
+
 
 % Math
 % --------------------------------------------------------------------------------
