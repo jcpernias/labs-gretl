@@ -3,23 +3,24 @@ SHELL := /bin/sh
 ## Source files
 ## ================================================================================
 src-files := \
-	vote.org \
-	bwght.org \
-	hprice1.org \
-	hprice1-sol.org \
-	loanapp.org \
-	wagegap.org \
-	wagegap-sol.org \
-	cons.org \
-	cons-sol.org \
-	unemp.org \
-	unemp-sol.org \
-	phillips.org \
-	phillips-sol.org \
-	exports.org \
-	exports-sol.org \
-	traffic2.org
+	vote \
+	bwght \
+	hprice1 \
+	hprice1-sol \
+	loanapp \
+	wagegap \
+	wagegap-sol \
+	cons \
+	cons-sol \
+	unemp \
+	unemp-sol \
+	phillips \
+	phillips-sol \
+	exports \
+	exports-sol \
+	traffic2
 
+ans-files := hprice1
 
 ## Directories
 ## ================================================================================
@@ -82,11 +83,11 @@ RSCRIPT := $(Rscriptbin)
 
 ## Targets ----------------------------------------
 
-org-files := $(addprefix $(org-dir)/,$(src-files))
-tex-files := $(addprefix $(build-dir)/,$(patsubst %.org,%.tex,$(src-files)))
-pdf-files := $(addprefix $(pdf-dir)/,$(patsubst %.org,%.pdf,$(src-files)))
+org-files := $(addprefix $(org-dir)/,$(addsuffix .org,$(src-files)))
+tex-files := $(addprefix $(build-dir)/,$(addsuffix .tex,$(src-files)))
+pdf-files := $(addprefix $(pdf-dir)/,$(addsuffix .pdf,$(src-files)))
 zip-files := $(addprefix $(zip-dir)/,\
-	$(patsubst %.org,%.zip,$(filter-out %-sol.org,$(src-files))))
+	$(addsuffix .zip,$(filter-out %-sol,$(src-files))))
 
 
 tex-deps := $(root-dir)/setup.org $(root-dir)/setup-emacs.el
@@ -109,24 +110,26 @@ endif
 
 all: $(zip-files) $(filter %-sol.pdf,$(pdf-files))
 
-
+## From .org to .tex
 .PRECIOUS: $(build-dir)/%.tex
 $(build-dir)/%.tex: $(org-dir)/%.org $(tex-deps) | $(build-dir)
 	$(EMACS) --load=./setup-emacs.el --visit=$< \
 		--eval '(org-to-latex "$(call dir-path,$@)")'
 
-
+## From .tex to .pdf
 $(build-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(build-dir)
 	$(LATEXMK) $<
 
+## Move .pdf to pdf dir
 .PRECIOUS: $(pdf-dir)/%.pdf
 $(pdf-dir)/%.pdf: $(build-dir)/%.pdf | $(pdf-dir)
 	$(MV) $< $@
 
+## Copy preamble.tex to build dir
 $(build-dir)/preamble.tex: $(root-dir)/preamble.tex | $(build-dir)
 	$(CP) $< $@
 
-
+## Make zip file
 $(zip-dir)/%.zip: $(pdf-dir)/%.pdf | $(zip-dir)
 	./make-zip -o $@ -d $(basename $(@F)) $^
 
