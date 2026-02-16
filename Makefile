@@ -158,7 +158,7 @@ hprice1-gretl-output.intermediate: \
 	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.csv
 	gretlcli -b -e $<
 
-$(pdf-dir)/hprice1-sol.pdf: $(hprice1-gretl-output)
+$(pdf-dir)/hprice1-ans.pdf: $(hprice1-gretl-output)
 
 
 ## wagegap gretl output -----------------------------------------
