@@ -9,12 +9,12 @@ genr dummy:1
 
 smpl 1981:06 1989:12
 
-gnuplot  l_total --time-series --with-lines --output=traffic2-l_total.pdf
+gnuplot  l_total --time-series --with-lines --output=traffic2-l_total.plt
 outfile traffic2-adf-l_total.txt
   adf 6 l_total --ct --test-down=AIC
 end outfile
 
-gnuplot  unem --time-series --with-lines --output=traffic2-unem.pdf
+gnuplot  unem --time-series --with-lines --output=traffic2-unem.plt
 outfile traffic2-adf-unem.txt
   adf 6 unem --ct --test-down=AIC
 end outfile

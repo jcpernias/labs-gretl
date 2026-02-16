@@ -15,22 +15,22 @@ series covid = obs == obsnum(2020)
 
 smpl 1965 2023
 
-gnuplot infl --time-series --with-lines --output=phillips-infl.pdf
+gnuplot infl --time-series --with-lines --output=phillips-infl.plt
 outfile phillips-adf-infl.txt
   adf 3 infl --c --test-down=AIC
 end outfile
 
-gnuplot d_infl --time-series --with-lines --output=phillips-d_infl.pdf
+gnuplot d_infl --time-series --with-lines --output=phillips-d_infl.plt
 outfile phillips-adf-d_infl.txt
   adf 3 infl --c --difference --test-down=AIC
 end outfile
 
-gnuplot paro --time-series --with-lines --output=phillips-paro.pdf
+gnuplot paro --time-series --with-lines --output=phillips-paro.plt
 outfile phillips-adf-paro.txt
   adf 3 paro --c --test-down=AIC
 end outfile
 
-gnuplot paroc --time-series --with-lines --output=phillips-paroc.pdf
+gnuplot paroc --time-series --with-lines --output=phillips-paroc.plt
 outfile phillips-adf-paroc.txt
   adf 3 paroc --c --test-down=AIC
 end outfile

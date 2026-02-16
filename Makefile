@@ -144,7 +144,10 @@ $(build-dir)/preamble.tex: $(root-dir)/preamble.tex | $(build-dir)
 $(zip-dir)/%.zip: $(pdf-dir)/%.pdf | $(zip-dir)
 	./make-zip -o $@ -d $(basename $(@F)) $^
 
-
+## Make pdf from plt
+$(build-dir)/%.pdf: $(build-dir)/%.plt
+	gnuplot -e \
+	"set terminal pdfcairo noenhanced font 'Serif,12'; set output '$@'" $<
 
 ## hprice1 gretl output ----------------------------------------
 hprice1-gretl-output := $(addsuffix .txt,\
@@ -180,7 +183,7 @@ unemp-gretl-output := \
 	$(addsuffix .txt,\
 		$(addprefix $(build-dir)/unemp-, \
 			static covid dl dyn-mult lr-mult cum-mult nat-rate)) \
-	$(addsuffix .pdf,\
+	$(addsuffix .plt,\
 		$(addprefix $(build-dir)/unemp-,\
 			d_unemp gY gYalt uhat corrgm-1))
 
@@ -193,7 +196,7 @@ unemp-gretl-output.intermediate: \
 	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
 	gretlcli -b -e $<
 
-$(pdf-dir)/unemp-sol.pdf: $(unemp-gretl-output)
+$(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
 
 
 # phillips figure -----------------------------------------------
@@ -208,7 +211,7 @@ phillips-gretl-output := \
 		$(addprefix $(build-dir)/phillips-, \
 			adf-infl adf-d_infl adf-paro adf-paroc \
 			static lags dyn lr-mult lr-mult-0)) \
-	$(addsuffix .pdf,\
+	$(addsuffix .plt,\
 		$(addprefix $(build-dir)/phillips-,infl d_infl paro paroc))
 
 
@@ -220,7 +223,7 @@ phillips-gretl-output.intermediate: \
 	$(gretl-dir)/phillips.inp $(data-dir)/phillips.csv
 	gretlcli -b -e $<
 
-$(pdf-dir)/phillips-sol.pdf: $(phillips-gretl-output)
+$(pdf-dir)/phillips-sol.pdf: $(patsubst %.plt,%.pdf,$(phillips-gretl-output))
 
 
 # exports gretl output -----------------------------------------
@@ -229,7 +232,7 @@ exports-gretl-output := \
 		$(addprefix $(build-dir)/exports-, \
 			adf-lx adf-gx adf-ly adf-gy \
 			lags dl dyn-mult ardl mult cum-mult chow)) \
-	$(addsuffix .pdf,\
+	$(addsuffix .plt,\
 		$(addprefix $(build-dir)/exports-,ly gy lx gx))
 
 
@@ -241,7 +244,7 @@ exports-gretl-output.intermediate: \
 	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
 	gretlcli -b -e $<
 
-$(pdf-dir)/exports-sol.pdf: $(exports-gretl-output)
+$(pdf-dir)/exports-sol.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
 
 
 # traffic2 gretl output -----------------------------------------
@@ -250,7 +253,7 @@ traffic2-gretl-output := \
 		$(addprefix $(build-dir)/traffic2-, \
 			adf-l_total adf-unem \
 			mco seas rho1 bgaux bgaux-hc bgaux-ar2 bg-ar2 pw)) \
-	$(addsuffix .pdf,\
+	$(addsuffix .plt,\
 		$(addprefix $(build-dir)/traffic2-,l_total unem))
 
 
@@ -262,8 +265,17 @@ traffic2-gretl-output.intermediate: \
 	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
 	gretlcli -b -e $<
 
-$(pdf-dir)/traffic2.pdf: $(traffic2-gretl-output)
+$(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 
+
+.NOTPARALLEL:
+	hprice1-gretl-output.intermediate \
+	wagegap-gretl-output.intermediate \
+	unemp-gretl-output.intermediate \
+	$(build-dir)/phillips-fig.csv \
+	phillips-gretl-output.intermediate \
+	exports-gretl-output.intermediate \
+	traffic2-gretl-output.intermediate
 
 
 # bibliography ---------------------------------------------------

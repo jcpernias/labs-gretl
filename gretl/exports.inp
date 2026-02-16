@@ -18,22 +18,22 @@ gx08 = s08 * gx
 
 smpl 1983:1 2023:3
 
-gnuplot ly --time-series --with-lines --output=exports-ly.pdf
+gnuplot ly --time-series --with-lines --output=exports-ly.plt
 outfile exports-adf-ly.txt
   adf 8 ly --ct --test-down=AIC
 end outfile
 
-gnuplot gy --time-series --with-lines --output=exports-gy.pdf
+gnuplot gy --time-series --with-lines --output=exports-gy.plt
 outfile exports-adf-gy.txt
   adf 8 gy --c --test-down=AIC
 end outfile
 
-gnuplot lx --time-series --with-lines --output=exports-lx.pdf
+gnuplot lx --time-series --with-lines --output=exports-lx.plt
 outfile exports-adf-lx.txt
   adf 8 lx --ct --test-down=AIC
 end outfile
 
-gnuplot gx --time-series --with-lines --output=exports-gx.pdf
+gnuplot gx --time-series --with-lines --output=exports-gx.plt
 outfile exports-adf-gx.txt
   adf 8 gx --c --test-down=AIC
 end outfile

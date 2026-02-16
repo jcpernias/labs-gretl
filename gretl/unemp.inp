@@ -8,14 +8,14 @@ diff unemp
 gY = 100 * ld_PIBpm
 
 # Time series plots
-gnuplot d_unemp --time-series --with-lines --output=unemp-d_unemp.pdf
-gnuplot gY --time-series --with-lines --output=unemp-gY.pdf
+gnuplot d_unemp --time-series --with-lines --output=unemp-d_unemp.plt
+gnuplot gY --time-series --with-lines --output=unemp-gY.plt
 
 covid2 = obs>=2020:1 && obs<=2020:2
 PIBpm_alt = covid2 ? NA: PIBpm
 ldiff PIBpm_alt
 gYalt = 100 * ld_PIBpm_alt
-gnuplot gYalt --time-series --with-lines --output=unemp-gYalt.pdf
+gnuplot gYalt --time-series --with-lines --output=unemp-gYalt.plt
 
 # Static regression
 smpl 1982:1 2023:3
@@ -25,8 +25,8 @@ end outfile
 
 # Time series plot and correlogram of the residuals
 uhat = $uhat
-gnuplot uhat --time-series --with-lines --output=unemp-uhat.pdf
-corrgm uhat 10 --acf-only --plot=unemp-corrgm-1.pdf
+gnuplot uhat --time-series --with-lines --output=unemp-uhat.plt
+corrgm uhat 10 --acf-only --plot=unemp-corrgm-1.plt
 
 # Static regression + Intervention
 covid = obs==2020:2
