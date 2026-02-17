@@ -159,7 +159,7 @@ $(hprice1-gretl-output): hprice1-gretl-output.intermediate
 .INTERMEDIATE: hprice1-gretl-output.intermediate
 hprice1-gretl-output.intermediate: \
 	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/hprice1-ans.pdf: $(hprice1-gretl-output)
 
@@ -174,7 +174,7 @@ $(wagegap-gretl-output): wagegap-gretl-output.intermediate
 .INTERMEDIATE: wagegap-gretl-output.intermediate
 wagegap-gretl-output.intermediate: \
 	$(gretl-dir)/wagegap.inp $(data-dir)/esp.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
 
@@ -194,7 +194,7 @@ $(unemp-gretl-output): unemp-gretl-output.intermediate
 .INTERMEDIATE: unemp-gretl-output.intermediate
 unemp-gretl-output.intermediate: \
 	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
 
@@ -203,7 +203,7 @@ $(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
 $(pdf-dir)/phillips.pdf: $(build-dir)/phillips-fig.csv
 $(build-dir)/phillips-fig.csv: \
 	$(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 # phillips gretl output -----------------------------------------
 phillips-gretl-output := \
@@ -221,7 +221,7 @@ $(phillips-gretl-output): phillips-gretl-output.intermediate
 .INTERMEDIATE: phillips-gretl-output.intermediate
 phillips-gretl-output.intermediate: \
 	$(gretl-dir)/phillips.inp $(data-dir)/phillips.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/phillips-sol.pdf: $(patsubst %.plt,%.pdf,$(phillips-gretl-output))
 
@@ -242,7 +242,7 @@ $(exports-gretl-output): exports-gretl-output.intermediate
 .INTERMEDIATE: exports-gretl-output.intermediate
 exports-gretl-output.intermediate: \
 	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/exports-sol.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
 
@@ -263,7 +263,7 @@ $(traffic2-gretl-output): traffic2-gretl-output.intermediate
 .INTERMEDIATE: traffic2-gretl-output.intermediate
 traffic2-gretl-output.intermediate: \
 	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
-	gretlcli -b -e $<
+	gretlcli -b -e $(realpath $<)
 
 $(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 
