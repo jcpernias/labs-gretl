@@ -30,7 +30,7 @@ Los datos provienen del trabajo de W. C. Hunter y M. B. Walker (1996):
 "@@latex:\foreignlanguage{english}{The Cultural Affinity Hypothesis
 and Mortgage Lending Decisions}@@",
 /@@latex:\foreignlanguage{english}{Journal of Real Estate Finance and
-Economics}@@/, 13, 57-7.  El fichero ~loanapp.csv~ contiene las
+Economics}@@/, 13, 57-70.  El fichero ~loanapp.csv~ contiene las
 siguientes variables:
 
 - \approve: variable ficticia que toma el valor 1 para aquellos
@@ -38,7 +38,7 @@ siguientes variables:
 
 - \black, \hispan: variables ficticias con las que se codifica la
   etnia de los solicitantes. Cada individuo se clasifica en uno de
-  tres grupos: negro (\black igual a 1), hispano (\hispan igual a 1)
+  tres grupos: negro ($\black = 1$), hispano ($\hispan = 1$)
   o blanco (categoría por defecto).
 
 - \obrat: porcentaje de la renta mensual del solicitante que se
@@ -78,24 +78,32 @@ a) Estime un modelo lineal de probabilidad donde la variable
    dependiente es \approve y las explicativas son \black e
    \hispan. Presente la tabla de la regresión con errores típicos
    robustos a heteroscedasticidad. Interprete las estimaciones de los
-   parámetros. ¿Son significativas individualmente las variables
-   explicativas?
+   parámetros. Las variable explicativas, ¿son significativas
+   individualmente?
 
-b) Contraste si son iguales los parámetros de las variables \black e
+b) Contraste si los parámetros de las variables \black e \hispan son
+   iguales.
+
+c) Añada la variable explicativa \obrat. Interprete la estimación del
+   parámetro de esta variable. ¿Tiene un efecto significativo?
+
+d) Añada las restantes variables del archivo de datos: \loanprc,
+   \unem, \male, \married, \dep, \self, \sch, \chist y
+   \pubrec. Presente las estimaciones de MCO junto con los errores
+   típicos robustos a heteroscedasticidad.  Contraste la significación
+   conjunta de todas las variables explicativas salvo \black e
    \hispan.
 
-c) Añada al modelo lineal de probabilidad las variables explicativas
-   \obrat, \loanprc, \unem, \male, \married, \dep, \self, \sch, \chist
-   y \pubrec. Presente las estimaciones de MCO junto con los errores
-   típicos robustos a heteroscedasticidad.  Contraste la significación
-   conjunta de las variables añadidas.
+e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
+   con las estimaciones de los parámetros de \black e \hispan? ¿Siguen
+   siendo individualmente significativas?  Contraste si los parámetros
+   de estas dos variables son iguales.
 
-d) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
-   con las estimaciones de los parámetros de \black e \hispan?
-   Contraste si los parámetros de estas dos variables son iguales.
-
-e) Los resultados obtenidos, ¿son evidencia de discriminación en
+f) Los resultados obtenidos, ¿son evidencia de discriminación en
    contra de las minorías raciales?
+
+g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
+   Ponderados Factibles?
 
 
 # Local Variables:
