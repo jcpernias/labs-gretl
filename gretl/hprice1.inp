@@ -5,48 +5,55 @@ open "../data/hprice1.csv"
 list X = bedrooms colonial lotsize size
 
 outfile hprice1-a.txt
-  ols price 0 X --simple-print
+  ols price 0 X
 end outfile
 
 # b)
 
 outfile hprice1-b.txt
-  ols price 0 X --robust --simple-print
+  ols price 0 X --robust
 end outfile
 
+uhat_sq = $uhat * $uhat
+l_uhat_sq = log(uhat_sq)
+yhat = $yhat
+yhat_sq = yhat * yhat
+
+
 # c)
-outfile hprice1-c1.txt
+outfile hprice1-c.txt
   modtest --breusch-pagan --robust --quiet
 end outfile
 
-outfile hprice1-c2.txt
+# d)
+outfile hprice1-d1.txt
   modtest --white --quiet
 end outfile
 
-# d)
+outfile hprice1-d2.txt
+  ols  uhat_sq 0 yhat yhat_sq
+end outfile
+
+# f)
 w = 1 / lotsize
 
-outfile hprice1-d1.txt
+outfile hprice1-f1.txt
   wls w price 0 X
 end outfile
 
-outfile hprice1-d2.txt
+outfile hprice1-f2.txt
   wls w price 0 X --robust
 end outfile
 
 
-# e)
-ols price 0 X --quiet
-
-lusq = log($uhat * $uhat)
-
-outfile hprice1-e1.txt
-  ols lusq 0 X --simple-print
+# g)
+outfile hprice1-g1.txt
+  ols l_uhat_sq 0 X --simple-print
 end outfile
 
 h = exp($yhat)
 w = 1 / h
 
-outfile hprice1-e2.txt
+outfile hprice1-g2.txt
   wls w price 0 X --robust
 end outfile

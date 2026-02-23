@@ -67,18 +67,24 @@ a) Estime un modelo de regresión por mínimos cuadrados ordinarios
 
    A un nivel de significación $\alpha = 5\%$, solo dos variables
    presentan un efecto estadísticamente significativo sobre el precio
-   de las casas: el tamaño de la parcela, \lotsize, y la superficie de
+   de las viviendas: el tamaño de la parcela, \lotsize, y la superficie de
    la vivienda, \size (los valores-$p$ son \num{0.002} y menos que
    $0.001$, respectivamente). Por el contrario, las variables
    \bedrooms y \colonial no tienen efectos estadísticamente
    significativos.
 
-   La estimación del parámetro de \lotsize indica que cada metro
+   La estimación del parámetro de \lotsize indica que por cada metro
    cuadrado adicional del tamaño de la parcela, el precio de venta
    aumentaría en poco más de $22$ dólares, manteniendo constantes el
    resto de variables. Por otro lado, el coeficiente de \size muestra
-   que, /cetris paribus/, el precio de venta aumenta en algo más de
-   \num{1300} dólares por cada metro cuadrado adicional de superficie.
+   que, /ceteris paribus/, el precio de venta aumenta en algo más de
+   \num{1300} dólares por cada metro cuadrado adicional de
+   superficie. El parámetro de \bedrooms mide en cuánto aumentaría el
+   precio si la vivienda tuviera una habitación adicional (unos
+   \num{11000} dólares). Por último, la estimación del parámetro de
+   \colonial indica que, a igualdad del resto de características, las
+   casas de estilo colonial se venden por $13.7$ miles de dolares más
+   que el resto de las casas.
    #+latex: \end{answer}
 
 b) Obtenga los resultados de la estimación del modelo de regresión del
@@ -89,23 +95,32 @@ b) Obtenga los resultados de la estimación del modelo de regresión del
    variables?
 
    #+latex: \begin{answer}
+   A continuación se muestran los resultados de la estimación del
+   modelo de regresión hedónica por MCO usando errores típicos
+   robustos a heteroscedasticidad.
+
    #+latex: \gretl{hprice1-b.txt}
 
-   El uso de errores típicos robustos no afecta ni a las estimaciones de
-   los parámetros ni a la bondad del ajuste medida por el $R^2$. El
-   empleo de errores típicos robustos sí va a introducir diferencias en
-   los cocientes $t$ y, por consiguiente, en los valores-$p$ que se
-   muestran en la tabla de la regresión.
+   El uso de errores típicos robustos no afecta ni a las estimaciones
+   de los parámetros ni a la bondad del ajuste medida por el $R^2$, el
+   $R^2$ ajustado o el error típico de la regresión,
+   $\hat{\sigma}$. Por otro lado, sí que se ven afectados los
+   contrastes de significación individual de los parámetros (los
+   estadísticos $t$) y la significación conjunta de la regresión (el
+   estadístico $F$).
 
-   Aunque la precisión de todos los coeficientes estimados se ve
-   afectada, el cambio más notable corresponde a \lotsize, cuyo error
-   típico se duplica. Como consecuencia, la significación de esta
-   variable cambia dramáticamente con respecto a la estimación presentada
-   en el apartado anterior. Este resultado sugiere que el supuesto de
-   homoscedasticidad no se cumple y que la heteroscedasticidad afecta
-   sobre todo a la estimación del parámetro de \lotsize. Por otro lado,
-   el error típico de \size es ahora un poco más grande, pero esto no
-   altera la significación de esta variable.
+   El estadístico $F$ de significación conjunta de la regresión es
+   considerablemente menor cuando se usan errores típicos
+   robustos. Aún así, se rechaza al $5\%$ la hipótesis nula de
+   ausencia de capacidad explicativa.
+
+   Con respecto a la significación individual de las variables
+   explicativas, la variación más importante se produce con
+   \lotsize. Cuando se usan errores típicos robustos a
+   heteroscedasticidad, el efecto de esta variable no es
+   estadísticamente significativo para $\alpha = 5\%$ (valor $p =
+   0.11$). La única pendiente que es significativamente distinta de
+   $0$ es \size.
    #+latex: \end{answer}
 
 ** Contrastes de heteroscedasticidad
@@ -118,17 +133,33 @@ c) Contraste el supuesto de heteroscedasticidad usando el contraste de
    #+latex: \begin{answer}
    El contraste de Breusch-Pagan-Koenker, cuyos resultados aparecen a
    continuación, conduce a un fuerte rechazo de la hipótesis nula de
-   homoscedasticidad.
-   #+latex: \gretl{hprice1-c1.txt}
+   homoscedasticidad (valor $p \approx 0.003 < \alpha = 0.05$).
+
+   #+latex: \gretl{hprice1-c.txt}
    #+latex: \end{answer}
 
 d) Utilice también el contraste de White y la alternativa propuesta
    por Wooldridge.
 
    #+latex: \begin{answer}
-   La misma conclusión se obtiene con el contraste de White, cuyos
-   resultados se muestran en la siguiente tabla.
-   #+latex: \gretl{hprice1-c2.txt}
+   Con el contraste de White también se rechaza fuertemente la
+   hipótesis nula a un nivel de significación del $5\%$:
+   #+latex: \gretl{hprice1-d1.txt}
+
+   Wooldridge propone una alternativa que usa solo 2 explicativas en
+   la regresión auxiliar, muchas menos que las 13 que se necesitan en
+   el contraste originalmente propuesto por White. La variable
+   dependiente de la regresión auxiliar es $\Var{uhat\_sq}$, los
+   residuos al cuadrado. Los regresores son $\Var{yhat}$ y
+   $\Var{yhat\_sq}$, las predicciones y las predicciones al cuadrado,
+   respectivamente.
+
+   #+latex: \gretl{hprice1-d2.txt}
+
+   El contraste $F$ de significación de la regresión auxiliar rechaza
+   la hipótesis nula (valor $p < 0.001 < \alpha = 5\%$), por lo que
+   también con este contraste se encuentra fuerte evidencia de
+   heteroscedasticidad.
    #+latex: \end{answer}
 
 e) ¿Hay indicios de heteroscedasticidad? ¿Son válidos los resultados
@@ -136,20 +167,19 @@ e) ¿Hay indicios de heteroscedasticidad? ¿Son válidos los resultados
    robustos?
 
    #+latex: \begin{answer}
-   Los dos contrastes indican que hay una fuerte evidencia de
+   Los tres contrastes indican que hay fuerte evidencia de
    heteroscedasticidad y, por tanto, los errores típicos
-   convencionales de MCO no son válidos. En consecuencia, las
-   inferencias realizadas en el apartado a) serían incorrectas. En
-   cambio, los resultados del apartado b), al haberse estimado con
-   errores típicos robustos, sí son válidos en presencia de
-   heteroscedasticidad.
+   convencionales de MCO no son válidos. En consecuencia, los
+   contrastes mostrados en la tabla del apartado a) no serían
+   válidos. En cambio, los resultados del apartado b) sí pueden usarse
+   aún en presencia de heteroscedasticidad.
    #+latex: \end{answer}
 
 
 ** Mínimos cuadrados ponderados
 
 #+ATTR_LATEX: :options [a), start = 6]
-d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
+f) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    el supuesto de que la varianza condicional del término de error es
    proporcional a \lotsize:
    #+begin_export latex
@@ -169,7 +199,7 @@ d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    \lotsize, se emplean ponderaciones inversamente proporcionales a esta
    variable, $w = 1 / \lotsize$.
 
-   #+latex: \gretl[lastline=13]{hprice1-d1.txt}
+   #+latex: \gretl[lastline=13]{hprice1-f1.txt}
 
    Los resultados de la estimación MCP muestran que las variables \lotsize
    y \size tienen efectos significativos sobre el precio de venta de las
@@ -185,7 +215,7 @@ d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    La siguiente tabla muestra las estimaciones MCP empleando errores
    típicos robustos a heteroscedasticidad.
 
-   #+latex: \gretl[lastline=14]{hprice1-d2.txt}
+   #+latex: \gretl[lastline=14]{hprice1-f2.txt}
 
    En el caso de MCP, el uso de errores típicos robustos no se traduce en
    cambios drásticos. Aunque, en general, los errores típicos son algo
@@ -195,7 +225,7 @@ d) Obtenga las estimaciones de mínimos cuadrados ponderados (MCP) bajo
    de la parcela.
    #+latex: \end{answer}
 
-e) Aplique el método de mínimos cuadrados ponderados factibles de
+g) Aplique el método de mínimos cuadrados ponderados factibles de
    acuerdo con el supuesto:
    #+begin_export latex
    \begin{equation*}
@@ -215,26 +245,27 @@ e) Aplique el método de mínimos cuadrados ponderados factibles de
    conclusiones se pueden extraer?
 
    #+latex: \begin{answer}
-   A partir de los residuos de la estimación presentada en el
-   apartado a), $\hat{u}$, se construye la variable $\Var{lusq} =
+   Se crea una nueva variable, \Var{l\_uhat\_sq}, definida como el
+   logaritmo de los residuos de MCO al cuadrado: $\Var{l\_uhat\_sq} =
    \log(\hat{u}^2)$. Esta se utiliza como variable dependiente en una
-   regresión frente a las variables \bedrooms, \colonial, \lotsize
-   y \size.
+   regresión frente a las variables \bedrooms, \colonial, \lotsize y
+   \size.
 
-   #+latex: \gretl{hprice1-e1.txt}
+   #+latex: \gretl{hprice1-g1.txt}
 
-   Se construye la variable $h$ aplicando la función exponencial a los
-   valores ajustados de esta regresión. Finalmente, se estima el modelo
-   del precio de las casas por MCPF, usando como ponderación $w = 1 / h$,
+   Posteriormente, se construye la variable $h$ aplicando la función
+   exponencial a los valores ajustados de esta regresión. Finalmente,
+   se estima el modelo del precio de las casas por MCPF, usando como
+   ponderación $w = 1 / h$,
 
-   #+latex: \gretl[lastline=14]{hprice1-e2.txt}
+   #+latex: \gretl[lastline=14]{hprice1-g2.txt}
 
-   Los resultados son bastante similares a los obtenidos en el apartado
-   anterior. No se observan diferencias importantes ni en la estimación
-   de los parámetros ni en la significación de las variables.  La mayor
-   diferencia se encuentra en el parámetro de \bedrooms, lo cual se puede
-   explicar por la escasa precisión con la que se estima el efecto de
-   esta variable.
+   Los resultados son bastante similares a los obtenidos en el
+   apartado anterior. No se observan diferencias importantes ni en la
+   estimación de los parámetros ni en la significación de las
+   variables.  La mayor diferencia se encuentra en el parámetro de
+   \bedrooms, cuya variación se puede explicar por la escasa precisión
+   con la que se estima el efecto de esta variable.
 
    En resumen, los resultados de las distintas estimaciones indican que
    el tamaño de la casa y de la parcela son importantes a la hora de
@@ -248,4 +279,4 @@ e) Aplique el método de mínimos cuadrados ponderados factibles de
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  Breusch Koenker Wooldridge
+#  LocalWords:  Breusch Koenker Wooldridge MCP MCG MCPF White

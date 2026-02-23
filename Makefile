@@ -151,7 +151,7 @@ $(build-dir)/%.pdf: $(build-dir)/%.plt
 
 ## hprice1 gretl output ----------------------------------------
 hprice1-gretl-output := $(addsuffix .txt,\
-  $(addprefix $(build-dir)/hprice1-,a b c1 c2 d1 d2 e1 e2))
+  $(addprefix $(build-dir)/hprice1-,a b c d1 d2 f1 f2 g1 g2))
 
 $(hprice1-gretl-output): hprice1-gretl-output.intermediate
 	@:
