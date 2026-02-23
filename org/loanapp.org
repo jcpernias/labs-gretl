@@ -83,6 +83,45 @@ a) Estime un modelo lineal de probabilidad donde la variable
 
    #+begin_answer
    #+latex: \gretl{loanapp-a.txt}
+
+   Las estimaciones corresponden al modelo poblacional:
+   #+begin_export latex
+   \[
+     \approve = \beta_0 + \beta_1 \black + \beta_2 \hispan + u.
+   \]
+   #+end_export
+   El parámetro $\beta_0$ es la probabilidad de que se le conceda una
+   hipoteca a un blanco.
+   #+begin_export latex
+   \[
+     \beta_0 = \Pr(\approve = 1 | \black = 0, \hispan = 0).
+   \]
+   #+end_export
+   De acuerdo con las estimaciones por MCO, esta probabilidad sería
+   $0.91$.
+
+   Los parámetros $\beta_1$ y $\beta_2$ miden la diferencia entre las
+   probabilidades de concesión de negros e hispanos (respectivamente) con
+   respecto a la probabilidad de concesión a un individuo de la categoría
+   de referencia (blancos):
+   #+begin_export latex
+   \begin{gather*}
+     \beta_1 = \Pr(\approve = 1 | \black = 1, \hispan = 0) - \beta_0, \\
+     \beta_2 = \Pr(\approve = 1 | \black = 0, \hispan = 1) - \beta_0.
+   \end{gather*}
+   #+end_export
+
+   Las estimaciones de MCO indican que los individuos pertenecientes a
+   las minorías raciales en Estados Unidos tenían una menor probabilidad
+   de acceder una hipoteca que los blancos: 24 puntos porcentuales menos
+   en el caso de negros y 16 puntos porcentuales menos en el caso de
+   hispanos.
+
+   Los contrastes $t$ de significación individual de los parámetros
+   $\beta_0$, $\beta_1$ y $\beta_2$ toman valores absolutos muy grandes y
+   los valores-$p$ son inferiores a $\alpha = 5\%$. Por tanto, todos los
+   parámetros son significativamente distintos de $0$ a un nivel de
+   significación de $5\%$
    #+end_answer
 
 b) Contraste si los parámetros de las variables \black e \hispan son
@@ -90,6 +129,13 @@ b) Contraste si los parámetros de las variables \black e \hispan son
 
    #+begin_answer
    #+latex: \gretl{loanapp-b.txt}
+
+   La hipótesis nula de que los parámetros de \black e \hispan son
+   iguales puede escribirse como: $H_0: \beta_1 - \beta_2 = 0$. El
+   contraste de Wald robusto a heteroscedasticidad toma el valor $2.5$
+   y su valor-$p$ es $0.11$. En estas condiciones no podemos rechazar
+   la hippótesis nula dado que el valor-$p$ es superior al nivel de
+   significación $\alpha = 5\%$.
    #+end_answer
 
 c) Añada la variable explicativa \obrat. Interprete la estimación del
@@ -108,7 +154,14 @@ d) Añada las restantes variables del archivo de datos: \loanprc,
 
    #+begin_answer
    #+latex: \gretl{loanapp-d1.txt}
+
    #+latex: \gretl{loanapp-d2.txt}
+
+   El resultado del contraste, $13.1$, es un valor muy elevado para
+   ser compatible con la hipótesis nula. El valor-$p$ es prácticamente
+   nulo e inferior a $\alpha = 5\%$. Se rechaza la hipótesis nula de
+   que las variables explicativas que se han añadido no tengan
+   capacidad explicativa.
    #+end_answer
 
 e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
@@ -119,13 +172,34 @@ e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
    #+begin_answer
    #+latex: \gretl{loanapp-e.txt}
 
+   Las estimaciones de los parámetros de \black e \hispan se han
+   reducido considerablemente con respecto a las obtenidas en el
+   apartado a), especialmente en el caso de la pendiente de \black que
+   pasa de $-0.24$ a $-0.16$. A pesar de eso, las dos pendientes
+   tienen signo negativo y son significativamente distintas de $0$ a
+   un nivel de significación de $5\%$.
+
+   Por otro lado, los resultados del contraste no muestran diferencias
+   significativas entre los parámetros de \black e \hispan para
+   $\alpha = 5\%$. El valor del contraste es $0.7$ y el el valor-$p$,
+   $0.39$, es superior al nivel de significación $\alpha = 5\%$. Se
+   concluye que no hay diferencias en las probabilidades de concesión
+   de hipotecas a individuos de diferentes minorías raciales.
    #+end_answer
 
 f) Los resultados obtenidos, ¿son evidencia de discriminación en
    contra de las minorías raciales?
 
    #+begin_answer
-
+   Los resultados obtenidos en el apartado e) muestran que la
+   probabilidad de acceder a una hipoteca es distinta para blancos y
+   para no blancos. Esta diferencia no puede ser atribuida a las
+   variables que se han usado como explicativas en el modelo de
+   regresión: situación financiera del solicitante, situación laboral,
+   situación familiar, sexo, nivel educativo e historial
+   crediticio. En consecuencia, las diferencias observadas en la
+   concesión de hipotecas pueden atribuirse a discriminación en contra
+   de las minorías raciales.
    #+end_answer
 
 g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
