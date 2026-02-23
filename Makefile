@@ -18,7 +18,8 @@ src-files := \
 	exports-sol \
 	traffic2
 
-ans-files := hprice1
+ans-files := hprice1 \
+	loanapp
 
 ## Directories
 ## ================================================================================
