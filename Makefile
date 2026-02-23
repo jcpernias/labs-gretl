@@ -164,6 +164,20 @@ hprice1-gretl-output.intermediate: \
 
 $(pdf-dir)/hprice1-ans.pdf: $(hprice1-gretl-output)
 
+## loanapp gretl output ----------------------------------------
+loanapp-gretl-output := $(addsuffix .txt,\
+  $(addprefix $(build-dir)/loanapp-,a b c d1 d2 e g))
+
+$(loanapp-gretl-output): loanapp-gretl-output.intermediate
+	@:
+
+.INTERMEDIATE: loanapp-gretl-output.intermediate
+loanapp-gretl-output.intermediate: \
+	$(gretl-dir)/loanapp.inp $(data-dir)/loanapp.csv
+	gretlcli -b -e $(realpath $<)
+
+$(pdf-dir)/loanapp-ans.pdf: $(loanapp-gretl-output)
+
 
 ## wagegap gretl output -----------------------------------------
 wagegap-gretl-output := $(addsuffix .txt,\

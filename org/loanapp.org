@@ -82,21 +82,21 @@ a) Estime un modelo lineal de probabilidad donde la variable
    individualmente?
 
    #+begin_answer
-
+   #+latex: \gretl{loanapp-a.txt}
    #+end_answer
 
 b) Contraste si los parámetros de las variables \black e \hispan son
    iguales.
 
    #+begin_answer
-
+   #+latex: \gretl{loanapp-b.txt}
    #+end_answer
 
 c) Añada la variable explicativa \obrat. Interprete la estimación del
    parámetro de esta variable. ¿Tiene un efecto significativo?
 
    #+begin_answer
-
+   #+latex: \gretl{loanapp-c.txt}
    #+end_answer
 
 d) Añada las restantes variables del archivo de datos: \loanprc,
@@ -107,7 +107,8 @@ d) Añada las restantes variables del archivo de datos: \loanprc,
    \hispan.
 
    #+begin_answer
-
+   #+latex: \gretl{loanapp-d1.txt}
+   #+latex: \gretl{loanapp-d2.txt}
    #+end_answer
 
 e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
@@ -116,6 +117,7 @@ e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
    de estas dos variables son iguales.
 
    #+begin_answer
+   #+latex: \gretl{loanapp-e.txt}
 
    #+end_answer
 
@@ -130,7 +132,7 @@ g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
    Ponderados Factibles?
 
    #+begin_answer
-
+   #+latex: \gretl{loanapp-g.txt}
    #+end_answer
 
 

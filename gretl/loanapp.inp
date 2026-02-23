@@ -1,0 +1,47 @@
+set verbose off
+set workdir "./build"
+
+open "../data/loanapp.csv"
+list Xa = black hispan
+list Xc = obrat
+list Xd = loanprc unem self male married dep sch chist pubrec
+
+# a)
+
+outfile loanapp-a.txt
+  ols approve 0 Xa --robust
+end outfile
+
+# b)
+outfile loanapp-b.txt
+  restrict --quiet
+    b[black] - b[hispan] = 0
+  end restrict
+end outfile
+
+# c)
+outfile loanapp-c.txt
+  ols approve 0 Xa Xc --robust
+end outfile
+
+# d)
+outfile loanapp-d1.txt
+  ols approve 0 Xa Xc Xd --robust
+end outfile
+
+outfile loanapp-d2.txt
+  omit Xc Xd --test-only
+end outfile
+
+# e)
+outfile loanapp-e.txt
+  restrict --quiet
+    b[black] - b[hispan] = 0
+  end restrict
+end outfile
+
+# g)
+outfile loanapp-g.txt
+  series phat = $yhat
+  summary phat --simple
+end outfile
