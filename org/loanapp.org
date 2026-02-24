@@ -82,23 +82,25 @@ a) Estime un modelo lineal de probabilidad donde la variable
    individualmente?
 
    #+begin_answer
-   #+latex: \gretl{loanapp-a.txt}
+   Modelo lineal de probabilidad:
+   #+begin_export latex
+   \[
+     \approve_i = \beta_0 + \beta_1 \black_i + \beta_2 \hispan_i + u_i.
+   \]
+   #+end_export
+   La tabla siguiente muestra las estimaciones MCO junto con errores
+   típicos robustos a heteroscedasticidad:
+   #+latex: \gretl[firstline=2, lastline=12]{loanapp-a.txt}
 
-   Las estimaciones corresponden al modelo poblacional:
+   El parámetro $\beta_0$ se interpreta como la probabilidad de que se
+   le conceda una hipoteca a un blanco:
    #+begin_export latex
    \[
-     \approve = \beta_0 + \beta_1 \black + \beta_2 \hispan + u.
+     \beta_0 = \Pr(\approve_i = 1 | \black_i = 0, \hispan_i = 0).
    \]
    #+end_export
-   El parámetro $\beta_0$ es la probabilidad de que se le conceda una
-   hipoteca a un blanco.
-   #+begin_export latex
-   \[
-     \beta_0 = \Pr(\approve = 1 | \black = 0, \hispan = 0).
-   \]
-   #+end_export
-   De acuerdo con las estimaciones por MCO, esta probabilidad sería
-   $0.91$.
+   De acuerdo con las estimaciones presentadas antes, esta
+   probabilidad sería $0.91$.
 
    Los parámetros $\beta_1$ y $\beta_2$ miden la diferencia entre las
    probabilidades de concesión de negros e hispanos (respectivamente) con
@@ -106,43 +108,50 @@ a) Estime un modelo lineal de probabilidad donde la variable
    de referencia (blancos):
    #+begin_export latex
    \begin{gather*}
-     \beta_1 = \Pr(\approve = 1 | \black = 1, \hispan = 0) - \beta_0, \\
-     \beta_2 = \Pr(\approve = 1 | \black = 0, \hispan = 1) - \beta_0.
+     \beta_1 = \Pr(\approve_i = 1 | \black_i = 1, \hispan_i = 0) - \beta_0, \\
+     \beta_2 = \Pr(\approve_i = 1 | \black_i = 0, \hispan_i = 1) - \beta_0.
    \end{gather*}
    #+end_export
-
    Las estimaciones de MCO indican que los individuos pertenecientes a
    las minorías raciales en Estados Unidos tenían una menor probabilidad
    de acceder una hipoteca que los blancos: 24 puntos porcentuales menos
    en el caso de negros y 16 puntos porcentuales menos en el caso de
    hispanos.
 
-   Los contrastes $t$ de significación individual de los parámetros
-   $\beta_0$, $\beta_1$ y $\beta_2$ toman valores absolutos muy grandes y
-   los valores-$p$ son inferiores a $\alpha = 5\%$. Por tanto, todos los
-   parámetros son significativamente distintos de $0$ a un nivel de
-   significación de $5\%$
+   Los estadísticos $t$ para contrastar la significación individual de
+   los parámetros $\beta_0$, $\beta_1$ y $\beta_2$ son elevados en
+   valor absoluto y sus valores $p$ son inferiores a $\alpha =
+   5\%$. Por tanto, todos los parámetros son significativamente
+   distintos de $0$ a un nivel de significación de $5\%$
    #+end_answer
 
 b) Contraste si los parámetros de las variables \black e \hispan son
    iguales.
 
    #+begin_answer
-   #+latex: \gretl{loanapp-b.txt}
-
    La hipótesis nula de que los parámetros de \black e \hispan son
-   iguales puede escribirse como: $H_0: \beta_1 - \beta_2 = 0$. El
-   contraste de Wald robusto a heteroscedasticidad toma el valor $2.5$
-   y su valor-$p$ es $0.11$. En estas condiciones no podemos rechazar
-   la hippótesis nula dado que el valor-$p$ es superior al nivel de
-   significación $\alpha = 5\%$.
+   iguales puede escribirse como: $H_0: \beta_1 - \beta_2 = 0$:
+   #+latex: \gretl[lastline=4]{loanapp-b.txt}
+   El contraste de Wald robusto a heteroscedasticidad toma el valor
+   $2.5$ y su valor $p$ es $0.11$. En consecuencia, no se rechaza la
+   hipótesis nula al nivel de significación $\alpha = 5\%$.
    #+end_answer
+   #+latex: \clearpage{}
 
 c) Añada la variable explicativa \obrat. Interprete la estimación del
    parámetro de esta variable. ¿Tiene un efecto significativo?
 
    #+begin_answer
-   #+latex: \gretl{loanapp-c.txt}
+   #+latex: \gretl[firstline=2, lastline=13]{loanapp-c.txt}
+   La estimación de la pendiente de \obrat muestra que por cada punto
+   porcentual adicional de renta que el solicitante destine a otras
+   obligaciones financieras, la probabilidad de obtener la hipoteca
+   disminuye en $0.6$ puntos porcentuales.
+
+   El contraste $t$ de significación individual de \obrat rechaza la
+   hipótesis nula al $5\%$ de significación. Un aumento de otras
+   cargas financieras reduce significativamente la probabilidad de
+   concesión de las hipotecas.
    #+end_answer
 
 d) Añada las restantes variables del archivo de datos: \loanprc,
@@ -153,15 +162,18 @@ d) Añada las restantes variables del archivo de datos: \loanprc,
    \hispan.
 
    #+begin_answer
-   #+latex: \gretl{loanapp-d1.txt}
+   Resultados de la estimación por MCO con errores típicos robustos a
+   heteroscedasticidad:
+   #+latex: \gretl[firstline=2, lastline=22]{loanapp-d1.txt}
+   #+latex: \clearpage{}
 
-   #+latex: \gretl{loanapp-d2.txt}
-
-   El resultado del contraste, $13.1$, es un valor muy elevado para
-   ser compatible con la hipótesis nula. El valor-$p$ es prácticamente
-   nulo e inferior a $\alpha = 5\%$. Se rechaza la hipótesis nula de
-   que las variables explicativas que se han añadido no tengan
-   capacidad explicativa.
+   Resultados del contraste robusto sobre la significación conjunta de
+   todas las explicativas, salvo \black e \hispan:
+   #+latex: \gretl[firstline=2, lastline=4]{loanapp-d2.txt}
+   El estadístico $F$ es $13.5$, lo que representa un valor muy
+   elevado para ser compatible con la hipótesis nula. El valor $p$ es
+   extremadamente pequeño e inferior a $\alpha = 5\%$ por lo que se
+   rechaza la hipótesis nula.
    #+end_answer
 
 e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
@@ -170,21 +182,26 @@ e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
    de estas dos variables son iguales.
 
    #+begin_answer
-   #+latex: \gretl{loanapp-e.txt}
-
-   Las estimaciones de los parámetros de \black e \hispan se han
-   reducido considerablemente con respecto a las obtenidas en el
+   Las estimaciones de los parámetros de \black e \hispan son
+   considerablemente menores en valor absoluto que las obtenidas en el
    apartado a), especialmente en el caso de la pendiente de \black que
-   pasa de $-0.24$ a $-0.16$. A pesar de eso, las dos pendientes
-   tienen signo negativo y son significativamente distintas de $0$ a
-   un nivel de significación de $5\%$.
+   pasa de $-0.24$ a $-0.16$. Estos cambios pueden deberse a
+   diferencias sistemáticas entre los miembros de los diferentes
+   grupos raciales en los valores de las variables añadidas (historial
+   crediticio, cargas financieras, precariedad del empleo, nivel
+   educativo, etc.). A pesar de que tomen valores absolutos más
+   pequeños, las pendientes de \black e \hispan tienen signo negativo
+   y son significativamente distintas de $0$ a un nivel de
+   significación de $5\%$.
 
-   Por otro lado, los resultados del contraste no muestran diferencias
-   significativas entre los parámetros de \black e \hispan para
-   $\alpha = 5\%$. El valor del contraste es $0.7$ y el el valor-$p$,
-   $0.39$, es superior al nivel de significación $\alpha = 5\%$. Se
-   concluye que no hay diferencias en las probabilidades de concesión
-   de hipotecas a individuos de diferentes minorías raciales.
+   Contraste de igualdad de los parámetros de \black e \hispan:
+   #+latex: \gretl[lastline=4]{loanapp-e.txt}
+   No parece haber diferencias significativas entre los parámetros de
+   \black e \hispan para $\alpha = 5\%$. El valor del contraste es
+   $0.76$ y el valor $p = 0.38$ es superior al nivel de significación
+   $\alpha = 5\%$. No hay diferencias significativas en las
+   probabilidades de concesión de hipotecas a individuos de diferentes
+   minorías raciales.
    #+end_answer
 
 f) Los resultados obtenidos, ¿son evidencia de discriminación en
@@ -194,22 +211,61 @@ f) Los resultados obtenidos, ¿son evidencia de discriminación en
    Los resultados obtenidos en el apartado e) muestran que la
    probabilidad de acceder a una hipoteca es distinta para blancos y
    para no blancos. Esta diferencia no puede ser atribuida a las
-   variables que se han usado como explicativas en el modelo de
-   regresión: situación financiera del solicitante, situación laboral,
-   situación familiar, sexo, nivel educativo e historial
-   crediticio. En consecuencia, las diferencias observadas en la
-   concesión de hipotecas pueden atribuirse a discriminación en contra
-   de las minorías raciales.
+   variables que se han usado como explicativas: situación financiera
+   del solicitante, situación laboral, situación familiar, sexo, nivel
+   educativo e historial crediticio. La persistencia de diferencias en
+   la concesión de hipotecas después de haber controlado por factores
+   económicos y personales constituiría evidencia de la existencia de
+   discriminación en contra de las minorías raciales.
    #+end_answer
 
 g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
    Ponderados Factibles?
 
    #+begin_answer
-   #+latex: \gretl{loanapp-g.txt}
+   La varianza condicional del término de error es:
+   #+begin_export latex
+   \[
+     \operatorname{var}(u_i | \bm{x}_i) = p_i (1 - p_i),
+   \]
+   #+end_export
+   donde $p_i$ es la probabilidad de ocurrencia:
+   #+begin_export latex
+   \[
+     p_i = \Pr(\approve_i = 1 | \bm{x}_i) = \beta_0 + \beta_1 \black_i +
+     \beta_2 \hispan_i + \beta_3 \obrat_i + \dots + \beta_{12} \pubrec_i.
+   \]
+   #+end_export
+   Para aplicar MCPF se deberían utilizar las ponderaciones
+   #+begin_export latex
+   \[
+     w_i = \frac{1}{\hat{p}_i (1 - \hat{p}_i)},
+   \]
+   #+end_export
+   donde $\hat{p}_i$ son las predicciones de MCO que se obtienen a
+   partir de las estimaciones los parámetros:
+   #+begin_export latex
+   \[
+     \hat{p}_i = \hat{\beta}_0 + \hat{\beta}_1 \black_i +
+     \hat{\beta}_2 \hispan_i + \hat{\beta}_3 \obrat_i + \dots +
+     \hat{\beta}_{12} \pubrec_i.
+   \]
+   #+end_export
+   Para que se pueda usar MCPF es necesario que $0 < \hat{p}_i <
+   1$. Si esta condición no se cumple, las ponderaciones y las
+   varianzas del término de error no serían estrictamente positivas.
+
+   Guardamos en la variable ~phat~ las predicciones del modelo
+   estimado en el apartado d) y calculamos sus estadísticos
+   descriptivos:
+   #+latex: \gretl[firstline=2, lastline=9]{loanapp-g.txt}
+   Las probabilidades de ocurrencia predichas no cumplen la condición
+   para usar MCPF: el valor máximo de $\hat{p}_i$ es $1.14$.
    #+end_answer
 
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
+
+#  LocalWords:  Wald MCPF

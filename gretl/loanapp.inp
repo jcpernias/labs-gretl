@@ -9,7 +9,7 @@ list Xd = loanprc unem self male married dep sch chist pubrec
 # a)
 
 outfile loanapp-a.txt
-  ols approve 0 Xa --robust
+  ols approve 0 Xa --robust --simple-print
 end outfile
 
 # b)
@@ -21,12 +21,12 @@ end outfile
 
 # c)
 outfile loanapp-c.txt
-  ols approve 0 Xa Xc --robust
+  ols approve 0 Xa Xc --robust --simple-print
 end outfile
 
 # d)
 outfile loanapp-d1.txt
-  ols approve 0 Xa Xc Xd --robust
+  ols approve 0 Xa Xc Xd --robust --simple-print
 end outfile
 
 outfile loanapp-d2.txt
