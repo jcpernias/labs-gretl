@@ -15,11 +15,11 @@ src-files := \
 	phillips \
 	phillips-sol \
 	exports \
-	exports-sol \
 	traffic2
 
 ans-files := hprice1 \
-	loanapp
+	loanapp \
+	exports
 
 ## Directories
 ## ================================================================================
@@ -259,7 +259,7 @@ exports-gretl-output.intermediate: \
 	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
 	gretlcli -b -e $(realpath $<)
 
-$(pdf-dir)/exports-sol.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
+$(pdf-dir)/exports-ans.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
 
 
 # traffic2 gretl output -----------------------------------------

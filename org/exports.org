@@ -2,8 +2,9 @@
 #+SETUPFILE: ../setup.org
 
 # Define macros for the variable names
-#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
-
+#+LATEX_HEADER: \newcommand*{\covid}{\Var{covid}}
+#+LATEX_HEADER: \newcommand*{\gy}{\Var{gy}}
+#+LATEX_HEADER: \newcommand*{\gx}{\Var{gx}}
 
 * Objetivo
 
@@ -31,8 +32,8 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
 
 * Instrucciones
 
+Tenga en cuenta las siguientes indicaciones en sus respuestas:
 
-#+begin_tcolorbox
 - Realice los contrastes con un nivel de significación del 5%; en su
   caso, estime intervalos de confianza al 95%.
 
@@ -44,7 +45,6 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
   transformar variables.
 
 - Utilice un máximo de 8 retardos en las regresiones o contrastes.
-#+end_tcolorbox
 
 
 ** Transformación de las variables
@@ -71,6 +71,74 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
   variables en niveles, se emplean las tasas de crecimiento =gy= y
   =gx=, ¿seguirían presentándose los mismos problemas?
 
+#+begin_answer
+  Los gráficos de series temporales muestran marcadas tendencias
+  crecientes en =ly= y en =lx=, por lo que se incluye una tendencia
+  lineal en las regresiones auxiliares de estas dos variables. El
+  número óptimo de retardos se determina con el AIC, incluyéndose un
+  retardo en las regresiones de =ly= y =lx= y ninguno en las de =gy= y
+  =gx=. En los casos de =ly= y =lx= no es posible rechazar la
+  hipótesis nula de raíz unitaria al \pct{5}. En los casos de =gy= y
+  =gx= se rechaza la presencia de raíces unitarias al \pct{5}.
+
+  Un modelo de regresión de =ly= sobre =lx= incumpliría el supuesto de
+  estacionariedad y dependencia débil, ya que estas variables
+  presentan raíces unitarias, por lo que sería muy probable obtener
+  resultados espurios. No hay evidencia de raíces unitarias en =gy= y
+  =gx=, por lo que una regresión que incluya estas variables no
+  produciría, en principio, resultados espurios.
+
+  #+ATTR_LATEX: :options [c]{0.40\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.45
+  [[file:exports-ly.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.60\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+latex: \gretl{exports-adf-ly.txt}
+  #+end_minipage
+
+
+  #+ATTR_LATEX: :options [c]{0.40\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.45
+  [[file:exports-gy.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.60\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+latex: \gretl{exports-adf-gy.txt}
+  #+end_minipage
+
+
+  #+ATTR_LATEX: :options [c]{0.40\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.45
+  [[file:exports-lx.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.60\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+latex: \gretl{exports-adf-lx.txt}
+  #+end_minipage
+
+  #+ATTR_LATEX: :options [c]{0.40\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.45
+  [[file:exports-gx.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.60\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+latex: \gretl{exports-adf-gx.txt}
+  #+end_minipage
+#+end_answer
+
 ** Selección del número de retardos
 
 - Determine el número óptimo de retardos en un modelo de retardos
@@ -85,6 +153,25 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
 - Incluya en el modelo un retardo de la variable dependiente. ¿Es
   necesario incluir este retardo?
 
+#+begin_answer
+  En la siguiente tabla se presenta el BIC para especificaciones que
+  incluyen hasta 8 retardos de =gx=. El BIC se minimiza cuando se
+  incluyen dos retardos.
+  #+latex: \gretl{exports-lags.txt}
+
+  Resultados de la estimación del modelo de retardos distribuidos con
+  dos retardos.
+  #+latex: \gretl{exports-dl.txt}
+
+  A continuación se muestran los resultados de un modelo de regresión
+  que, además de los dos retardos de la explicativa, incluye un
+  retardo de la variable dependiente. No parece necesario incluir este
+  retardo ya que, por un lado, su coeficiente no es significativamente
+  distinto de 0 (valor $p = 0.20$) y, por otro lado, el BIC aumenta al
+  incluir el retardo de =gy=.
+  #+latex: \gretl{exports-ardl.txt}
+#+end_answer
+
 ** Multiplicadores dinámicos
 
 - Obtenga los multiplicadores acumulados y el multiplicador de largo
@@ -93,6 +180,71 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
 - Interprete los multiplicadores dinámicos, los acumulados y, en
   especial, los multiplicadores de corto y largo plazo.
 
+#+begin_answer
+  Los multiplicadores dinámicos ($\beta_0$, $\beta_1$, $\beta_2$) se
+  estiman directamente con el modelo de retardos distribuidos:
+  #+begin_export latex
+  \[
+    \gy_t =
+    \delta +
+    \beta_0 \,\gx_{t} +
+    \beta_1 \,\gx_{t-1} +
+    \beta_2 \,\gx_{t-2} +
+    \phi \Delta \covid_{t} +
+    u_{t}
+  \]
+  #+end_export
+  La estimación de este modelo se presentó en la página anterior. En
+  la siguiente tabla se muestran los multiplicadores dinámicos y sus
+  errores típicos:
+  #+latex: \gretl{exports-dyn-mult.txt}
+
+  Los tres multiplicadores son significativamente distintos de 0 a un
+  nivel del \pct{5}. El multiplicador de corto plazo muestra que, como
+  consecuencia de un aumento de 1 punto porcentual en la tasa de
+  crecimiento de las exportaciones, se produce, en el mismo trimestre,
+  un incremento en la tasa de crecimiento del PIB de $0.15$ puntos
+  porcentuales. También son positivos los multiplicadores dinámicos
+  correspondientes a los dos trimestres siguientes, aunque la magnitud
+  del efecto se reduce considerablemente (en cada trimestre el efecto
+  es, aproximadamente, un tercio del multiplicador a corto plazo).
+
+  Los multiplicadores acumulados ($\theta_0$, $\theta_1$, $\theta_2$),
+  y sus errores típicos, se obtienen estimando una reparametrización
+  del modelo anterior:
+  #+begin_export latex
+  \[
+    \gy_t =
+    \delta +
+    \theta_0 \,\Delta \gx_{t} +
+    \theta_1 \,\Delta \gx_{t-1} +
+    \theta_2 \,\gx_{t-2} +
+    \phi \Delta \covid_{t} +
+    u_{t}
+  \]
+  #+end_export
+
+  La tabla siguiente muestra los resultados de la estimación por MCO
+  del modelo anterior usando errores típicos robustos a
+  autocorrelación y heteroscedasticidad:
+  #+latex: \gretl{exports-mult.txt}
+
+  A continuación se muestran los multiplicadores acumulados (y sus
+  errores típicos):
+  #+latex: \gretl{exports-cum-mult.txt}
+
+  Un cambio permanente en la tasa de crecimiento de las exportaciones,
+  provocaría un aumento progresivo en la tasa de crecimiento del PIB
+  en el trimestre en que se produce el cambio y en los dos
+  siguientes. El último de los multiplicadores acumulados es el
+  multiplicador de largo plazo. En el largo plazo, un cambio
+  permanente de 1 punto porcentual en la tasa de crecimiento de las
+  exportaciones incrementaría la tasa de crecimiento del PIB en casi
+  un cuarto de punto porcentual ($0.24$). El error típico del
+  multiplicador de largo plazo es relativamente pequeño ($0.05$), por
+  lo que el efecto de la exportaciones sobre el crecimiento a largo
+  plazo es significativo al nivel de significación del \pct{5}.
+#+end_answer
 
 ** Cambio estructural
 
@@ -111,9 +263,28 @@ El fichero =exports.csv= contiene dos de las series de BDREMS:
 - Contraste la significación de los términos añadidos en el punto
   anterior. Interprete los resultados obtenidos.
 
+#+begin_answer
+  Estimación por MCO con la variable escalón, =s08=, y las
+  interacciones, =gx08=, =gx08_1=, =gx08_2=.  Se usan errores típicos
+  válidos en presencia de autocorrelación y heteroscedasticidad.
+  #+latex: \gretl{exports-chow.txt}
+
+  Contraste de significación conjunta de los parámetros de las
+  variables añadidas en la regresión anterior: =s08=, =gx08=, =gx08_1=
+  y =gx08_2=:
+  #+latex: \gretl{exports-chow2.txt}
+
+  El contraste de estabilidad estructural rechaza la hipótesis nula de
+  que los parámetros del modelo de regresión permanecen constantes a
+  lo largo de todo el periodo. En concreto, los resultados de la
+  estimación mostrarían que las exportaciones tendrían un efecto
+  significativo únicamente en el periodo posterior a la crisis
+  financiera de 2008.
+#+end_answer
+
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  PIB COVID
+#  LocalWords:  PIB COVID autocorrelación
