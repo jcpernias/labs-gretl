@@ -6,3 +6,4 @@
 /local.mk
 *.t2d
 /build/
+/.deps/

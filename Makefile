@@ -17,7 +17,8 @@ src-files := \
 	exports \
 	traffic2
 
-ans-files := hprice1 \
+ans-files := \
+	hprice1 \
 	loanapp \
 	exports
 
@@ -33,7 +34,7 @@ R-dir := $(root-dir)/R
 gretl-dir := $(root-dir)/gretl
 tex-dir := $(root-dir)/tex
 zip-dir := $(root-dir)/zip
-deps-dir := $(root-dir)/deps
+deps-dir := $(root-dir)/.deps
 
 
 ## Programs
@@ -50,6 +51,14 @@ latexmkbin := /Library/TeX/texbin/latexmk
 
 ## Variables
 ## ================================================================================
+
+INCLUDEDEPS := yes
+
+# Do not include dependency files if make goal is some kind of clean
+ifneq (,$(findstring clean,$(MAKECMDGOALS)))
+INCLUDEDEPS := no
+endif
+
 
 ## Print info ----------------------------------------
 LATEX_MESSAGES := no
@@ -89,6 +98,8 @@ pdf-files := $(addprefix $(pdf-dir)/,\
 zip-files := $(addprefix $(zip-dir)/,\
 	$(addsuffix .zip,$(filter-out %-sol,$(src-files))))
 
+
+auto-deps := $(addprefix $(deps-dir)/,$(addsuffix .d, $(ans-files)))
 
 tex-deps := $(root-dir)/setup.org $(root-dir)/setup-emacs.el
 
@@ -151,36 +162,17 @@ $(build-dir)/%.pdf: $(build-dir)/%.plt
 	gnuplot -e \
 	"set terminal pdfcairo noenhanced font 'Serif,12'; set output '$@'" $<
 
+## Auto dependencies
+$(deps-dir)/%.d: $(gretl-dir)/%.inp | $(deps-dir)
+	$(pythonbin) $(root-dir)/makedeps.py -o $@ $<
+
+
 ## Include rules for dependencies
-include $(deps-dir)/*.d
+## automatic dependencies
+ifeq ($(INCLUDEDEPS),yes)
+include $(auto-deps)
+endif
 
-## hprice1 gretl output ----------------------------------------
-hprice1-gretl-output := $(addsuffix .txt,\
-  $(addprefix $(build-dir)/hprice1-,a b c d1 d2 f1 f2 g1 g2))
-
-$(hprice1-gretl-output): hprice1-gretl-output.intermediate
-	@:
-
-.INTERMEDIATE: hprice1-gretl-output.intermediate
-hprice1-gretl-output.intermediate: \
-	$(gretl-dir)/hprice1.inp $(data-dir)/hprice1.csv
-	gretlcli -b -e $(realpath $<)
-
-$(pdf-dir)/hprice1-ans.pdf: $(hprice1-gretl-output)
-
-## loanapp gretl output ----------------------------------------
-loanapp-gretl-output := $(addsuffix .txt,\
-  $(addprefix $(build-dir)/loanapp-,a b c d1 d2 e g))
-
-$(loanapp-gretl-output): loanapp-gretl-output.intermediate
-	@:
-
-.INTERMEDIATE: loanapp-gretl-output.intermediate
-loanapp-gretl-output.intermediate: \
-	$(gretl-dir)/loanapp.inp $(data-dir)/loanapp.csv
-	gretlcli -b -e $(realpath $<)
-
-$(pdf-dir)/loanapp-ans.pdf: $(loanapp-gretl-output)
 
 
 ## wagegap gretl output -----------------------------------------
@@ -245,25 +237,6 @@ phillips-gretl-output.intermediate: \
 $(pdf-dir)/phillips-sol.pdf: $(patsubst %.plt,%.pdf,$(phillips-gretl-output))
 
 
-# # exports gretl output -----------------------------------------
-# exports-gretl-output := \
-# 	$(addsuffix .txt,\
-# 		$(addprefix $(build-dir)/exports-, \
-# 			adf-lx adf-gx adf-ly adf-gy \
-# 			lags dl dyn-mult ardl mult cum-mult chow)) \
-# 	$(addsuffix .plt,\
-# 		$(addprefix $(build-dir)/exports-,ly gy lx gx))
-
-
-# $(exports-gretl-output): exports-gretl-output.intermediate
-# 	@:
-
-# .INTERMEDIATE: exports-gretl-output.intermediate
-# exports-gretl-output.intermediate: \
-# 	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
-# 	gretlcli -b -e $(realpath $<)
-
-# $(pdf-dir)/exports-ans.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
 
 
 # traffic2 gretl output -----------------------------------------
@@ -317,7 +290,7 @@ $(zip-dir)/traffic2.zip: $(data-dir)/traffic2.csv
 ## Create directories
 ## --------------------------------------------------------------------------------
 
-$(build-dir) $(pdf-dir) $(zip-dir):
+$(build-dir) $(pdf-dir) $(zip-dir) $(deps-dir):
 	mkdir $@
 
 
@@ -332,8 +305,7 @@ clean:
 .PHONY: veryclean
 veryclean: clean
 	-@rm -r $(build-dir)
-
-#        -@rm -r $(deps-dir)
+	-@rm -r $(deps-dir)
 
 
 # Local Variables:
