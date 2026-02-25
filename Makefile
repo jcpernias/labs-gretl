@@ -33,6 +33,7 @@ R-dir := $(root-dir)/R
 gretl-dir := $(root-dir)/gretl
 tex-dir := $(root-dir)/tex
 zip-dir := $(root-dir)/zip
+deps-dir := $(root-dir)/deps
 
 
 ## Programs
@@ -150,6 +151,9 @@ $(build-dir)/%.pdf: $(build-dir)/%.plt
 	gnuplot -e \
 	"set terminal pdfcairo noenhanced font 'Serif,12'; set output '$@'" $<
 
+## Include rules for dependencies
+include $(deps-dir)/*.d
+
 ## hprice1 gretl output ----------------------------------------
 hprice1-gretl-output := $(addsuffix .txt,\
   $(addprefix $(build-dir)/hprice1-,a b c d1 d2 f1 f2 g1 g2))
@@ -241,25 +245,25 @@ phillips-gretl-output.intermediate: \
 $(pdf-dir)/phillips-sol.pdf: $(patsubst %.plt,%.pdf,$(phillips-gretl-output))
 
 
-# exports gretl output -----------------------------------------
-exports-gretl-output := \
-	$(addsuffix .txt,\
-		$(addprefix $(build-dir)/exports-, \
-			adf-lx adf-gx adf-ly adf-gy \
-			lags dl dyn-mult ardl mult cum-mult chow)) \
-	$(addsuffix .plt,\
-		$(addprefix $(build-dir)/exports-,ly gy lx gx))
+# # exports gretl output -----------------------------------------
+# exports-gretl-output := \
+# 	$(addsuffix .txt,\
+# 		$(addprefix $(build-dir)/exports-, \
+# 			adf-lx adf-gx adf-ly adf-gy \
+# 			lags dl dyn-mult ardl mult cum-mult chow)) \
+# 	$(addsuffix .plt,\
+# 		$(addprefix $(build-dir)/exports-,ly gy lx gx))
 
 
-$(exports-gretl-output): exports-gretl-output.intermediate
-	@:
+# $(exports-gretl-output): exports-gretl-output.intermediate
+# 	@:
 
-.INTERMEDIATE: exports-gretl-output.intermediate
-exports-gretl-output.intermediate: \
-	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
-	gretlcli -b -e $(realpath $<)
+# .INTERMEDIATE: exports-gretl-output.intermediate
+# exports-gretl-output.intermediate: \
+# 	$(gretl-dir)/exports.inp $(data-dir)/exports.csv
+# 	gretlcli -b -e $(realpath $<)
 
-$(pdf-dir)/exports-ans.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
+# $(pdf-dir)/exports-ans.pdf: $(patsubst %.plt,%.pdf,$(exports-gretl-output))
 
 
 # traffic2 gretl output -----------------------------------------
@@ -328,6 +332,8 @@ clean:
 .PHONY: veryclean
 veryclean: clean
 	-@rm -r $(build-dir)
+
+#        -@rm -r $(deps-dir)
 
 
 # Local Variables:
