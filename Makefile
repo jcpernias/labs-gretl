@@ -129,7 +129,7 @@ $(build-dir)/%-ans.tex: $(build-dir)/%.tex
 	$(file > $@,$(call ans-tex,$*))
 
 ## From .tex to .pdf
-$(build-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps) | $(build-dir)
+$(build-dir)/%.pdf: $(build-dir)/%.tex $(pdf-deps)
 	$(LATEXMK) $<
 
 ## Move .pdf to pdf dir
