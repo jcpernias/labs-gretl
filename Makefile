@@ -261,13 +261,6 @@ $(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 
 
 .NOTPARALLEL:
-	hprice1-gretl-output.intermediate \
-	wagegap-gretl-output.intermediate \
-	unemp-gretl-output.intermediate \
-	$(build-dir)/phillips-fig.csv \
-	phillips-gretl-output.intermediate \
-	exports-gretl-output.intermediate \
-	traffic2-gretl-output.intermediate
 
 
 # bibliography ---------------------------------------------------
