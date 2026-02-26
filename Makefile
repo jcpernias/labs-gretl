@@ -9,6 +9,7 @@ src-files := \
 	loanapp \
 	wagegap \
 	wagegap-sol \
+	engel \
 	cons \
 	unemp \
 	unemp-sol \

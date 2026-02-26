@@ -1,0 +1,202 @@
+#+TITLE: Estimación de curvas de Engel
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: \newcommand*{\totexpend}{\Var{totexpend}}
+#+LATEX_HEADER: \newcommand*{\ltotexpend}{\Var{ltotexpend}}
+#+LATEX_HEADER: \newcommand*{\kids     }{\Var{kids     }}
+#+LATEX_HEADER: \newcommand*{\age      }{\Var{age      }}
+#+LATEX_HEADER: \newcommand*{\pctfood  }{\Var{pctfood  }}
+#+LATEX_HEADER: \newcommand*{\pctclothes}{\Var{pctclothes}}
+#+LATEX_HEADER: \newcommand*{\twokids  }{\Var{twokids  }}
+#+LATEX_HEADER: % \newcommand*{\}{\Var{}}
+
+
+* Objetivo
+
+Seleccionar entre distintas especificaciones de curvas de Engel,
+mediante el uso de contrastes de hipótesis no anidadas.
+
+* Datos
+
+Los datos fueron recopilados para el artículo de Blundell, Duncan, and Pendakur (1998): “Semiparametric Estimation and Consumer Demand,” *Journal of Applied Econometrics*, 13, 435-461.
+
+La fuente original de los datos es la Encuesta de Gastos Familiares británica (*Family Expenditure Survey*) para los años 1980-1982. Los autores seleccionaron una muestra relativamente homogénea de familias: parejas con uno o dos hijos que viven en el sureste de Inglaterra y donde el sustentador principal tiene un trabajo por cuenta ajena. Los autores presentan métodos para estimar curvas de Engel de diferentes categorías de bienes (alimentación, energía, etc.). La selección de la muestra se hace con respecto a las variables explicativas (características demográficas) por lo que no afectaría a las propiedades de insesgadez y consistencia de los estimadores. Por un lado, la utilización de una muestra relativamente homogénea simplifica la especificación de las curvas de Engel, pero, por otro, limita la generalidad de los resultados.
+
+Esos datos están recogidos en el fichero ~engel.csv~.
+
+La base de datos contiene las siguientes variables:
+
+- \totexpend: gasto total en consumo (£ por semana).
+
+- \kids: número de hijos (1 o 2).
+
+- \age: edad del sustentador principal.
+
+- \pctfood: porcentaje del gasto total en consumo destinado a alimentación.
+
+- \pctclothes: porcentaje del gasto total en consumo destinado a ropa.
+
+- \twokids: variable ficticia que toma el valor 1 para las familias con dos hijos y el valor 0 para las familias con un hijo único.
+
+- \ltotexpend: logaritmo del gasto total en consumo.
+
+* Instrucciones
+
+A lo largo de esta sesión trabajaremos con dos especificaciones alternativas de la curva de Engel para la alimentación:
+
+- **Modelo A**:
+  #+begin_export latex
+  \[
+     \pctfood =
+     \beta_0 +
+     \beta_1 \totexpend +
+     \beta_2 \twokids +
+     \beta_3 \age +
+     u
+  \]
+  #+end_export
+
+- **Modelo B**:
+  #+begin_export latex
+  \[
+     \pctfood =
+     \alpha_0 +
+     \alpha_1 \log(\totexpend) +
+     \alpha_2 \twokids +
+     \alpha_3 \age +
+     v
+  \]
+  #+end_export
+
+Estimamos los parámetros de los dos modelos por MCO usando errores típicos robustos a heteroscedasticidad.
+
+** Bondad del ajuste
+
+Las medidas de bondad del ajuste pueden usarse para comparar modelos cuando la variable dependiente es la misma. Calcularemos el $R^2$ ajustado para nuestros dos modelos utilizando la fórmula:
+#+begin_export latex
+\[
+  \bar{R}^2 = 1 - \frac{\hat{\sigma}^2}{\operatorname{var}(y)}
+\]
+#+end_export
+
+De acuerdo a este criterio el Modelo B sería preferible.
+
+** Contrastes de abarcamiento
+
+Para llevar a cabo este tipo de contraste, primero fusionamos los dos modelos rivales:
+#+begin_export latex
+\[
+  \mathit{pct\_food} = \gamma_0
+  + \gamma_1 \mathit{totexpend}
+  + \gamma_2 \mathit{two\_kids}
+  + \gamma_3 \mathit{age}
+  + \gamma_4 \log(\mathit{totexpend})
+  + \text{error}
+\]
+#+end_export
+$$ Ahora podemos expresar los dos modelo rivales como restricciones sobre los parámetros $\gamma_0, \gamma_1, \dots, \gamma_4$:
+
+-   Modelo A: $H_0\!: \gamma_4 = 0$.
+
+-   Modelo B: $H_0\!: \gamma_1 = 0$.
+
+Aplicamos esta estrategia a nuestros modelos (usando contrastes de significación robustos a heteroscedasticidad):
+
+-   Estimamos un modelo que incluye las variables explicativas del Modelo A y del Modelo B:
+
+    ```{r}
+    enc <- lm(pct_food ~ totexpend + two_kids + age + ltotexpend, data = engel)
+    coeftest(enc, vcov. = vcovHC)
+    ```
+
+-   Contrastamos la validez del Modelo A frente al B:
+
+    ```{r}
+    h0 <- "ltotexpend"
+    lht(enc, h0, vcov. = vcovHC)
+    ```
+
+    El resultado del contraste llevaría al rechazo del Modelo A.
+
+-   Contrastamos la validez del Modelo B frente al A:
+
+    ```{r}
+    h0 <- "totexpend"
+    lht(enc, h0, vcov. = vcovHC)
+    ```
+
+    En este caso no podemos rechazar el Modelo B.
+
+Los contrastes de abarcamiento seleccionarían el Modelo B.
+
+** Contrastes de Davidson-MacKinnon
+
+Los contrastes propuestos por Davidson y MacKinnon consisten en ampliar cada uno de los modelos con las predicciones del modelo rival. Si un modelo está correctamente especificado, las predicciones obtenidas con un modelo rival no deberían tener poder explicativo.
+
+-   Modelo A:
+
+    ```{r}
+    yhat_B <- fitted(mod_B)
+    dm_A <- lm(pct_food ~ totexpend + two_kids + age + yhat_B, data = engel)
+    coeftest(dm_A, vcov. = vcovHC)
+    ```
+
+    El contraste $t$ robusto a heteroscedasticidad muestra que las predicciones del modelo B tienen capacidad explicativa. Por tanto, rechazamos el modelo A.
+
+-   Modelo B:
+
+    ```{r}
+    yhat_A <- fitted(mod_A)
+    dm_B <- lm(pct_food ~ ltotexpend + two_kids + age + yhat_A, data = engel)
+    coeftest(dm_B, vcov. = vcovHC)
+    ```
+
+    En este caso las predicciones de Modelo A no son significativas, por lo que no rechazaríamos la hipótesis de correcta especificación del Modelo B.
+
+Los contrastes de Davidson-MacKinnon también seleccionarían el Modelo B.
+
+** Conclusión
+
+Tanto las medidas de bondad del ajuste como los resultados de los contrastes de modelos no anidados muestran que el Modelo B es preferible al Modelo A.
+
+Especificaciones como las del Modelo B se conocen como el modelo Working-Leser. La variable dependiente es el porcentaje del presupuesto familiar dedicado al consumo de un bien: $$w = 100 \frac{p q}{m},$$ donde $p$ y $q$ son es el precio y la cantidad consumida del bien, y $m$ es el gasto total. Como variables explicativas se usan el logaritmo del gasto total y variables demográficas, $Z$:
+#+begin_export latex
+\[
+  w = \alpha
+  + \beta \log(m)
+  + \phi' Z
+  + u.
+\]
+#+end_export
+Operando en la expresión anterior se llega a:
+#+begin_export latex
+\[
+  \frac{\partial q}{\partial m} = \frac{w + \beta}{100 p}
+\]
+#+end_export
+Finalmente, obtenemos la elasticidad del gasto en el bien con respecto al gasto total como:
+#+begin_export latex
+\[
+  \epsilon_m = \frac{\partial q}{\partial m}\frac{m}{q} = 1 + \frac{\beta}{w}
+\]
+#+end_export
+El valor del parámetro $\beta$ permite clasificar al bien de acuerdo a cómo varía su consumo cuando cambia el gasto total:
+
+-   $\beta > 0$: bien de lujo.
+
+-   $\beta = 0$: elasticidad renta unitaria.
+
+-   $\beta < 0$: bien de primera necesidad (cuando $w > -\beta$) o bien inferior (cuando $w < -\beta$).
+
+De acuerdo con las estimaciones del modelo B, en la población de donde se extrajo la muestra el consumo de alimentos era un bien de primera necesidad para aquellas familias que le dedicaban más de un $14{,}6\%$ del gasto total, mientras que sería un bien inferior para aquellas familias que dedicaban a alimentación menos del $14{,}6\%$ de su gasto total.
+
+
+
+# #+print_bibliography:
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Engel
