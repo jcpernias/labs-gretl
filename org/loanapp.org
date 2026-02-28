@@ -17,7 +17,6 @@
 #+LATEX_HEADER: \newcommand*{\pubrec }{\Var{pubrec }}
 
 
-
 * Objetivo
 
 Se estima un modelo lineal de probabilidad para determinar si existió
@@ -26,12 +25,8 @@ en 1990.
 
 * Datos
 
-Los datos provienen del trabajo de W. C. Hunter y M. B. Walker (1996):
-"@@latex:\foreignlanguage{english}{The Cultural Affinity Hypothesis
-and Mortgage Lending Decisions}@@",
-/@@latex:\foreignlanguage{english}{Journal of Real Estate Finance and
-Economics}@@/, 13, 57-70.  El fichero ~loanapp.csv~ contiene las
-siguientes variables:
+Los datos provienen de [cite:@hunterCulturalAffinityHypothesis1996].
+El fichero ~loanapp.csv~ contiene las siguientes variables:
 
 - \approve: variable ficticia que toma el valor 1 para aquellos
   solicitantes a los que se les concede un préstamo hipotecario.
@@ -263,6 +258,7 @@ g) ¿Es posible estimar el modelo del apartado [[item_d]] por Mínimos
    para usar MCPF: el valor máximo de $\hat{p}_i$ es $1.14$.
    #+end_answer
 
+#+print_bibliography:
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
