@@ -16,7 +16,6 @@ de la regresión hedónica de los precios de venta de las viviendas de
 Boston.
 
 
-
 * Datos
 
 Los datos proceden de la sección inmobiliaria del periódico /The
@@ -54,9 +53,43 @@ a) <<item_a>>Estime por Mínimos Cuadrados Ordinarios, utilizando
    Aplique el contraste de Breusch-Pagan (Koenker) para determinar si
    hay evidencia de heteroscedasticidad.
 
+   #+begin_answer
+     #+latex: \gretl[lastline=14]{outliers-a1.txt}
+
+     #+latex: \gretl[lastline=6]{outliers-a2.txt}
+   #+end_answer
+
 b) Examine los gráficos de los residuos de la regresión anterior
    frente a cada una de las variables explicativas. ¿Hay alguna
    observación atípica en la muestra?
+
+   #+begin_answer
+     #+ATTR_LATEX: :options [c]{0.50\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.52
+     [[file:outliers-bedrooms.pdf]]
+     #+end_minipage
+     #+ATTR_LATEX: :options [c]{0.50\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.52
+     [[file:outliers-colonial.pdf]]
+     #+end_minipage
+
+     #+ATTR_LATEX: :options [c]{0.50\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.52
+     [[file:outliers-lotsize.pdf]]
+     #+end_minipage
+     #+ATTR_LATEX: :options [c]{0.50\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.52
+     [[file:outliers-size.pdf]]
+     #+end_minipage
+   #+end_answer
 
 c) <<item_c>>Cree una variable ficticia que tome el valor $1$
    únicamente para la observación atípica identificada en el apartado
@@ -65,13 +98,25 @@ c) <<item_c>>Cree una variable ficticia que tome el valor $1$
    parámetro de la variable ficticia?  Obtenga el residuo
    estudentizado de la observación atípica e interprete su magnitud.
 
+   #+begin_answer
+     #+latex: \gretl[lastline=15]{outliers-c.txt}
+   #+end_answer
+
 d) Ajuste la muestra para que no incluya la observación atípica y
    vuelva a estimar la regresión del apartado [[item_a]]. Compare los
    resultados con los obtenidos en el apartado [[item_c]].
 
+   #+begin_answer
+     #+latex: \gretl[lastline=14]{outliers-d.txt}
+   #+end_answer
+
 e) Una vez eliminada la observación atípica de la muestra, repita el
    contraste de heteroscedasticidad de Breusch–Pagan (Koenker). ¿Sigue
    habiendo evidencia de heteroscedasticidad?
+
+   #+begin_answer
+     #+latex: \gretl[lastline=6]{outliers-e.txt}
+   #+end_answer
 
 
 # #+print_bibliography:

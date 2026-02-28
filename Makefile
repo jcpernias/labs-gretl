@@ -23,7 +23,8 @@ ans-files := \
 	hprice1 \
 	loanapp \
 	exports \
-	engel
+	engel \
+	outliers
 
 ## Directories
 ## ================================================================================

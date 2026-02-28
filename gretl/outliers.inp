@@ -1,0 +1,37 @@
+set verbose off
+set workdir ./build
+
+open ../data/hprice1.csv
+
+outfile outliers-a1.txt
+ols price 0 bedrooms colonial lotsize size --robust --simple-print
+end outfile
+
+outfile outliers-a2.txt
+modtest --breusch-pagan --robust --quiet
+end outfile
+
+uhat1 = $uhat
+
+
+gnuplot uhat1 bedrooms --output=outliers-bedrooms.plt
+gnuplot uhat1 colonial --output=outliers-colonial.plt
+gnuplot uhat1 lotsize --output=outliers-lotsize.plt
+gnuplot uhat1 size --output=outliers-size.plt
+
+
+large_lot = lotsize > 8000
+
+outfile outliers-c.txt
+ols price 0 bedrooms colonial lotsize size large_lot --robust --simple-print
+end outfile
+
+smpl large_lot == 0 --restrict
+
+outfile outliers-d.txt
+ols price 0 bedrooms colonial lotsize size --robust --simple-print
+end outfile
+
+outfile outliers-e.txt
+modtest --breusch-pagan --robust --quiet
+end outfile
