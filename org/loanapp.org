@@ -136,7 +136,7 @@ b) Contraste si los parámetros de las variables \black e \hispan son
    $2.5$ y su valor $p$ es $0.11$. En consecuencia, no se rechaza la
    hipótesis nula al nivel de significación $\alpha = 5\%$.
    #+end_answer
-   #+latex: \clearpage{}
+   #+latex: \ClearPage{}
 
 c) Añada la variable explicativa \obrat. Interprete la estimación del
    parámetro de esta variable. ¿Tiene un efecto significativo?
@@ -165,7 +165,7 @@ d) Añada las restantes variables del archivo de datos: \loanprc,
    Resultados de la estimación por MCO con errores típicos robustos a
    heteroscedasticidad:
    #+latex: \gretl[firstline=2, lastline=22]{loanapp-d1.txt}
-   #+latex: \clearpage{}
+   #+latex: \ClearPage{}
 
    Resultados del contraste robusto sobre la significación conjunta de
    todas las explicativas, salvo \black e \hispan:
