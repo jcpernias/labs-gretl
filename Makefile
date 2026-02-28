@@ -7,9 +7,10 @@ src-files := \
 	bwght \
 	hprice1 \
 	loanapp \
+	engel \
+	outliers \
 	wagegap \
 	wagegap-sol \
-	engel \
 	cons \
 	unemp \
 	unemp-sol \
@@ -276,6 +277,7 @@ $(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
 $(zip-dir)/hprice1.zip: $(data-dir)/hprice1.csv
 $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
 $(zip-dir)/engel.zip: $(data-dir)/engel.csv
+$(zip-dir)/outliers.zip: $(data-dir)/hprice1.csv
 $(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv

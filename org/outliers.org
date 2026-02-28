@@ -1,0 +1,83 @@
+#+TITLE: Observaciones atípicas
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: \newcommand*{\hprice}{\Var{price}}
+#+LATEX_HEADER: \newcommand*{\bedrooms}{\Var{bedrooms}}
+#+LATEX_HEADER: \newcommand*{\colonial}{\Var{colonial}}
+#+LATEX_HEADER: \newcommand*{\lotsize}{\Var{lotsize}}
+#+LATEX_HEADER: \newcommand*{\size}{\Var{size}}
+
+
+* Objetivo
+
+Examinar los efectos de las observaciones atípicas en los resultados
+de la regresión hedónica de los precios de venta de las viviendas de
+Boston.
+
+
+
+* Datos
+
+Los datos proceden de la sección inmobiliaria del periódico /The
+Boston Globe/ durante el año 1990. Este conjunto de datos se usa en
+múltiples capítulos del manual de econometría de Wooldridge. Las
+variables disponibles en el fichero ~hprice1.csv~ son:
+
+- \hprice: precios de venta de las casas, miles de dólares.
+
+- \bedrooms: número de habitaciones.
+
+- \colonial: variable ficticia que toma el valor 1 para las casas con
+  estilo colonial.
+
+- \lotsize: tamaño del jardín, en metros cuadrados.
+
+- \size: tamaño de la vivienda, en metros cuadrados.
+
+* Instrucciones
+
+#+ATTR_LATEX: :options [a)]
+a) <<item_a>>Estime por Mínimos Cuadrados Ordinarios, utilizando
+   errores típicos robustos, la siguiente regresión hedónica:
+   #+begin_export latex
+   \begin{equation*}
+     \hprice_{i} =
+     \beta_{0}
+     + \beta_{1} \bedrooms_{i}
+     + \beta_{2} \colonial_{i}
+     + \beta_{3} \lotsize_{i}
+     + \beta_{4} \size_{i}
+     + u _{i}.
+   \end{equation*}
+   #+end_export
+   Aplique el contraste de Breusch-Pagan (Koenker) para determinar si
+   hay evidencia de heteroscedasticidad.
+
+b) Examine los gráficos de los residuos de la regresión anterior
+   frente a cada una de las variables explicativas. ¿Hay alguna
+   observación atípica en la muestra?
+
+c) <<item_c>>Cree una variable ficticia que tome el valor $1$
+   únicamente para la observación atípica identificada en el apartado
+   anterior. Inclúyala en la regresión y examine las diferencias con
+   las estimaciones del apartado [[item_a]]. ¿Qué interpretación tiene el
+   parámetro de la variable ficticia?  Obtenga el residuo
+   estudentizado de la observación atípica e interprete su magnitud.
+
+d) Ajuste la muestra para que no incluya la observación atípica y
+   vuelva a estimar la regresión del apartado [[item_a]]. Compare los
+   resultados con los obtenidos en el apartado [[item_c]].
+
+e) Una vez eliminada la observación atípica de la muestra, repita el
+   contraste de heteroscedasticidad de Breusch–Pagan (Koenker). ¿Sigue
+   habiendo evidencia de heteroscedasticidad?
+
+
+# #+print_bibliography:
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Boston estudentizado Koenker Breusch
