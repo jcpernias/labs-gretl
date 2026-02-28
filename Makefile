@@ -21,7 +21,8 @@ src-files := \
 ans-files := \
 	hprice1 \
 	loanapp \
-	exports
+	exports \
+	engel
 
 ## Directories
 ## ================================================================================
@@ -267,12 +268,14 @@ $(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 # bibliography ---------------------------------------------------
 $(pdf-dir)/cons.pdf: $(root-dir)/labs.bib
 $(pdf-dir)/unemp.pdf: $(root-dir)/labs.bib
+$(pdf-dir)/engel.pdf: $(root-dir)/labs.bib
 
 # data files -----------------------------------------------------
 $(zip-dir)/vote.zip: $(data-dir)/vote.csv
 $(zip-dir)/bwght.zip: $(data-dir)/bwght.gdt
 $(zip-dir)/hprice1.zip: $(data-dir)/hprice1.csv
 $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
+$(zip-dir)/engel.zip: $(data-dir)/engel.csv
 $(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv

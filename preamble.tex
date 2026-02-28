@@ -88,10 +88,18 @@
 \providebool{answers}
 
 \ifbool{answers}{%
-  \newtcolorbox{answer}{coltext=Black!70, colframe=SlateGray!70!Black,%
-    colback=LightSteelBlue!5!White, notitle, boxrule=0.5pt,%
-    fontupper=\small, breakable, skin=enhanced, parbox=false,%
-    before upper=\csname @totalleftmargin\endcsname0pt}}{%
+  \newtcolorbox{answer}{%
+    coltext=Black!70,%
+    colframe=SlateGray!70!Black,%
+    colback=LightSteelBlue!5!White,%
+    notitle,%
+    boxrule=0.5pt,%
+    fontupper=\small,%
+    breakable,%
+    % skin=enhanced,%
+    parbox=true,%
+    %before upper=\csname @totalleftmargin\endcsname0pt,%
+  }}{%
   \newenvironment{answer}{\expandafter\comment}{\expandafter\endcomment}}
 
 \ifbool{answers}{%

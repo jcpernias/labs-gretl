@@ -1,0 +1,57 @@
+set verbose off
+set workdir "./build"
+
+open "../data/engel.csv"
+
+pctfood = 100 * food / total
+twokids = kids == 2
+square age
+logs total
+square total
+
+outfile engel-a.txt
+summary pctfood twokids age --simple
+end outfile
+
+list Xa = total sq_total
+list Xb = l_total
+list Xcommon = twokids age sq_age
+
+# modelo 1
+outfile engel-b.txt
+ols pctfood 0 Xa Xcommon --robust
+end outfile
+series yhat_A = $yhat
+
+# modelo 2
+outfile engel-c.txt
+ols pctfood 0 Xb Xcommon --robust
+end outfile
+series yhat_B = $yhat
+
+# modelo 3
+outfile engel-e1.txt
+ols pctfood 0 Xa Xb Xcommon --robust --simple-print
+end outfile
+outfile engel-e2.txt
+omit Xb --test-only
+end outfile
+outfile engel-e3.txt
+omit Xa --test-only
+end outfile
+
+# modelo 1
+outfile engel-f1.txt
+ols pctfood 0 Xa Xcommon yhat_B --robust --simple-print
+end outfile
+outfile engel-f2.txt
+omit yhat_B --quiet
+end outfile
+
+# modelo 2
+outfile engel-f3.txt
+ols pctfood 0 Xb Xcommon yhat_A --robust --simple-print
+end outfile
+outfile engel-f4.txt
+omit yhat_A --quiet
+end outfile

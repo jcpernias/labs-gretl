@@ -119,41 +119,66 @@ a) Cree las siguientes variables:
    ¿Cuál era la edad media de los sustentadores principales?
 
    #+begin_answer
-
+   Una vez creadas las nuevas variables, se calculan los estadísticos
+   descriptivos necesarios para responder a las preguntas:
+   #+latex: \gretl[lastline=5]{engel-a.txt}
+   Los valores medios de las  variables muestran que:
+   - Las familias de la muestra dedicaban a alimentación el \pct{35.6}
+     de su gasto total, por término medio.
+   - El \pct{60.9} de las familias tenía $2$ hijos.
+   - La edad media de los sustentadores principales era de $35.8$
+     años.
    #+end_answer
+   #+latex: \ClearPage{}
 
 b) <<item_mcoa>>Estime por MCO los parámetros del Modelo A. Guarde los valores
    ajustados de la variable dependiente.
 
    #+begin_answer
+   Estimación por MCO del Modelo A:
+   #+latex: \gretl[lastline=18]{engel-b.txt}
 
+   Las predicciones se guardan en la variable ~yhat_A~.
    #+end_answer
 
 c) <<item_mcob>>Estime el Modelo B por MCO y guarde las predicciones.
 
    #+begin_answer
+   Estimación por MCO del Modelo B:
+   #+latex: \gretl[lastline=17]{engel-c.txt}
 
+   Las predicciones se guardan en la variable ~yhat_B~.
    #+end_answer
 
 d) Compare la bondad del ajuste de ambos modelos. ¿Cuál sería
    preferible de acuerdo con este criterio?
 
    #+begin_answer
-     el $R^2$ ajustado.
+     Puesto que los dos modelos que se están comparando tienen un
+     número diferente de variables explicativas se utilizará el $R^2$
+     ajustado para comparar la bondad del ajuste:
+     #+begin_export latex
+     \[
+     \bar{R}^2_A = 0.282, \quad \bar{R}^2_B = 0.286.
+     \]
+     #+end_export
 
-     De acuerdo a este criterio el Modelo B sería preferible.
+     De acuerdo con este criterio, el Modelo B sería preferible ya que
+     su $R^2$ ajustado es ligeramente superior al del Modelo A.
    #+end_answer
+   #+latex: \ClearPage{}
 
 e) Use los contrastes de abarcamiento para evaluar la validez de cada
    uno de los modelos frente al otro. ¿Qué conclusión puede extraerse
    de estos contrastes?
 
    #+begin_answer
-     Para llevar a cabo este tipo de contraste, primero fusionamos los
-     dos modelos rivales:
+     Para llevar a cabo este tipo de contraste, se estima una
+     regresión con todas las variables explicativas de los dos modelos
+     rivales:
      #+begin_export latex
      \[
-       \pctfood} = \gamma_0
+       \pctfood = \gamma_0
        + \gamma_1 \total
        + \gamma_2 \total^2
        + \gamma_3 \log(\total)
@@ -163,58 +188,64 @@ e) Use los contrastes de abarcamiento para evaluar la validez de cada
        + \text{error}
      \]
      #+end_export
-     Ahora podemos expresar los dos modelo rivales como restricciones
+     Cada uno de los modelos se puede obtener mediante restricciones
      sobre los parámetros $\gamma_0, \gamma_1, \dots, \gamma_6$:
 
      - Modelo A: $H_0\!: \gamma_3 = 0$.
 
      - Modelo B: $H_0\!: \gamma_1 = \gamma_2 = 0$.
 
-     Aplicamos esta estrategia a nuestros modelos (usando contrastes de
-     significación robustos a heteroscedasticidad):
+     Se estima, en primer lugar, la regresión de abarcamiento por MCO:
+     #+latex: \gretl[lastline=16]{engel-e1.txt}
+     #+latex: \vspace*{1ex}
 
-     - Estimamos un modelo que incluye las variables explicativas del
-       Modelo A y del Modelo B:
+     Contraste del Modelo A frente al Modelo B:
+     #+latex: \gretl[lastline=3]{engel-e2.txt}
+     Se rechazaría el Modelo A al \pct{5} de significación.
+     #+latex: \vspace*{1ex}
 
-     - Contrastamos la validez del Modelo A frente al B:
+     Contraste del Modelo B frente al Modelo A:
+     #+latex: \gretl[lastline=4]{engel-e3.txt}
+     En este caso, no se puede rechazar la validez del Modelo B para
+     $\alpha = \pct{5}$.
+     #+latex: \vspace*{1ex}
 
-       El resultado del contraste llevaría al rechazo del Modelo A.
-
-     - Contrastamos la validez del Modelo B frente al A:
-
-       En este caso no podemos rechazar el Modelo B.
-
-     Los contrastes de abarcamiento seleccionarían el Modelo B.
-
+     Los contrastes de abarcamiento rechazarían el Modelo A en favor
+     del Modelo B.
    #+end_answer
+   #+latex: \ClearPage{}
 
 f) Utilice las predicciones guardadas en los apartados [[item_mcoa]] y
    [[item_mcob]] para comparar los dos modelos con los contrastes de
    Davidson-MacKinnon y comente los resultados.
 
    #+begin_answer
-     Los contrastes propuestos por Davidson y MacKinnon consisten en
-     ampliar cada uno de los modelos con las predicciones del modelo
-     rival. Si un modelo está correctamente especificado, las predicciones
-     obtenidas con un modelo rival no deberían tener poder explicativo.
+     Estimación del Modelo A cuando se incluye como explicativa
+     adicional las predicciones del otro modelo:
+     #+latex: \gretl[lastline=16]{engel-f1.txt}
+     #+latex: \vspace*{1ex}
 
-     - Modelo A:
+     Contraste de significación de $\hat{y}_B$:
+     #+latex: \gretl[lastline=3]{engel-f2.txt}
+     El contraste muestra que las predicciones del Modelo B tienen
+     capacidad explicativa, por tanto, se rechaza el Modelo A.
+     #+latex: \vspace*{1ex}
 
-       El contraste $t$ robusto a heteroscedasticidad muestra que las
-       predicciones del modelo B tienen capacidad explicativa. Por tanto,
-       rechazamos el modelo A.
+     Estimación del Modelo B cuando se añaden las predicciones del
+     Modelo A:
+     #+latex: \gretl[lastline=15]{engel-f3.txt}
+     #+latex: \vspace*{1ex}
 
-     - Modelo B:
-
-       En este caso las predicciones de Modelo A no son significativas, por
-       lo que no rechazaríamos la hipótesis de correcta especificación del
-       Modelo B.
+     Contraste de significación de $\hat{y}_A$:
+     #+latex: \gretl[lastline=3]{engel-f4.txt}
+     En este caso, las predicciones de Modelo A no son significativas,
+     por lo que no se rechazaría la hipótesis de correcta
+     especificación del Modelo B.
+     #+latex: \vspace*{1ex}
 
      Los contrastes de Davidson-MacKinnon también seleccionarían el
      Modelo B.
-
    #+end_answer
-
 
 #+print_bibliography:
 
