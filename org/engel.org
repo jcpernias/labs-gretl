@@ -31,10 +31,10 @@ Se seleccionó una muestra relativamente homogénea de familias: parejas
 con uno o dos hijos que viven en el sureste de Inglaterra y donde el
 sustentador principal tiene un trabajo por cuenta ajena.  La selección
 de la muestra se hace con respecto a las variables explicativas
-(características demográficas) por lo que no afectaría a las
-propiedades de insesgadez y consistencia de MCO. La utilización de una
-muestra relativamente homogénea simplifica la especificación de las
-curvas de Engel, pero limita la generalidad de los resultados.
+(características demográficas), lo que no afecta a las propiedades de
+insesgadez y consistencia de MCO. La utilización de una muestra
+relativamente homogénea simplifica la especificación de las curvas de
+Engel, pero limita la generalidad de los resultados.
 
 En el fichero ~engel.csv~ se encuentran las siguientes variables:
 
@@ -49,12 +49,13 @@ En el fichero ~engel.csv~ se encuentran las siguientes variables:
 
 * Curvas de Engel
 
-En el trabajo empírico sobre consumo es habitual trabajar con modelos
-donde la variable dependiente es el porcentaje del gasto total que un
-consumidor o una familia destina a un determinado bien (alimentos, por
-ejemplo). La variable dependiente se explica por una función del gasto
-total y otras variables demográficas (edad, número de hijos, etc.). En
-este laboratorio se estimarán modelos que son casos particulares de:
+En los trabajos empíricos sobre consumo, es habitual emplear modelos
+en los que la variable dependiente es el porcentaje del gasto total
+que un consumidor o una familia destina a un determinado bien
+(alimentos, por ejemplo). La variable dependiente se explica por una
+función del gasto total y otras variables demográficas (edad, número
+de hijos, etc.). En este laboratorio se estimarán modelos que son
+casos particulares de:
 #+begin_export latex
 \[
   \pctfood = f(\total, \kids, \age),
@@ -109,9 +110,9 @@ de significación del \pct{5}.
 a) Cree las siguientes variables:
    - \pctfood: porcentaje que representan los gastos en alimentos
      sobre el gasto total de las familias.
-   - \twokids: ficticia que toma el valor $1$ en las familias con 2
-     hijos.
-   - Cree variables con con el logaritmo de \total y con los cuadrados
+   - \twokids: variable ficticia que toma el valor $1$ en las familias
+     con 2 hijos.
+   - Cree variables con el logaritmo de \total y con los cuadrados
      de \total y \age.
    ¿Cuál era, por término medio, el porcentaje del gasto total
    dedicado a alimentación? ¿Qué proporción de familias tenía 2 hijos?
@@ -121,14 +122,14 @@ a) Cree las siguientes variables:
 
    #+end_answer
 
-b) Estime por MCO los parámetros del Modelo A. Guarde los valores
+b) <<item_mcoa>>Estime por MCO los parámetros del Modelo A. Guarde los valores
    ajustados de la variable dependiente.
 
    #+begin_answer
 
    #+end_answer
 
-c) Estime el Modelo B por MCO y guarde las predicciones.
+c) <<item_mcob>>Estime el Modelo B por MCO y guarde las predicciones.
 
    #+begin_answer
 
@@ -187,8 +188,9 @@ e) Use los contrastes de abarcamiento para evaluar la validez de cada
 
    #+end_answer
 
-f) Utilice ahora los contrastes de Davidson-MacKinnon para comparar
-   los dos modelos y comente los resultados.
+f) Utilice las predicciones guardadas en los apartados [[item_mcoa]] y
+   [[item_mcob]] para comparar los dos modelos con los contrastes de
+   Davidson-MacKinnon y comente los resultados.
 
    #+begin_answer
      Los contrastes propuestos por Davidson y MacKinnon consisten en
