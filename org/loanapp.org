@@ -74,7 +74,7 @@ Responda a las siguientes preguntas. Use un nivel de significación del
 $5\%$ para los contrastes.
 
 #+ATTR_LATEX: :options [a)]
-a) Estime un modelo lineal de probabilidad donde la variable
+a) <<item_a>>Estime un modelo lineal de probabilidad donde la variable
    dependiente es \approve y las explicativas son \black e
    \hispan. Presente la tabla de la regresión con errores típicos
    robustos a heteroscedasticidad. Interprete las estimaciones de los
@@ -154,7 +154,7 @@ c) Añada la variable explicativa \obrat. Interprete la estimación del
    concesión de las hipotecas.
    #+end_answer
 
-d) Añada las restantes variables del archivo de datos: \loanprc,
+d) <<item_d>>Añada las restantes variables del archivo de datos: \loanprc,
    \unem, \male, \married, \dep, \self, \sch, \chist y
    \pubrec. Presente las estimaciones de MCO junto con los errores
    típicos robustos a heteroscedasticidad.  Contraste la significación
@@ -176,16 +176,16 @@ d) Añada las restantes variables del archivo de datos: \loanprc,
    rechaza la hipótesis nula.
    #+end_answer
 
-e) Al añadir las variables explicativas adicionales, ¿qué ha ocurrido
-   con las estimaciones de los parámetros de \black e \hispan? ¿Siguen
-   siendo individualmente significativas?  Contraste si los parámetros
-   de estas dos variables son iguales.
+e) <<item_e>>Al añadir las variables explicativas adicionales, ¿qué ha
+   ocurrido con las estimaciones de los parámetros de \black e
+   \hispan? ¿Siguen siendo individualmente significativas?  Contraste
+   si los parámetros de estas dos variables son iguales.
 
    #+begin_answer
    Las estimaciones de los parámetros de \black e \hispan son
    considerablemente menores en valor absoluto que las obtenidas en el
-   apartado a), especialmente en el caso de la pendiente de \black que
-   pasa de $-0.24$ a $-0.16$. Estos cambios pueden deberse a
+   apartado [[item_a]], especialmente en el caso de la pendiente de \black
+   que pasa de $-0.24$ a $-0.16$. Estos cambios pueden deberse a
    diferencias sistemáticas entre los miembros de los diferentes
    grupos raciales en los valores de las variables añadidas (historial
    crediticio, cargas financieras, precariedad del empleo, nivel
@@ -208,7 +208,7 @@ f) Los resultados obtenidos, ¿son evidencia de discriminación en
    contra de las minorías raciales?
 
    #+begin_answer
-   Los resultados obtenidos en el apartado e) muestran que la
+   Los resultados obtenidos en el apartado [[item_e]] muestran que la
    probabilidad de acceder a una hipoteca es distinta para blancos y
    para no blancos. Esta diferencia no puede ser atribuida a las
    variables que se han usado como explicativas: situación financiera
@@ -219,8 +219,8 @@ f) Los resultados obtenidos, ¿son evidencia de discriminación en
    discriminación en contra de las minorías raciales.
    #+end_answer
 
-g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
-   Ponderados Factibles?
+g) ¿Es posible estimar el modelo del apartado [[item_d]] por Mínimos
+   Cuadrados Ponderados Factibles?
 
    #+begin_answer
    La varianza condicional del término de error es:
@@ -256,7 +256,7 @@ g) ¿Es posible estimar el modelo del apartado d) por Mínimos Cuadrados
    varianzas del término de error no serían estrictamente positivas.
 
    Guardamos en la variable ~phat~ las predicciones del modelo
-   estimado en el apartado d) y calculamos sus estadísticos
+   estimado en el apartado [[item_d]] y calculamos sus estadísticos
    descriptivos:
    #+latex: \gretl[firstline=2, lastline=9]{loanapp-g.txt}
    Las probabilidades de ocurrencia predichas no cumplen la condición
