@@ -7,6 +7,7 @@
 #+LATEX_HEADER: \newcommand*{\colonial}{\Var{colonial}}
 #+LATEX_HEADER: \newcommand*{\lotsize}{\Var{lotsize}}
 #+LATEX_HEADER: \newcommand*{\size}{\Var{size}}
+#+LATEX_HEADER: \newcommand*{\largelot}{\Var{large\_lot}}
 
 
 * Objetivo
@@ -56,6 +57,12 @@ a) <<item_a>>Estime por Mínimos Cuadrados Ordinarios, utilizando
    #+begin_answer
      #+latex: \gretl[lastline=14]{outliers-a1.txt}
 
+     En la tabla anterior se muestran las estimaciones MCO con errores
+     típicos robustos. El contraste de Breusch–Pagan (versión de
+     Koenker) proporciona fuerte evidencia de heteroscedasticidad. La
+     elevada magnitud del estadístico $\mathit{LM} = 16.15$ con un
+     valor $p = 0.0028$ llevaría a rechazar la hipótesis nula de
+     homoscedasticidad al \pct{5}:
      #+latex: \gretl[lastline=6]{outliers-a2.txt}
    #+end_answer
 
@@ -64,6 +71,10 @@ b) Examine los gráficos de los residuos de la regresión anterior
    observación atípica en la muestra?
 
    #+begin_answer
+     A continuación se muestran los gráficos de cada una de las
+     variables explicativas (en el eje horizontal) frente a los
+     residuos (en el eje vertical).
+
      #+ATTR_LATEX: :options [c]{0.50\textwidth}
      #+begin_minipage
      #+latex: \vspace{0pt}
@@ -89,6 +100,13 @@ b) Examine los gráficos de los residuos de la regresión anterior
      #+ATTR_LATEX: :scale 0.52
      [[file:outliers-size.pdf]]
      #+end_minipage
+
+     En los gráficos de residuos frente a las variables explicativas
+     únicamente aparece una observación inusual en el caso de
+     \lotsize. Mientras la mayoría de las parcelas tiene una
+     superficie inferior a \SI{2000}{\metre\squared}, una vivienda
+     registra un tamaño superior a \SI{8000}{\metre\squared}, lo que
+     constituye una observación atípica.
    #+end_answer
 
 c) <<item_c>>Cree una variable ficticia que tome el valor $1$
@@ -99,7 +117,51 @@ c) <<item_c>>Cree una variable ficticia que tome el valor $1$
    estudentizado de la observación atípica e interprete su magnitud.
 
    #+begin_answer
+     Se añadió al conjunto de datos una variable ficticia \largelot
+     cuya definición es: ~large_lot = lotsize > 8000~. La regresión
+     hedónica se amplía incluyendo esta variable entre las
+     explicativas:
+     #+begin_export latex
+       \begin{equation*}
+       \hprice_{i} =
+       \beta_{0}
+       + \beta_{1} \bedrooms_{i}
+       + \beta_{2} \colonial_{i}
+       + \beta_{3} \lotsize_{i}
+       + \beta_{4} \size_{i}
+       + \delta \largelot_{i}
+       + u _{i}.
+       \end{equation*}
+     #+end_export
+
      #+latex: \gretl[lastline=15]{outliers-c.txt}
+     Tras incluir \largelot se observan cambios sustanciales en las
+     estimaciones de las pendientes de las restantes explicativas. La
+     estimación del parámetro de \lotsize se incrementa
+     notablemente. También aumentan los parámetros de \bedrooms y
+     \colonial. Por último, se observa una reducción en la magnitud de
+     la pendiente de \size.
+     #+latex: \vspace*{1ex}
+
+     A diferencia de lo que ocurría en la estimación del apartado
+     [[item_a]], todas las explicativas excepto \colonial son
+     significativas al nivel del \pct{5}.
+     #+latex: \vspace*{1ex}
+
+     El parámetro de \largelot indica que el precio correspondiente a
+     la observación atípica está muy por debajo de lo que predice la
+     regresión. De acuerdo con las estimaciones, el precio de venta de
+     esa vivienda debería haber sido aproximadamente $770.7$ miles de
+     dólares mayor.
+     #+latex: \vspace*{1ex}
+
+     El residuo estudentizado de la observación atípica coincide con
+     el cociente $t$ de la variable \largelot. Bajo los supuestos del
+     modelo lineal clásico se distribuye como una variable $t$, por lo
+     que el valor obtenido, $-5.16$, es muy grande en valor
+     absoluto. Esto indicaría que la observación atípica estaría
+     ejerciendo una gran influencia en las estimaciones del apartado
+     [[item_a]].
    #+end_answer
 
 d) Ajuste la muestra para que no incluya la observación atípica y
@@ -107,8 +169,16 @@ d) Ajuste la muestra para que no incluya la observación atípica y
    resultados con los obtenidos en el apartado [[item_c]].
 
    #+begin_answer
+     Estimaciones MCO usando la muestra para la que $\largelot = 0$:
      #+latex: \gretl[lastline=14]{outliers-d.txt}
+
+     Al estimar el modelo sin la observación atípica, los coeficientes
+     son idénticos a los obtenidos al incluir una variable ficticia
+     para esa observación. Los errores típicos y los cocientes $t$ son
+     también muy similares (serían idénticos si se usaran errores
+     típicos no robustos en ambas estimaciones).
    #+end_answer
+   #+latex: \ClearPage{}
 
 e) Una vez eliminada la observación atípica de la muestra, repita el
    contraste de heteroscedasticidad de Breusch–Pagan (Koenker). ¿Sigue
@@ -116,6 +186,11 @@ e) Una vez eliminada la observación atípica de la muestra, repita el
 
    #+begin_answer
      #+latex: \gretl[lastline=6]{outliers-e.txt}
+
+     La evidencia de heteroscedasticidad se desvanece cuando no se
+     incluye la observación atípica en la muestra. No se rechazaría la
+     hipótesis de homoscedasticidad a un nivel de significación del
+     \pct{5} (valor $p = 0.40 > \alpha = 0.05$).
    #+end_answer
 
 

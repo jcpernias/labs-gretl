@@ -14,10 +14,14 @@ end outfile
 uhat1 = $uhat
 
 
-gnuplot uhat1 bedrooms --output=outliers-bedrooms.plt
-gnuplot uhat1 colonial --output=outliers-colonial.plt
-gnuplot uhat1 lotsize --output=outliers-lotsize.plt
-gnuplot uhat1 size --output=outliers-size.plt
+gnuplot uhat1 bedrooms --output=outliers-bedrooms.plt \
+  { set linetype 1 pt 7 lc rgb "#093860"; set pointsize 0.4; }
+gnuplot uhat1 colonial --output=outliers-colonial.plt \
+  { set linetype 1 pt 7 lc rgb "#093860"; set pointsize 0.4; }
+gnuplot uhat1 lotsize --output=outliers-lotsize.plt \
+  { set linetype 1 pt 7 lc rgb "#093860"; set pointsize 0.4; }
+gnuplot uhat1 size --output=outliers-size.plt \
+  { set linetype 1 pt 7 lc rgb "#093860"; set pointsize 0.4; }
 
 
 large_lot = lotsize > 8000
