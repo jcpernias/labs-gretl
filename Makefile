@@ -264,7 +264,7 @@ $(zip-dir)/hprice1.zip: $(data-dir)/hprice1.csv
 $(zip-dir)/loanapp.zip: $(data-dir)/loanapp.csv
 $(zip-dir)/engel.zip: $(data-dir)/engel.csv
 $(zip-dir)/outliers.zip: $(data-dir)/hprice1.csv
-$(zip-dir)/wagegap.zip: $(data-dir)/esp.csv
+$(zip-dir)/wagegap.zip: $(data-dir)/esp.csv $(pdf-dir)/bool.pdf
 $(zip-dir)/cons.zip: $(data-dir)/cons.csv
 $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
 $(zip-dir)/phillips.zip: $(data-dir)/phillips.csv

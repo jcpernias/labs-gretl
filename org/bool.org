@@ -1,0 +1,182 @@
+#+TITLE: Creación de variables con condiciones lógicas en Gretl
+#+SETUPFILE: ../setup.org
+
+#+latex: \newcommand*{\OR}{\texttt{||}}
+#+latex: \newcommand*{\AND}{\texttt{\&\&}}
+#+latex: \newcommand*{\NOT}{\texttt{!}}
+
+* Introducción
+
+En Gretl, el menú =Añadir → Definir nueva variable...= se usa para
+crear nuevas variables. Por ejemplo, se puede crear una
+interacción entre las variables ~mujer~ y ~educ~ usando la siguiente
+definición:
+#+begin_src
+  mujer_educ = mujer * educ
+#+end_src
+Con esta definición se crearía una nueva variable, ~mujer_educ~, cuyos
+valores se calcularían multiplicando los de las variables ~mujer~ y
+~educ~.
+
+Las definiciones pueden usar operadores aritméticos (=+=, =-=, =*=,
+=/=, =^=), expresiones entre paréntesis y funciones matemáticas
+(=log=, =exp=, etc.), de una forma similar a las fórmulas en una hoja
+de cálculo.
+
+Con mucha frecuencia, se crean variables ficticias a partir de
+condiciones lógicas que involucran a otras variables. En Gretl, las
+condiciones lógicas toman el valor 1 cuando se cumplen y 0 cuando no
+se cumplen, por lo que pueden utilizarse directamente para crear
+variables ficticias.
+
+Este documento muestra cómo escribir condiciones lógicas en Gretl y
+presenta algunos ejemplos comunes de creación de variables.
+
+
+* Operadores de comparación
+
+Las condiciones lógicas más simples comparan los valores que toman dos
+expresiones. La siguiente tabla muestra los operadores de comparación
+que se pueden usar en Gretl.
+#+latex: \vspace*{1.5ex}
+#+ATTR_LATEX: :booktabs t :align cp{4cm}
+|----------+-------------------|
+| Operador | Significado       |
+|----------+-------------------|
+| ~>~      | mayor que         |
+| ~<~      | menor que         |
+| ~>=~     | mayor o igual que |
+| ~<=~     | menor o igual que |
+| ~==~     | igual a           |
+| ~!=~     | distinto de       |
+|----------+-------------------|
+#+latex: \vspace*{1.5ex}
+
+
+** Ejemplos
+
+ - /Igualdad a/: Crear la variable ficticia =mujer= a partir de la
+   variable =sexo= que asigna el valor 1 a los hombres y el valor 2 a
+   las mujeres:
+   #+latex: \vspace*{1ex}
+   #+begin_src c
+     mujer = sexo == 2
+   #+end_src
+   #+latex: \vspace*{1.5ex}
+
+ - /Distinto de/: La variable =estado_civil= asigna un número
+   diferente a cada estado civil (1 para casado, 2 para soltero,
+   etc.). La siguiente definición crea una ficticia para las
+   observaciones correspondientes a personas no casadas:
+   #+latex: \vspace*{1ex}
+   #+begin_src c
+     no_casado = estado_civil != 1
+   #+end_src
+   #+latex: \vspace*{1.5ex}
+
+ - /Mayor que/: para crear una variable ficticia para las familias con
+   renta superior a \money{30000}:
+   #+latex: \vspace*{1ex}
+   #+begin_src c
+     renta_alta = renta > 30000
+   #+end_src
+   #+latex: \vspace*{1.5ex}
+
+ - /Menor o igual/: creación de una variable ficticia para personas
+   con 30 años o menos:
+   #+latex: \vspace*{1ex}
+   #+begin_src c
+     joven = edad <= 30
+   #+end_src
+   #+latex: \vspace*{1.5ex}
+
+
+* Operadores lógicos
+
+Además de comparar valores, es posible combinar dos o más condiciones
+simples con los operadores lógicos. La tabla siguiente muestra cómo se
+escriben en Gretl.
+
+#+latex: \vspace*{1.5ex}
+#+ATTR_LATEX: :booktabs t :align cp{4cm}
+| Operador | Significado |
+|----------+-------------|
+| \NOT     | negación    |
+| \AND     | operador Y  |
+| \OR      | operador O  |
+#+latex: \vspace*{1.5ex}
+
+
+** Ejemplos
+
+- /Operador/ \NOT: Invierte una condición lógica.
+  #+latex: \vspace*{1ex}
+  #+begin_src c
+    no_trabaja = !(empleado == 1)
+  #+end_src
+  #+latex: \vspace*{1ex}
+  Este ejemplo equivale a:
+  #+begin_src c
+    no_trabaja = empleado != 1
+  #+end_src
+  #+latex: \vspace*{1ex}
+
+- /Operador/ \AND: Combina dos condiciones de forma que la condición
+  resultante es verdadera solo si ambas condiciones se
+  cumplen. Ejemplo: crear una ficticia para personas en edad de
+  trabajar:
+  #+latex: \vspace*{1ex}
+  #+begin_src c
+     puede_trabajar = (edad > 16) && (edad <= 64)
+  #+end_src
+  #+latex: \vspace*{1ex}
+
+- /Operador/ \OR: La condición resultante es verdadera si se cumple al
+  menos una de las que se combinan. Ejemplo: crear una ficticia para
+  personas en la población activa:
+  #+latex: \vspace*{1ex}
+  #+begin_src
+    vulnerable = (empleado == 1) || (parado == 1)
+  #+end_src
+  #+latex: \vspace*{1ex}
+  #+latex: \clearpage
+
+** Expresiones más complejas
+
+Es posible combinar más de dos expresiones. Ejemplo: ficticia que vale
+1 si =x= es 1, 3 o 5:
+#+latex: \vspace*{1ex}
+#+begin_src c
+  d135 = (x == 1) || (x == 3) || (x == 5)
+#+end_src
+#+latex: \vspace*{1ex}
+
+En una definición pueden aparecer operadores distintos y más de una
+variable. Ejemplo: ficticia para individuos que trabajan o están
+parados, y que hayan completado la educación secundaria:
+#+latex: \vspace*{1ex}
+#+begin_src c
+  activo_secundaria = ((trabaja ==  1) || (parado == 1)) && (secundaria == 1)
+#+end_src
+#+latex: \vspace*{1ex}
+La expresión anterior también se puede escribir como:
+#+latex: \vspace*{1ex}
+#+begin_src c
+  activo_secundaria = (trabaja ==  1 || parado == 1) && secundaria == 1
+#+end_src
+#+latex: \vspace*{1ex}
+Sin embargo, si se eliminan más paréntesis, la variable resultante no
+respondería a la definición. Cuando se combinan los operadores \AND{} y
+\OR, el uso de paréntesis es especialmente importante para evitar
+ambigüedades.
+
+En general, es recomendable usar paréntesis para asegurar que las
+expresiones se combinan de forma correcta y comprobar los resultados
+observando los valores de la variable creada.
+
+
+# Local Variables:
+# ispell-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Gretl
