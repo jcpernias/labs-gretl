@@ -19,6 +19,8 @@
 #+LATEX_HEADER: \newcommand*{\parcial}{\Var{parcial}}
 #+LATEX_HEADER: \newcommand*{\cualalta}{\Var{cual\_alta}}
 #+LATEX_HEADER: \newcommand*{\cualmedia}{\Var{cual\_media}}
+#+LATEX_HEADER: \newcommand*{\mujerexper}{\Var{mujer\_exper}}
+#+LATEX_HEADER: \newcommand*{\mujersqexper}{\Var{mujer\_sq\_exper}}
 
 
 * Objetivo
@@ -214,11 +216,11 @@ indefinido (categoría de referencia), temporal y otros contratos
 (aprendizaje, contrato verbal, sin contrato, etc.). Defina las
 siguientes variables:
 
-- ~contr_temp~: ficticia que toma el valor 1 si el contrato es temporal. Se
-  construye a partir de ~D2_Q10_C~.
+- ~contr_temp~: ficticia que toma el valor 1 si el contrato es
+  temporal. Se construye a partir de ~D2_Q10_C~.
 
-- ~contr_otro~: ficticia que toma el valor 1 si el contrato no es indefinido
-  ni temporal. Se construye a partir de ~D2_Q10_C~.
+- ~contr_otro~: ficticia que toma el valor 1 si el contrato no es
+  indefinido ni temporal. Se construye a partir de ~D2_Q10_C~.
 
 También es útil distinguir entre trabajadores a jornada completa o a
 tiempo parcial. Cree la siguiente variable:
@@ -235,9 +237,9 @@ omitida), media y alta. Construya las siguientes variables:
   alta cualificación. Se construye a partir de ~ISCOSKIL4~ (/skilled
   occupations/).
 
-- ~cual_media~: ficticia que toma el valor 1 para puestos de trabajo de
-  cualificación media. Se construye a partir de ~ISCOSKIL4~ (/semi-skilled
-  occupations/).
+- ~cual_media~: ficticia que toma el valor 1 para puestos de trabajo
+  de cualificación media. Se construye a partir de ~ISCOSKIL4~
+  (/semi-skilled occupations/).
 
 * Instrucciones
 
@@ -257,6 +259,10 @@ descritas en la sección [[Transformación de las variables]].
   ~educ_sup~, ~exper~, ~antig~, ~pub~, ~ong~, ~contr_temp~,
   ~contr_otro~, ~parcial~, ~cual_alta~ y ~cual_media~.
 
+  #+begin_answer
+    #+latex: \gretl[lastline=18]{wagegap-a.txt}
+  #+end_answer
+
 ** Brecha salarial no ajustada
 
 La *brecha salarial no ajustada* mide la diferencia entre los salarios
@@ -275,13 +281,56 @@ el logaritmo del salario y la variable explicativa es ~mujer~:
 
 - ¿Cuál es la interpretación del parámetro $\beta_1$?
 
+  #+begin_answer
+    El parámetro $\beta_{1}$ mide cuál es la diferencia relativa entre
+    el salario medio de las mujeres y el de los hombres. Por término
+    medio, el salario de una mujer es aproximadamente un
+    $100\beta_{1}\%$ mayor que el de un hombre. Cuando $\beta_1 < 0$,
+    existe una brecha salarial desfavorable para las mujeres.
+  #+end_answer
+
 - Estime los parámetros del modelo de la ecuación \eqref{eq-mod1} y
   presente una tabla con los resultados. Utilice errores típicos
   robustos a heteroscedasticidad.
 
+  #+begin_answer
+    #+latex: \gretl[lastline=14]{wagegap-b.txt}
+  #+end_answer
+
 - Contraste la existencia de una brecha salarial desfavorable para las
   mujeres.
 
+  #+begin_answer
+    La hipótesis nula del contraste es $\beta_1 = 0$. No habría
+    diferencia en los salarios de hombres y mujeres si $H_0$ es
+    cierta. La hipótesis alternativa es que el salario de las mujeres
+    es menor que el de los hombres lo que implica que $\beta_1 <
+    0$. La $H_1$ es unilateral, por lo que la región de rechazo se
+    concentra en la cola negativa.
+    #+latex: \vspace*{1ex}
+
+    Para encontrar el valor crítico, en primer lugar, se busca el valor
+    que deja el \pct{5} de probabilidad en la cola derecha de una $t$ con
+    \num{2909} grados de libertad (en Gretl se pueden consultar las tablas
+    estadísticas en el menú /Herramientas/). En segundo lugar, dado que la
+    región de rechazo se halla en la cola izquierda, se cambia el signo al
+    valor encontrado en las tablas. Por tanto, el valor crítico es $c =
+    \num{-1.65}$.
+    #+latex: \vspace*{1ex}
+
+    La regla de decisión consiste en comparar el cociente $t$ con el
+    valor crítico y se rechazará la hipótesis nula si $t < c$. De
+    acuerdo con los resultados de la regresión, se rechaza la
+    hipótesis nula para $\alpha = 5\%$, puesto que $t = -6.29 < c =
+    -1.65$.
+    #+latex: \vspace*{1ex}
+
+    En conclusión, los resultados de las estimaciones muestran que las
+    mujeres tienen un salario medio aproximadamente un \pct{13}
+    inferior al de los hombres y que esta diferencia es
+    estadísticamente significativa.
+  #+end_answer
+  #+latex: \ClearPage
 
 ** Brecha salarial ajustada
 
@@ -313,21 +362,64 @@ estimaremos a partir del modelo de regresión múltiple:
 \end{equation}
 #+end_export
 
-
 - Estime los parámetros de la ecuación \eqref{eq-mod2} y presente una
   tabla con los resultados. Utilice errores típicos robustos a
   heteroscedasticidad.
 
+  #+begin_answer
+    #+latex: \gretl[lastline=29]{wagegap-c.txt}
+  #+end_answer
+  #+latex: \ClearPage
+
+- Contraste la presencia de heteroscedasticidad con el contraste de
+  Breusch-Pagan (Koenker).
+
+  #+begin_answer
+    #+latex: \gretl[lastline=6]{wagegap-d.txt}
+
+    El valor $p$ del contraste es inferior al nivel de significación
+    (valor $p = 0.02 < \alpha = 0.05$), por lo que se rechaza la
+    hipótesis de homoscedasticidad.
+  #+end_answer
+
 - Contraste la significación conjunta de los parámetros $\beta_{2},
   \beta_{3}, \dots, \beta_{16}$.
+
+  #+begin_answer
+    #+latex: \gretl{wagegap-e.txt}
+
+    Los resultados del contraste rechazan, para un nivel de
+    significación del \pct{5}, la hipótesis $\beta_{2} = \beta_3 =
+    \dots = \beta_{16} = 0$. En conclusión, sin considerar la ficticia
+    \mujer, las restantes variables explicativas aportan información
+    relevante para explicar el salario.
+  #+end_answer
 
 - Interprete la estimación obtenida del parámetro $\beta_{3}$ y
   determine si es significativo.
 
-- ¿Hay diferencias entre las estimaciones de la brecha salarial no
-  ajustada y de la ajustada? Obtenga el intervalo de confianza del
-  parámetro $\beta_1$ y compárelo con el obtenido a partir de la
-  estimación de la ecuación \eqref{eq-mod1}.
+  #+begin_answer
+    El parámetro $\beta_{3}$ es la pendiente de la variable ficticia
+    \inmigr. Su valor estimado es \num{-0.053}, lo que indicaría que
+    el salario de los trabajadores nacidos en el extranjero es, en
+    promedio, un \pct{5.3} menor que el de los nacidos en España,
+    manteniendo constantes el resto de factores. El parámetro no es
+    significativamente distinto de $0$, ya que su valor $p = 0.055$ es
+    ligeramente superior al nivel de significación del \pct{5}.
+  #+end_answer
+
+- ¿Hay grandes diferencias entre las estimaciones de la brecha
+  salarial ajustada y no ajustada?
+
+  #+begin_answer
+    Al introducir variables explicativas adicionales, la estimación de
+    la brecha salarial aumenta hasta aproximadamente un \pct{16}.  La
+    diferencia entre las dos estimaciones de la brecha es de una
+    magnitud similar al error típico (aproximadamente $0.02$), por lo
+    que, desde el punto de vista estadístico, ambas estimaciones no
+    difieren significativamente.
+  #+end_answer
+  #+latex: \ClearPage
 
 
 
@@ -337,16 +429,107 @@ Los modelos considerados hasta ahora no admiten la posibilidad de que
 determinadas características de los trabajadores tengan una influencia
 en el salario que sea diferente para hombres y para mujeres.
 
-- Amplíe el modelo \eqref{eq-mod1} de forma que la experiencia
-  laboral pueda tener efectos diferentes para hombres y para mujeres.
+- Amplíe el modelo \eqref{eq-mod1} de forma que la experiencia laboral
+  pueda tener efectos diferentes para hombres y para
+  mujeres. Contraste la hipótesis de que no hay diferencias en la
+  valoración de la experiencia laboral de hombres y mujeres.  ¿Qué
+  conclusión se obtiene?
 
-- Estime el modelo y contraste la hipótesis de que no hay diferencias
-  en la valoración de la experiencia laboral de hombres y
-  mujeres. Utilice errores típicos robustos a heteroscedasticidad.
-  ¿Qué conclusión se obtiene?
+  #+begin_answer
+    Se crean dos variables adicionales interactuando la variable
+    \mujer con la experiencia laboral y su cuadrado:
+    #+begin_export latex
+    \begin{gather*}
+      \mujerexper = \mujer \cdot \exper \\
+      \mujersqexper = \mujer \cdot \exper^{2}
+    \end{gather*}
+    #+end_export
+    Se incluyen estas interacciones en el modelo \eqref{eq-mod2}:
+    #+begin_export latex
+      \begin{equation}\label{eq-mod3}
+        \begin{aligned}
+        \log(\salario) =\, &\beta_0
+          + \beta_{1}\, \mujer
+          + \beta_{2}\, \edad
+          + \beta_{3}\, \inmigr
+          + \beta_{4}\, \otroidioma
+          \, + \\ &\beta_{5}\, \educsec
+          + \beta_{6}\, \educsup
+          + \beta_{7}\, \exper
+          + \beta_{8}\, \exper^2
+          + \beta_{9}\, \antig
+          \, + \\ &\beta_{10}\, \pub
+          + \beta_{11}\, \ong
+          + \beta_{12}\, \contrtemp
+          + \beta_{13}\, \controtro
+          \, + \\ &\beta_{14}\, \parcial
+          + \beta_{15}\, \cualalta
+          + \beta_{16}\, \cualmedia
+          \, + \\ &\beta_{17}\, \mujerexper
+          + \beta_{18}\, \mujersqexper
+          + u
+      \end{aligned}
+      \end{equation}
+    #+end_export
+    Estimación por MCO con errores típicos robustos:
+    #+latex: \gretl[lastline=31]{wagegap-f.txt}
+
+    Si no hay diferencias en la valoración de la experiencia laboral
+    de hombres y mujeres, se cumpliría la hipótesis nula: $\beta_{17}
+    = \beta_{18} = 0$.
+    #+latex: \gretl{wagegap-g.txt}
+    El contraste de significación conjunta de las interacciones de
+    \mujer con \exper y $\exper^2$ rechaza la hipótesis nula (valor $p
+    = 0.035 < \alpha = 0.05$). Se concluye que existen diferencias
+    significativas en cómo se retribuye la experiencia laboral a
+    hombres y mujeres.
+  #+end_answer
 
 - Contraste la hipótesis de que la experiencia laboral sólo es
   determinante para los hombres y no afecta al salario de las mujeres.
+
+  #+begin_answer
+    A partir de la ecuación \eqref{eq-mod3}, se puede escribir la
+    ecuación de salarios para las mujeres como:
+     #+begin_export latex
+      \begin{equation*}
+        \begin{aligned}
+        \log(\salario) =\, &(\beta_0 + \beta_{1})
+          + \beta_{2}\, \edad
+          + \beta_{3}\, \inmigr
+          + \beta_{4}\, \otroidioma
+          \, + \\ &\beta_{5}\, \educsec
+          + \beta_{6}\, \educsup
+          + (\beta_{7} + \beta_{17})\, \exper
+          + (\beta_{8} + \beta_{18})\, \exper^2
+          \, + \\ &\beta_{9}\, \antig
+          + \beta_{10}\, \pub
+          + \beta_{11}\, \ong
+          + \beta_{12}\, \contrtemp
+          + \beta_{13}\, \controtro
+          \, + \\ &\beta_{14}\, \parcial
+          + \beta_{15}\, \cualalta
+          + \beta_{16}\, \cualmedia
+          + u
+      \end{aligned}
+      \end{equation*}
+    #+end_export
+    Si la experiencia laboral no influyera en el salario de las mujeres se debería cumplir la hipótesis nula:
+    #+begin_export latex
+    \[
+      H_{0}\!:
+      \begin{cases}
+        \beta_{7} + \beta_{17} = 0 \\
+        \beta_{8} + \beta_{18} = 0
+      \end{cases}
+    \]
+    #+end_export
+    Contraste de Wald robusto a heteroscedasticidad:
+    #+latex: \gretl{wagegap-h.txt}
+    Por tanto se rechaza la hipótesis nula a un nivel de significación
+    del \pct{5}. La experiencia laboral sí afecta al salario de las
+    mujeres.
+  #+end_answer
 
 * COMMENT Participación en el mercado laboral (Opcional e individual)
 
@@ -371,12 +554,24 @@ hombres estimando el modelo de regresión simple:
 - Estime los parámetros del modelo de la ecuación \eqref{eq-mod3} y
   presente una tabla con los resultados.
 
+  #+begin_answer
+
+  #+end_answer
+
 - Calcule, a partir de las estimaciones de los parámetros, las tasas
   de actividad de hombres y mujeres.
+
+  #+begin_answer
+
+  #+end_answer
 
 - Usando los resultados de la regresión, ¿qué diferencia hay entre las
   tasas de actividad de hombres y mujeres?  ¿Es significativa esa
   diferencia?
+
+  #+begin_answer
+
+  #+end_answer
 
 
 ** Modelo de probabilidad lineal múltiple
@@ -422,4 +617,4 @@ Se añaden más variables explicativas a la ecuación \eqref{eq-mod3}:
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  PIAAC OCDE
+#  LocalWords:  PIAAC OCDE Breusch Koenker

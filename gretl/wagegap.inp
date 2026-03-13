@@ -1,56 +1,72 @@
 set verbose off
 set workdir "./build"
 
-open "../data/esp.csv"
+open "../data/piaac-es.csv"
 
-lsalario = log(EARNHR)
-edad = AGE_R
+salario = EARNHRBONUS
+logs salario
 mujer = GENDER_R == 2
-inmigr = J_Q04a == 2
-hijos = J_Q03b > 0
-pareja = J_Q02a == 1
-educ = YRSQUAL
-activ = C_D05 != 3
+edad = AGE_R
+inmigr = BORNLANG > 2
+otro_idioma = BORNLANG == 2 || BORNLANG == 4
+educ_sec = EDCAT7 >= 2 && EDCAT7 <= 4
+educ_sup = EDCAT7 >= 5
 exper = C_Q09
-antig = 2012 - D_Q05a2
+square exper
+antig = edad - D_Q05a1
 pub = D_Q03 == 2
 ong = D_Q03 == 3
-temp = D_Q09 == 2 || D_Q09 == 3
-apr = D_Q09 == 4
-otro = D_Q09 == 5 || D_Q09 == 6
+contr_temp = D2_Q10_C == 2
+contr_otro = D2_Q10_C == 3
+parcial = D_Q10 < 35
+cual_alta = ISCOSKIL4 == 1
+cual_media = ISCOSKIL4 == 2 || ISCOSKIL4 == 3
 
-# 3.1 Brecha salarial no ajustada
+list X1 = edad inmigr otro_idioma educ_sec educ_sup exper
+list X2 = antig pub ong contr_temp contr_otro parcial cual_alta cual_media
+
+# 3.1 Preparación de los datos
 outfile wagegap-a.txt
-  ols lsalario 0 mujer --robust --simple-print
+  summary salario mujer X1 X2 --simple
 end outfile
 
-# 3.2 Brecha salarial ajustada
-list X = educ exper antig pub ong temp apr otro edad hijos inmigr pareja
+# 3.2 Brecha salarial no ajustada
 outfile wagegap-b.txt
-  ols lsalario 0 mujer X --robust --simple-print
+  ols l_salario 0 mujer --robust
 end outfile
 
+# 3.3 Brecha salarial ajustada
 outfile wagegap-c.txt
-  omit X --test-only --quiet
+  ols l_salario 0 mujer X1 sq_exper X2 --robust
 end outfile
 
-
-# 4.1 MLP simple
 outfile wagegap-d.txt
-  ols activ 0 mujer --robust --simple-print
+  modtest --breusch-pagan --robust --quiet
 end outfile
 
-# 4.2 MLP múltiple
-list X = educ exper hijos edad inmigr pareja
+ols l_salario 0 mujer X1 sq_exper X2 --robust --quiet
 outfile wagegap-e.txt
-  ols activ 0 mujer X --robust --simple-print
+  omit X1 sq_exper X2 --quiet
 end outfile
+
+
+# 3.4 Otros contrastes
+mujer_exper = mujer * exper
+mujer_sq_exper = mujer * sq_exper
+list X3 = mujer_exper mujer_sq_exper
 
 outfile wagegap-f.txt
-  omit X --test-only --quiet
+  ols l_salario 0 mujer X1 sq_exper X2 X3 --robust
 end outfile
 
-phat = $yhat
 outfile wagegap-g.txt
-  summary phat --simple
+  omit X3 --quiet
+end outfile
+
+ols l_salario 0 mujer X1 sq_exper X2 X3 --robust --quiet
+outfile wagegap-h.txt
+  restrict --quiet
+    b[exper] + b[mujer_exper] = 0
+    b[sq_exper] + b[mujer_sq_exper] = 0
+  end restrict
 end outfile

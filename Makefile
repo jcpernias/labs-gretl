@@ -10,7 +10,6 @@ src-files := \
 	engel \
 	outliers \
 	wagegap \
-	wagegap-sol \
 	cons \
 	unemp \
 	unemp-sol \
@@ -24,6 +23,7 @@ ans-files := \
 	loanapp \
 	exports \
 	engel \
+	wagegap \
 	outliers
 
 ## Directories
@@ -177,21 +177,6 @@ ifeq ($(INCLUDEDEPS),yes)
 include $(auto-deps)
 endif
 
-
-
-## wagegap gretl output -----------------------------------------
-wagegap-gretl-output := $(addsuffix .txt,\
-  $(addprefix $(build-dir)/wagegap-,a b c d e))
-
-$(wagegap-gretl-output): wagegap-gretl-output.intermediate
-	@:
-
-.INTERMEDIATE: wagegap-gretl-output.intermediate
-wagegap-gretl-output.intermediate: \
-	$(gretl-dir)/wagegap.inp $(data-dir)/esp.csv
-	gretlcli -b -e $(realpath $<)
-
-$(pdf-dir)/wagegap-sol.pdf: $(wagegap-gretl-output)
 
 # unemp gretl output -----------------------------------------
 unemp-gretl-output := \
