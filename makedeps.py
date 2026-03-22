@@ -11,6 +11,7 @@ class GretlScanner:
     - Input data files (`open`)
     - Output files (`outfile`)
     - Figure files generated with gnuplot (`gnuplot --output=`)
+    - Coorelogram figure files  (`corrgm --plot=`)
 
     It also handles Gretl-style line and block comments and manages line
     continuations.
@@ -27,9 +28,10 @@ class GretlScanner:
     # Regex to match specific Gretl commands and extract file paths
     GRETL_PATTERN = re.compile(r'''
     ^\s*                        # Allow spaces
-    (?:set\s+(workdir)|(open)|(outfile)|(gnuplot)) # Command
+    (?:set\s+(workdir)|(open)|(outfile)|(gnuplot)|(corrgm)) # Command
     \s+                         # Some spaces
-    (?:(?(4).*--output=))       # gnuplot extras
+    (?:(?(4).*--output=))       # gnuplot file
+    (?:(?(5).*--plot=))         # gnuplot file
     (?:"([^"]+)"|([^"\s]+)      # name without quotes
     (?:\s|$))                   # a space or end of line
     ''', re.X)
@@ -171,6 +173,8 @@ class GretlScanner:
                 case ('outfile', path):
                     self.outfiles.add(self.norm_path(workdir, path))
                 case ('gnuplot', path):
+                    self.figfiles.add(self.norm_path(workdir, path))
+                case ('corrgm', path):
                     self.figfiles.add(self.norm_path(workdir, path))
         return self
 
