@@ -24,7 +24,8 @@ ans-files := \
 	exports \
 	engel \
 	wagegap \
-	outliers
+	outliers \
+	cons
 
 ## Directories
 ## ================================================================================

@@ -1,0 +1,71 @@
+set verbose off
+set workdir ./build
+
+open ../data/cons.csv
+
+set seed 12101492
+c = log(PCR)
+y = log(PYR)
+
+gnuplot  c y --time-series --with-lines --output=cons-cy.plt
+
+outfile cons-2a.txt
+corrgm c 10 --acf-only --plot=cons-rho-c.plt
+end outfile
+
+outfile cons-2b.txt
+corrgm y 10 --acf-only --plot=cons-rho-y.plt
+end outfile
+
+# modelo 1
+outfile cons-3a.txt
+ols c 0 y
+end outfile
+
+uhat1 = $uhat
+gnuplot  uhat1 --time-series --with-lines --output=cons-uhat1.plt
+
+outfile cons-3b.txt
+corrgm uhat1 10 --acf-only --plot=cons-rho-uhat1.plt
+end outfile
+
+
+rw = 13 + cum(normal(0.006, 0.007))
+gnuplot rw --time-series --with-lines --output=cons-rw.plt
+
+# modelo 2
+outfile cons-4a.txt
+ols c 0 rw
+end outfile
+
+
+diff c y rw
+
+gnuplot  d_c  --time-series --with-lines --output=cons-dc.plt
+gnuplot  d_y  --time-series --with-lines --output=cons-dy.plt
+
+outfile cons-5a.txt
+corrgm d_c 10 --acf-only --plot=cons-rho-dc.plt
+end outfile
+
+outfile cons-5b.txt
+corrgm d_y 10 --acf-only --plot=cons-rho-dy.plt
+end outfile
+
+# modelo 3
+outfile cons-5c.txt
+ols d_c 0 d_y
+end outfile
+
+uhat3 = $uhat
+gnuplot  uhat3 --time-series --with-lines --output=cons-uhat3.plt
+
+outfile cons-5d.txt
+corrgm uhat3 10 --acf-only --plot=cons-rho-uhat3.plt
+end outfile
+
+
+# modelo 4
+outfile cons-5e.txt
+ols d_c 0 d_rw
+end outfile

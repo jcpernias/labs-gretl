@@ -2,7 +2,7 @@
 #+SETUPFILE: ../setup.org
 
 # Define macros for the variable names
-#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\rw}{\Var{rw}}
 
 
 * Objetivo
@@ -24,16 +24,11 @@ variables se miden en términos reales y los datos cubren el periodo
 que va desde el primer trimestre de 1970 hasta el segundo de 1998:
 
 
-** Transformación de las variables
-
 - Cree la variable ~c~ aplicando el logaritmo a la serie del consumo
   privado, ~PCR~.
 
 - Cree la variable ~y~ calculando el logaritmo de la serie de la renta
   disponible de las familias, ~PYR~.
-
-
-** Descripción de las variables
 
 - Represente gráficamente y observe la evolución temporal de las
   series ~c~ e ~y~. ¿Son estacionarias?
@@ -41,6 +36,54 @@ que va desde el primer trimestre de 1970 hasta el segundo de 1998:
 - Calcule los *correlogramas* de las series ~c~ e ~y~. ¿Son
   compatibles con la propiedad de dependencia débil?
 
+#+begin_answer
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-cy.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}%
+  Tanto el logaritmo de la renta como el del consumo agregado
+  presentan fuertes tendencias crecientes a lo largo de todo el
+  periodo. Ninguna de las dos series es estacionaria.
+  #+end_minipage
+
+  Correlograma del logaritmo del consumo:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-c.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-2a.txt}
+  #+end_minipage
+
+  Correlograma del logaritmo de la renta:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-y.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-2a.txt}
+  #+end_minipage
+
+  En ambos correlogramas se observa un decrecimiento muy lento de los
+  coeficientes de autocorrelación, lo que es característico de series
+  que no poseen la propiedad de dependencia débil.
+#+end_answer
+#+latex: %\ClearPage
 
 * Modelo en niveles
 
@@ -59,6 +102,52 @@ que va desde el primer trimestre de 1970 hasta el segundo de 1998:
 - Obtenga un gráfico de series temporales de los residuos. Represente
   también el *correlograma* de los residuos. ¿Se comportan como un
   *ruido blanco*?
+
+#+begin_answer
+  #+latex: \gretl[firstline=2, lastline=13]{cons-3a.txt}
+  El ajuste es casi perfecto, alcanzando el coeficiente de
+  determinación un valor muy elevado, $R^2 = 0.996$. El parámetro
+  $\beta_1$, que mide la elasticidad del consumo agregado con respecto
+  de la renta, es significativamente distinto de $0$ (el cociente $t$
+  toma un valor extremadamente grande, $t = 159.8$, y el valor $p$ es
+  prácticamente $0$). Sin embargo, el coeficiente estimado es muy elevado,
+  $\hat{\beta}_1 = 1.15$, lo que significaría que el consumo agregado
+  crece más rápido que la renta.
+
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-uhat1.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}%
+  A pesar de que los residuos no muestran tendencias temporales,
+  tampoco se observa un comportamiento similar a un ruido blanco. En
+  particular, se aprecia la alternancia de largas rachas de residuos
+  positivos y de residuos negativos.
+  #+end_minipage
+
+  Correlograma de los residuos:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-uhat1.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-3b.txt}
+  #+end_minipage
+  El correlograma tampoco se corresponde con el de un ruido blanco, en
+  cuyo caso todos los coeficientes de autocorrelación estarían muy
+  próximos a $0$. De hecho, los coeficiente de orden bajo toman
+  valores muy elevados ($0.98, 0.81, 0.75, \dots$) y su magnitud
+  disminuye muy lentamente.
+#+end_answer
 
 * Regresiones espurias
 
@@ -79,19 +168,31 @@ deriva*.
 - Considere ahora el modelo de regresión:
   #+begin_export latex
   \begin{equation}\label{eq:2}
-    c_t = \alpha_0 + \alpha_1 \mathit{rw}_t + \text{error}_t.
+    c_t = \alpha_0 + \alpha_1 \rw_t + \text{error}_t.
   \end{equation}
   #+end_export
-  Dado que $\mathit{rw}_t$ se ha generado aleatoriamente, no tiene
+  Dado que $\rw_t$ se ha generado aleatoriamente, no tiene
   relación con el consumo agregado y el parámetro $\alpha_1$ debe ser
   $0$.
 
   Estime los parámetros de la ecuación \eqref{eq:2} por MCO, evalúe la
   bondad del ajuste de la regresión y verifique la significación
-  estadística de la variable $\mathit{rw}_t$. Compare el $R^2$ y la
-  significación con los obtenidos en la estimación de la
-  ecuación \eqref{eq:1}. ¿Qué sugiere esta comparación?
+  estadística de la variable $\mathit{rw}_t$. Compare estos resultados
+  con los de la estimación de la ecuación \eqref{eq:1}. ¿Qué sugiere
+  esta comparación?
 
+#+begin_answer
+  #+latex: \gretl[firstline=2, lastline=13]{cons-4a.txt}
+  A pesar de que la variable \rw no es un determinante del consumo
+  agregado, el ajuste obtenido es muy elevado, $R^2 = 0.980$, y el
+  cociente $t$ de significación individual es muy elevado, $t =
+  74.4$.
+
+  Los resultados obtenidos con \rw, una variable que no puede tener
+  capacidad explicativa pero con una marcada tendencia temporal, hacen
+  sospechar que la regresión estimada en la sección anterior, usando
+  $y$ como variable explicativa, podría también ser espuria.
+#+end_answer
 
 * Modelo en diferencias
 
@@ -128,6 +229,116 @@ no son estacionarias es plantear modelos en diferencias.
 - A la vista de los resultados, ¿qué modelo considera más adecuado
   para analizar la relación entre consumo y renta?
 
+#+begin_answer
+  Gráficos de series temporales de la diferencia del consumo
+  (izquierda) y de la diferencia de la renta (derecha):
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:cons-dc.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:cons-dy.pdf]]
+  #+end_minipage
+  Al tomar diferencias, desaparecen las tendencias temporales. La
+  evolución a lo largo del tiempo de $\Delta c$ y de $\Delta y$ no
+  muestra variaciones sistemáticas de las medias o de las varianzas.
+  #+latex: \vspace*{1ex}
+
+  Correlograma de la diferencia del consumo:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-dc.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-5a.txt}
+  #+end_minipage
+
+  Correlograma de la diferencia de la renta:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-dy.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-5b.txt}
+  #+end_minipage
+  Ambos correlogramas son compatibles con la propiedad de dependencia
+  débil: los coeficientes de autocorrelación son relativamente bajos,
+  especialmente a partir del sexto orden.
+
+  #+latex: \gretl[firstline=2, lastline=13]{cons-5c.txt}
+  Al estimar el modelo en diferencias, la estimación de la elasticidad
+  de la renta toma un valor más razonable, $0.68$, y sigue siendo
+  significativamente distinta de $0$ a un nivel de significación del
+  \pct{5}. El $R^2 = 0.539$ muestra un ajuste moderado.
+
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-uhat3.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}%
+  El comportamiento de los residuos de la regresión en diferencias es,
+  en apariencia, compatible con un ruido blanco, o con un proceso
+  estacionario y débilmente dependiente.
+  #+end_minipage
+
+  Correlograma de los residuos:
+  #+latex: \par\vspace*{1ex}
+  #+ATTR_LATEX: :options [c]{0.62\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.65
+  [[file:cons-rho-uhat3.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.38\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}\tiny%
+  #+latex: \gretl[firstline=6, lastline=18, fontsize=\tiny]{cons-5d.txt}
+  #+end_minipage
+  El correlograma confirma que no hay indicios de dependencia fuerte
+  en los residuos. Todos los coeficientes de autocorrelación son
+  cercanos a 0.
+  #+latex: \par\vspace*{1ex}
+
+  La tabla siguiente muestra los resultados de la regresión entre las
+  diferencias del consumo y las del ruido blanco:
+  #+latex: \gretl[firstline=2, lastline=13]{cons-5e.txt}
+  Al contrario de lo que ocurría al estimar la ecuación \eqref{eq:2},
+  donde las variables no se habían diferenciado, el ajuste es
+  prácticamente inexistente y la variable $\Delta \rw$ no es
+  significativa. El riesgo de obtener una regresión espuria disminuye
+  cuando se toman diferencias.
+  #+latex: \par\vspace*{1ex}
+
+  A pesar de que, en apariencia, ajusta peor, el modelo en diferencias
+  sería más adecuado en este caso. Es poco probable que esta regresión
+  sea espuria, la estimación del parámetro es más razonable y la
+  evolución de los residuos es compatible con un ruido blanco.  En
+  conjunto, los resultados sugieren que el modelo en niveles puede ser
+  espurio debido a la no estacionariedad de las variables, mientras
+  que el modelo en diferencias proporciona una relación más fiable
+  desde el punto de vista econométrico.
+
+#+end_answer
 
 #+print_bibliography:
 
