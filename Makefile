@@ -12,7 +12,6 @@ src-files := \
 	wagegap \
 	cons \
 	unemp \
-	unemp-sol \
 	phillips \
 	phillips-sol \
 	exports \
@@ -25,7 +24,8 @@ ans-files := \
 	engel \
 	wagegap \
 	outliers \
-	cons
+	cons \
+	unemp
 
 ## Directories
 ## ================================================================================
@@ -180,24 +180,24 @@ endif
 
 
 # unemp gretl output -----------------------------------------
-unemp-gretl-output := \
-	$(addsuffix .txt,\
-		$(addprefix $(build-dir)/unemp-, \
-			static covid dl dyn-mult lr-mult cum-mult nat-rate)) \
-	$(addsuffix .plt,\
-		$(addprefix $(build-dir)/unemp-,\
-			d_unemp gY gYalt uhat corrgm-1))
+# unemp-gretl-output := \
+# 	$(addsuffix .txt,\
+# 		$(addprefix $(build-dir)/unemp-, \
+# 			static covid dl dyn-mult lr-mult cum-mult nat-rate)) \
+# 	$(addsuffix .plt,\
+# 		$(addprefix $(build-dir)/unemp-,\
+# 			d_unemp gY gYalt uhat corrgm-1))
 
 
-$(unemp-gretl-output): unemp-gretl-output.intermediate
-	@:
+# $(unemp-gretl-output): unemp-gretl-output.intermediate
+# 	@:
 
-.INTERMEDIATE: unemp-gretl-output.intermediate
-unemp-gretl-output.intermediate: \
-	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
-	gretlcli -b -e $(realpath $<)
+# .INTERMEDIATE: unemp-gretl-output.intermediate
+# unemp-gretl-output.intermediate: \
+# 	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
+# 	gretlcli -b -e $(realpath $<)
 
-$(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
+# $(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
 
 
 # phillips figure -----------------------------------------------

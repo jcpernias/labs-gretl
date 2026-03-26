@@ -52,6 +52,40 @@ Cree las variables:
   variables =d_unemp= y =gY=.  ¿Se observan tendencias o algún otro
   tipo de no estacionariedad?
 
+  #+begin_answer
+  #+ATTR_LATEX: :options [c]{0.50\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:unemp-d_unemp.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.50\textwidth}
+  #+begin_minipage
+  Algunas palabras sabias.
+  #+end_minipage
+
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:unemp-gY.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  Algunas palabras sabias.
+  #+end_minipage
+
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:unemp-gYalt.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.5\textwidth}
+  #+begin_minipage
+  Algunas palabras sabias.
+  #+end_minipage
+  #+end_answer
 * Modelo estático
 
 - Antes de proceder a la estimación del modelo estático, ajustaremos
@@ -68,9 +102,14 @@ Cree las variables:
     \Delta \unemp_t = \alpha + \beta\, \gY_t + u_t,
   \end{equation}
   #+end_export
-  donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la tasa
-  de crecimiento porcentual del PIB real y $u_t$ es el término de
+  donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la
+  tasa de crecimiento porcentual del PIB real y $u_t$ es el término de
   error.
+
+  #+begin_answer
+  #+latex: \gretl{unemp-static.txt}
+  #+end_answer
+
 
 - Evalúe la bondad del ajuste y la significación de la variable
   explicativa. ¿Cuál es la interpretación económica de los parámetros
@@ -79,6 +118,30 @@ Cree las variables:
 - Obtenga un gráfico de series temporales de los residuos. Represente
   también el correlograma de los residuos. ¿Se comportan como un ruido
   blanco?
+
+  #+begin_answer
+  #+ATTR_LATEX: :options [c]{0.45\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:unemp-uhat.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.55\textwidth}
+  #+begin_minipage
+  Algunas palabras sabias.
+  #+end_minipage
+
+  #+ATTR_LATEX: :options [c]{0.45\textwidth}
+  #+begin_minipage
+  #+latex: \vspace{0pt}
+  #+ATTR_LATEX: :scale 0.5
+  [[file:unemp-corrgm-1.pdf]]
+  #+end_minipage
+  #+ATTR_LATEX: :options [c]{0.55\textwidth}
+  #+begin_minipage
+  Algunas palabras sabias.
+  #+end_minipage
+  #+end_answer
 
 
 * Análisis de intervención
@@ -95,8 +158,6 @@ ejemplo, un *impulso* representa un cambio transitorio en el nivel de
 la serie y se incorpora mediante una variable ficticia que toma valor
 1 únicamente en el período afectado.
 
-
-
 - Cree una variable de impulso, =covid=, para captar el inicio del
   confinamiento a causa de la COVID19. Para ello, seleccione la opción
   /Variable ficticia de rango de observación/ del menú /Añadir/ y
@@ -112,6 +173,9 @@ la serie y se incorpora mediante una variable ficticia que toma valor
   Comente los resultados obtenidos y compárelos con los de la
   estimación de la ecuación \eqref{eq:1}.
 
+  #+begin_answer
+  #+latex: \gretl{unemp-covid.txt}
+  #+end_answer
 
 * Modelo de retardos distribuidos
 
@@ -133,6 +197,10 @@ la serie y se incorpora mediante una variable ficticia que toma valor
   ¿Qué significan los parámetros estimados? ¿Cómo responde la tasa de
   paro a cambios en el crecimiento del PIB?
 
+  #+begin_answer
+  #+latex: \gretl{unemp-dl.txt}
+  #+end_answer
+
 - Para calcular el multiplicador de largo plazo, $\delta_L = \sum
   \beta_i$, introduzca en la consola de Gretl las instrucciones:
   #+latex: \vspace*{1ex}
@@ -145,6 +213,13 @@ la serie y se incorpora mediante una variable ficticia que toma valor
   adecuadamente las instrucciones anteriores los parámetros de =gY= y
   sus retardos deben de ocupar las posiciones 2 a 7 en la tabla de la
   regresión.]/
+
+  #+begin_answer
+  #+latex: \gretl{unemp-dyn-mult.txt}
+
+  #+latex: \gretl{unemp-lr-mult.txt}
+  #+end_answer
+
 - Los multiplicadores acumulados, $\delta_j = \sum_{i=0}^j\beta_i$, se
   obtienen introduciendo en la consola de Gretl las siguientes líneas:
   #+latex: \vspace*{1ex}
@@ -154,6 +229,10 @@ la serie y se incorpora mediante una variable ficticia que toma valor
   #+end_src
   #+latex: \vspace*{1ex}
   ¿Que interpretación tienen estos multiplicadores?
+
+  #+begin_answer
+  #+latex: \gretl{unemp-cum-mult.txt}
+  #+end_answer
 
 - En [cite:@leon-ledesmaEndogeneityNaturalRate2002] se define la /tasa
   de crecimiento natural/ como aquella que mantiene constante el
@@ -183,6 +262,9 @@ la serie y se incorpora mediante una variable ficticia que toma valor
   sería la tasa trimestral de crecimiento necesaria para que no
   aumente el desempleo?
 
+  #+begin_answer
+  #+latex: \gretl{unemp-nat-rate.txt}
+  #+end_answer
 
 #+print_bibliography:
 
