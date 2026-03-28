@@ -9,268 +9,292 @@
 
 * Objetivo
 
-Estimar la respuesta dinámica de la tasa de desempleo a las
-variaciones en el crecimiento del PIB. Se estima un modelo de retardos
-distribuidos con datos de España que cubren el periodo que va desde el
-primer trimestre de 1980 hasta el tercero de 2023.
+Se estiman modelos dinámicos para analizar cómo responde, a lo largo
+del tiempo, la tasa de desempleo a variaciones en el crecimiento
+del PIB en España durante el periodo comprendido entre el primer
+trimestre de 1980 y el cuarto trimestre de 2019.
 
 * Datos
 
 La Secretaría de Estado de Presupuestos y Gastos proporciona varias
 bases de datos desde su [[https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/Paginas/Documentacion.aspx][página web]]. La base de datos [[https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/basedatosmodelorems.aspx][BDREMS]]
-proporciona series macroeconómicas para España que abarcan desde el
-primer trimestre de 1980 al tercer trimestre de 2023 . Su periodicidad
-es trimestral y, por lo general, se trata de series corregidas de
+proporciona series macroeconómicas para España. Su periodicidad es
+trimestral y, por lo general, se trata de series corregidas de
 estacionalidad y de efecto calendario.  Las variables a precios
 constantes tienen como referencia el año 2015.
 
 El fichero =unemp.csv= contiene dos de las series de BDREMS:
 
-- =PIBpm= es el PIB a precios de mercado en millones de euros
-  constantes, y
+- =PIBpm=: PIB a precios de mercado en millones de euros constantes.
 
-- =unemp= es la tasa de paro.
+- =unemp=: la tasa de paro.
 
+* Instrucciones
 
-** Transformación de las variables
+#+ATTR_LATEX: :options [a)]
+a) Cree las variables ~gY~, definida como la tasa de crecimiento del
+   PIB en tantos por ciento (utilice la aproximación basada en la
+   primera diferencia del logaritmo del PIB), y ~d_unemp~, definida
+   como la primera diferencia de la tasa de paro. Represente
+   gráficamente ambas variables y observe su evolución temporal. ¿Se
+   aprecian tendencias u otros indicios de no estacionariedad?
 
-Cree las variables:
+   #+begin_answer
+   Tanto ~d_unemp~ como ~gY~ oscilan alrededor de un nivel
+   aproximadamente constante. En conjunto, los gráficos no sugieren
+   tendencias persistentes a lo largo del periodo y las series parecen
+   estacionarias.
 
-- =ld_PIBpm=, la diferencia del logaritmo de =PIBpm=.
+   #+ATTR_LATEX: :options [c]{0.50\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-d_unemp.pdf]]
+   #+end_minipage
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-gY.pdf]]
+   #+end_minipage
+   #+end_answer
 
-- =d_unemp=, la primera diferencia de la tasa de paro.
+b) Para poder comparar modelos dinámicos con distinto número de
+   retardos, es necesario estimarlos utilizando la misma
+   muestra. Ajuste la muestra de forma que todos los modelos se
+   estimen con datos comprendidos entre el primer trimestre de 1982 y
+   el cuarto trimestre de 2019.
 
-- =gY=, que se obtiene multiplicando =ld_PIBpm= por 100.
+   #+begin_answer
+     En Gretl se puede modificar la muestra seleccionando el menú
+     /Muestra → Establecer rango…/ y ajustando el periodo inicial en el
+     cuadro de selección del rango muestral.
+   #+end_answer
 
+c) Estime por mínimos cuadrados ordinarios, MCO, los parámetros del
+   modelo estático:
+   #+begin_export latex
+   \begin{equation}\label{eq:1}
+     \Delta \unemp_t = \alpha + \beta\, \gY_t + u_t,
+   \end{equation}
+   #+end_export
+   donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la
+   tasa de crecimiento porcentual del PIB real y $u_t$ es el término de
+   error. Evalúe la bondad del ajuste y la significación de la variable
+   explicativa. ¿Cuál es la interpretación económica del parámetro
+   $\beta$?
 
-** Descripción de las variables
+   #+begin_answer
+   #+latex: \gretl[firstline=2, lastline=16]{unemp-static.txt}
 
-- En adelante, se usarán las series =d_unemp= y =gY=. ¿Qué
-  interpretación económica tienen?
+   La estimación del modelo estático muestra una relación negativa y
+   estadísticamente muy significativa entre el crecimiento del PIB y
+   la variación de la tasa de paro. El coeficiente estimado de \gY es
+   $-0.4317$, con un estadístico $t$ de $-9.032$ y un valor $p$
+   prácticamente nulo, por lo que se rechaza con claridad la hipótesis
+   nula de ausencia de efecto. Además, el contraste F del modelo
+   también resulta altamente significativo. El ajuste es moderado: el
+   $R^2$ es $0.352$, de modo que el modelo explica en torno al 35 % de
+   la variación de la variable dependiente. Económicamente, el
+   parámetro $\beta$ indica que un aumento de 1 punto porcentual en la
+   tasa de crecimiento del PIB se asocia, en promedio, con una
+   reducción de aproximadamente $0.43$ puntos en la variación de la
+   tasa de paro en el mismo trimestre. Este signo es coherente con la
+   relación inversa entre actividad y desempleo.
+   #+end_answer
 
-- Represente gráficamente y observe la evolución temporal de las
-  variables =d_unemp= y =gY=.  ¿Se observan tendencias o algún otro
-  tipo de no estacionariedad?
+d) Obtenga un gráfico de series temporales de los residuos del modelo
+   estático. Represente también el correlograma de los residuos. ¿Se
+   comportan como un ruido blanco?
 
-  #+begin_answer
-  #+ATTR_LATEX: :options [c]{0.50\textwidth}
-  #+begin_minipage
-  #+latex: \vspace{0pt}
-  #+ATTR_LATEX: :scale 0.5
-  [[file:unemp-d_unemp.pdf]]
-  #+end_minipage
-  #+ATTR_LATEX: :options [c]{0.50\textwidth}
-  #+begin_minipage
-  Algunas palabras sabias.
-  #+end_minipage
+   #+begin_answer
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-uhat.pdf]]
+   #+end_minipage
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-corrgm-1.pdf]]
+   #+end_minipage
+   #+latex: \vspace*{1ex}
 
-  #+ATTR_LATEX: :options [c]{0.5\textwidth}
-  #+begin_minipage
-  #+latex: \vspace{0pt}
-  #+ATTR_LATEX: :scale 0.5
-  [[file:unemp-gY.pdf]]
-  #+end_minipage
-  #+ATTR_LATEX: :options [c]{0.5\textwidth}
-  #+begin_minipage
-  Algunas palabras sabias.
-  #+end_minipage
+   Los residuos del modelo estático no parecen comportarse como ruido
+   blanco. En el gráfico de series temporales se observan rachas de
+   valores positivos y negativos, lo que sugiere persistencia. El
+   correlograma refuerza esta impresión: las autocorrelaciones son
+   positivas y relativamente elevadas en varios retardos iniciales,
+   varias de ellas por encima de las bandas aproximadas de
+   significación.
+   #+end_answer
 
-  #+ATTR_LATEX: :options [c]{0.5\textwidth}
-  #+begin_minipage
-  #+latex: \vspace{0pt}
-  #+ATTR_LATEX: :scale 0.5
-  [[file:unemp-gYalt.pdf]]
-  #+end_minipage
-  #+ATTR_LATEX: :options [c]{0.5\textwidth}
-  #+begin_minipage
-  Algunas palabras sabias.
-  #+end_minipage
-  #+end_answer
-* Modelo estático
+e) Estime por MCO los parámetros del siguiente modelo de retardos
+   distribuidos:
+   #+begin_export latex
+   \begin{equation}\label{eq:2}
+     \Delta \unemp_t =
+     \alpha +
+     \beta_0\, \gY_t +
+     \beta_1\, \gY_{t-1} +
+     \dots +
+     \beta_5\, \gY_{t-5} +
+     u_t,
+   \end{equation}
+   #+end_export
 
-- Antes de proceder a la estimación del modelo estático, ajustaremos
-  la muestra para que comience en el primer trimestre de 1982. De esta
-  forma, aunque en etapas posteriores se introduzcan retardos, las
-  estimaciones obtenidas seguirán siendo comparables con las del
-  modelo estático, ya que se utilizará el mismo rango muestral en
-  todas las especificaciones. Use el menú /Muestra | Establecer rango
-  .../ para ajustar el periodo inicial.
+   #+begin_answer
+   #+latex: \gretl[firstline=2, lastline=21]{unemp-dl.txt}
 
-- Estime por mínimos cuadrados ordinarios, MCO, los parámetros de:
-  #+begin_export latex
-  \begin{equation}\label{eq:1}
-    \Delta \unemp_t = \alpha + \beta\, \gY_t + u_t,
-  \end{equation}
-  #+end_export
-  donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la
-  tasa de crecimiento porcentual del PIB real y $u_t$ es el término de
-  error.
+   En el modelo de retardos distribuidos con cinco retardos, los
+   coeficientes contemporáneo y del primer retardo, $\beta_0=-0.3432$
+   y $\beta_1=-0.2926$, son negativos y claramente significativos. El
+   segundo retardo también es negativo, aunque su significación es
+   mucho más débil (valor $p=0.0728$). En cambio, los retardos
+   tercero, cuarto y quinto no resultan estadísticamente
+   significativos. Esto sugiere que el efecto del crecimiento del PIB
+   sobre la variación del paro se concentra sobre todo en el trimestre
+   actual y en el siguiente, con un posible efecto adicional menor al
+   cabo de dos trimestres. El ajuste mejora con respecto al modelo
+   estático: el $R^2$ aumenta hasta $0.530$. Por tanto, introducir
+   retardos del crecimiento del PIB permite captar mejor la dinámica
+   de corto plazo entre ambas variables.
+   #+end_answer
 
-  #+begin_answer
-  #+latex: \gretl{unemp-static.txt}
-  #+end_answer
+f) Utilice los criterios de información AIC (Akaike) y BIC (Schwarz)
+   para determinar el número adecuado de retardos. Identifique el
+   número de retardos que minimiza el BIC y determine también cuántos
+   retardos son necesarios para minimizar el AIC. ¿Coincide el número
+   de retardos seleccionado por ambos criterios de información?
 
+   #+begin_answer
+   #+latex: \gretl{unemp-lags.txt}
 
-- Evalúe la bondad del ajuste y la significación de la variable
-  explicativa. ¿Cuál es la interpretación económica de los parámetros
-  $\alpha$ y $\beta$?
+   Los dos criterios de información no seleccionan el mismo número de
+   retardos. El AIC alcanza su mínimo con 2 retardos
+   ($\text{AIC}=154.01$), mientras que el BIC se minimiza con 1
+   retardo ($\text{BIC}=165.51$). Por tanto, el AIC favorece una
+   especificación algo más amplia, mientras que el BIC, al penalizar
+   con mayor intensidad la complejidad, prefiere un modelo más
+   parsimonioso.
+   #+end_answer
 
-- Obtenga un gráfico de series temporales de los residuos. Represente
-  también el correlograma de los residuos. ¿Se comportan como un ruido
-  blanco?
+g) Guarde los residuos del modelo de retardos distribuidos que
+   minimiza el BIC. ¿Cuál es la interpretación de los parámetros
+   $\beta_j$? Represente el gráfico de series temporales y el
+   correlograma de los residuos. ¿Se comportan como ruido blanco? ¿Hay
+   indicios de no estacionariedad o de dependencia fuerte?
 
-  #+begin_answer
-  #+ATTR_LATEX: :options [c]{0.45\textwidth}
-  #+begin_minipage
-  #+latex: \vspace{0pt}
-  #+ATTR_LATEX: :scale 0.5
-  [[file:unemp-uhat.pdf]]
-  #+end_minipage
-  #+ATTR_LATEX: :options [c]{0.55\textwidth}
-  #+begin_minipage
-  Algunas palabras sabias.
-  #+end_minipage
+   #+begin_answer
+   #+latex: \gretl[firstline=2, lastline=17]{unemp-dlstar.txt}
 
-  #+ATTR_LATEX: :options [c]{0.45\textwidth}
-  #+begin_minipage
-  #+latex: \vspace{0pt}
-  #+ATTR_LATEX: :scale 0.5
-  [[file:unemp-corrgm-1.pdf]]
-  #+end_minipage
-  #+ATTR_LATEX: :options [c]{0.55\textwidth}
-  #+begin_minipage
-  Algunas palabras sabias.
-  #+end_minipage
-  #+end_answer
+   El modelo de retardos distribuidos seleccionado por el BIC es el
+   que incluye un retardo de \gY. En este modelo, los dos coeficientes
+   estimados son negativos y muy significativos: $\beta_0=-0.3588$ y
+   $\beta_1=-0.2924$. La interpretación económica es la siguiente: un
+   mayor crecimiento del PIB reduce la variación de la tasa de paro
+   tanto en el trimestre corriente como, adicionalmente, en el
+   trimestre siguiente. La suma de ambos coeficientes, aproximadamente
+   $-0.651$, sugiere un efecto acumulado negativo de cierta magnitud
+   en el corto plazo. El ajuste del modelo sigue siendo claramente
+   mejor que el del modelo estático ($R^2=0.504$ frente a $0.352$),
+   aunque algo inferior al del modelo con cinco retardos, lo que es
+   natural dado que aquí se impone mayor parsimonia.
 
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-uhat-dl.pdf]]
+   #+end_minipage
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-corrgm-dl.pdf]]
+   #+end_minipage
+   #+ATTR_LATEX: :options [c]{0.55\textwidth}
 
-* Análisis de intervención
+   En cuanto a los residuos, tampoco parecen comportarse como ruido
+   blanco. El gráfico temporal sigue mostrando cierta persistencia, y
+   el correlograma presenta autocorrelaciones positivas relativamente
+   elevadas en los primeros retardos, varias de ellas por encima de
+   las bandas de referencia. Además, el estadístico Durbin-Watson es
+   0.914, compatible con autocorrelación positiva importante. No se
+   aprecian tendencias claras en los residuos, por lo que no hay
+   indicios fuertes de no estacionariedad en media; el problema
+   principal parece ser la dependencia temporal que todavía permanece
+   en los errores.
+   #+end_answer
 
-Con frecuencia, una serie temporal refleja el impacto de sucesos
-exógenos que ocurren de forma puntual e imprevisible. Estos eventos,
-conocidos como *intervenciones*, pueden provocar cambios
-significativos en el nivel de la serie o dar lugar a valores extremos
-(/outliers/) que no se corresponden con la evolución habitual de la
-serie hasta ese momento. Para controlar estos efectos, se incorporan
-en los modelos de regresión variables explicativas deterministas
-diseñadas para captar el efecto específico de la intervención. Por
-ejemplo, un *impulso* representa un cambio transitorio en el nivel de
-la serie y se incorpora mediante una variable ficticia que toma valor
-1 únicamente en el período afectado.
+h) Estime los parámetros del modelo ARDL(1, 1):
+   #+begin_export latex
+   \begin{equation}\label{eq:3}
+     \Delta \unemp_t =
+     \alpha +
+     \beta_0\, \gY_t +
+     \beta_1\, \gY_{t-1} +
+     \delta_1\, \Delta \unemp_{t-1} +
+     u_t,
+   \end{equation}
+   #+end_export
+   Compare la bondad del ajuste y los criterios de información de este
+   modelo con los del modelo de retardos distribuidos del apartado
+   anterior. Examine el gráfico de los residuos y su correlograma y
+   compárelos con los obtenidos anteriormente.
 
-- Cree una variable de impulso, =covid=, para captar el inicio del
-  confinamiento a causa de la COVID19. Para ello, seleccione la opción
-  /Variable ficticia de rango de observación/ del menú /Añadir/ y
-  especifique un rango cuyo principio y fin sea el segundo trimestre
-  de 2020.
+   #+begin_answer
+   #+latex: \gretl[firstline=2, lastline=18]{unemp-ardl.txt}
 
-- Estime por MCO los parámetros de:
-  #+begin_export latex
-  \begin{equation}\label{eq:2}
-    \Delta \unemp_t = \alpha + \beta\, \gY_t + \theta\, \covid_t + u_t,
-  \end{equation}
-  #+end_export
-  Comente los resultados obtenidos y compárelos con los de la
-  estimación de la ecuación \eqref{eq:1}.
+   El modelo ARDL(1,1) mejora de forma muy notable respecto al modelo
+   de retardos distribuidos seleccionado en el apartado anterior. El
+   $R^2$ aumenta hasta $0.701$ y la suma de cuadrados residual cae
+   hasta $14.435$, muy por debajo de la del modelo anterior. También
+   los criterios de información mejoran de manera contundente: el AIC
+   pasa de $156.44$ a $81.52$ y el BIC de $165.51$ a $93.61$. Por
+   tanto, según estas medidas, el ARDL(1,1) proporciona una
+   descripción mucho mejor de los datos.
 
-  #+begin_answer
-  #+latex: \gretl{unemp-covid.txt}
-  #+end_answer
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-uhat-ardl.pdf]]
+   #+end_minipage
+   #+ATTR_LATEX: :options [c]{0.5\textwidth}
+   #+begin_minipage
+   #+latex: \vspace{0pt}
+   #+ATTR_LATEX: :scale 0.5
+   [[file:unemp-corrgm-ardl.pdf]]
+   #+end_minipage
 
-* Modelo de retardos distribuidos
+   Además, los residuos del ARDL(1,1) sí parecen mucho más cercanos a
+   ruido blanco. En el gráfico temporal no se observan rachas tan
+   persistentes como en los modelos anteriores, y en el correlograma
+   las autocorrelaciones son pequeñas y quedan, en general, dentro de
+   las bandas de referencia. El valor estimado de $\rho$ es muy
+   próximo a cero y negativo ($-0.034$), lo que también apunta en la
+   misma dirección. En comparación con el modelo de retardos
+   distribuidos, el ARDL(1,1) parece capturar mucho mejor la
+   dependencia temporal presente en los datos.
 
-- Use el menú /Editar | Modificar el modelo.../ de la ventana de la
-  estimación de la ecuación \eqref{eq:2} y añada 5 retardos de la
-  variable =gY=. Así se obtienen las estimaciones del modelo de
-  retardos distribuidos:
-  #+begin_export latex
-  \begin{equation}\label{eq:3}
-    \Delta \unemp_t =
-    \alpha +
-    \beta_0\, \gY_t +
-    \beta_1\, \gY_{t-1} +
-    \dots +
-    \beta_5\, \gY_{t-5} +
-    \theta\, \covid_t + u_t,
-  \end{equation}
-  #+end_export
-  ¿Qué significan los parámetros estimados? ¿Cómo responde la tasa de
-  paro a cambios en el crecimiento del PIB?
-
-  #+begin_answer
-  #+latex: \gretl{unemp-dl.txt}
-  #+end_answer
-
-- Para calcular el multiplicador de largo plazo, $\delta_L = \sum
-  \beta_i$, introduzca en la consola de Gretl las instrucciones:
-  #+latex: \vspace*{1ex}
-  #+begin_src gretl :eval no
-    mult = $coeff[2:7]
-    mult_lp = sum(mult)
-  #+end_src
-  #+latex: \vspace*{1ex}
-  ¿Qué significa el valor obtenido? /[Nota: Para que funcionen
-  adecuadamente las instrucciones anteriores los parámetros de =gY= y
-  sus retardos deben de ocupar las posiciones 2 a 7 en la tabla de la
-  regresión.]/
-
-  #+begin_answer
-  #+latex: \gretl{unemp-dyn-mult.txt}
-
-  #+latex: \gretl{unemp-lr-mult.txt}
-  #+end_answer
-
-- Los multiplicadores acumulados, $\delta_j = \sum_{i=0}^j\beta_i$, se
-  obtienen introduciendo en la consola de Gretl las siguientes líneas:
-  #+latex: \vspace*{1ex}
-  #+begin_src gretl :eval no
-        mult_ac = cum(mult)
-        mult_ac
-  #+end_src
-  #+latex: \vspace*{1ex}
-  ¿Que interpretación tienen estos multiplicadores?
-
-  #+begin_answer
-  #+latex: \gretl{unemp-cum-mult.txt}
-  #+end_answer
-
-- En [cite:@leon-ledesmaEndogeneityNaturalRate2002] se define la /tasa
-  de crecimiento natural/ como aquella que mantiene constante el
-  desempleo. El modelo de la ecuación \eqref{eq:3} implica que en
-  equilibrio a largo plazo:
-  #+begin_export latex
-  \[
-    \Delta \unemp_t =
-    \alpha +
-    \delta_L\, \gY.
-  \]
-  #+end_export
-  La tasa de crecimiento natural sería la que hace que $\Delta
-  \unemp_t = 0$, por lo que:
-  #+begin_export latex
-  \[
-     \gY_n = -\alpha / \delta_L.
-  \]
-  #+end_export
-  Esta tasa se puede obtener en la consola de Gretl con:
-  #+latex: \vspace*{1ex}
-  #+begin_src gretl :eval no
-        gYn = -$coeff[1] / mult_lp
-  #+end_src
-  #+latex: \vspace*{1ex}
-  De acuerdo con la estimación de la ecuación \eqref{eq:3}, ¿cuál
-  sería la tasa trimestral de crecimiento necesaria para que no
-  aumente el desempleo?
-
-  #+begin_answer
-  #+latex: \gretl{unemp-nat-rate.txt}
-  #+end_answer
-
-#+print_bibliography:
+   Desde el punto de vista de los coeficientes, el término
+   autorregresivo de la variable dependiente rezagada, $\Delta
+   unemp_{t-1}$, es positivo, grande y altamente significativo
+   ($0.6397$), lo que indica una fuerte inercia en la dinámica del
+   cambio del desempleo. El coeficiente contemporáneo de gY sigue
+   siendo negativo y significativo, mientras que el de $\gY_{t-1}$ ya
+   no resulta significativo al 5 %. Esto sugiere que, una vez
+   introducida la dinámica propia de la variable dependiente, buena
+   parte del ajuste adicional proviene de esa persistencia interna más
+   que de añadir muchos retardos del crecimiento del PIB.
+   #+end_answer
 
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  Gretl
+#  LocalWords:  Gretl BDREMS AIC Akaike BIC Schwarz ARDL
