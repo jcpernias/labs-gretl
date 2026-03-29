@@ -20,7 +20,7 @@ La Secretaría de Estado de Presupuestos y Gastos proporciona varias
 bases de datos desde su [[https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/Paginas/Documentacion.aspx][página web]]. La base de datos [[https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/DocumentacionEstadisticas/Documentacion/paginas/basedatosmodelorems.aspx][BDREMS]]
 proporciona series macroeconómicas para España. Su periodicidad es
 trimestral y, por lo general, se trata de series corregidas de
-estacionalidad y de efecto calendario.  Las variables a precios
+1estacionalidad y de efecto calendario.  Las variables a precios
 constantes tienen como referencia el año 2015.
 
 El fichero =unemp.csv= contiene dos de las series de BDREMS:
@@ -44,6 +44,7 @@ a) Cree las variables ~gY~, definida como la tasa de crecimiento del
    aproximadamente constante. En conjunto, los gráficos no sugieren
    tendencias persistentes a lo largo del periodo y las series parecen
    estacionarias.
+   #+latex: \vspace*{1ex}
 
    #+ATTR_LATEX: :options [c]{0.50\textwidth}
    #+begin_minipage
@@ -67,8 +68,8 @@ b) Para poder comparar modelos dinámicos con distinto número de
 
    #+begin_answer
      En Gretl se puede modificar la muestra seleccionando el menú
-     /Muestra → Establecer rango…/ y ajustando el periodo inicial en el
-     cuadro de selección del rango muestral.
+     /Muestra → Establecer rango…/ y ajustando el periodo inicial a
+     ~1982:1~ en el cuadro de selección del rango muestral.
    #+end_answer
 
 c) Estime por mínimos cuadrados ordinarios, MCO, los parámetros del
@@ -78,29 +79,53 @@ c) Estime por mínimos cuadrados ordinarios, MCO, los parámetros del
      \Delta \unemp_t = \alpha + \beta\, \gY_t + u_t,
    \end{equation}
    #+end_export
-   donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es la
-   tasa de crecimiento porcentual del PIB real y $u_t$ es el término de
-   error. Evalúe la bondad del ajuste y la significación de la variable
-   explicativa. ¿Cuál es la interpretación económica del parámetro
-   $\beta$?
+   donde $\unemp_t$ es la tasa de paro en el periodo $t$, $\gY_t$ es
+   la tasa de crecimiento porcentual del PIB real y $u_t$ es el
+   término de error. Evalúe la bondad del ajuste y la significación de
+   la variable explicativa. ¿Cuál es la interpretación económica de
+   los parámetros $\alpha$ y $\beta$?
 
    #+begin_answer
    #+latex: \gretl[firstline=2, lastline=16]{unemp-static.txt}
+   #+latex: \vspace*{1ex}
 
-   La estimación del modelo estático muestra una relación negativa y
-   estadísticamente muy significativa entre el crecimiento del PIB y
-   la variación de la tasa de paro. El coeficiente estimado de \gY es
-   $-0.4317$, con un estadístico $t$ de $-9.032$ y un valor $p$
-   prácticamente nulo, por lo que se rechaza con claridad la hipótesis
-   nula de ausencia de efecto. Además, el contraste F del modelo
-   también resulta altamente significativo. El ajuste es moderado: el
-   $R^2$ es $0.352$, de modo que el modelo explica en torno al 35 % de
-   la variación de la variable dependiente. Económicamente, el
-   parámetro $\beta$ indica que un aumento de 1 punto porcentual en la
-   tasa de crecimiento del PIB se asocia, en promedio, con una
-   reducción de aproximadamente $0.43$ puntos en la variación de la
-   tasa de paro en el mismo trimestre. Este signo es coherente con la
-   relación inversa entre actividad y desempleo.
+   El coeficiente estimado de \gY es $-0.43$, con un estadístico $t$
+   de $-9.0$ y un valor $p$ prácticamente nulo, por lo que se rechaza
+   al \pct{5} la hipótesis nula de ausencia de efecto. El valor del
+   $R^2$ muestra que el crecimiento explica en torno al \pct{35} de la
+   variación en el desempleo.
+   #+latex: \vspace*{1ex}
+
+   El parámetro $\alpha$ representa la variación esperada de la tasa
+   de paro cuando la tasa de crecimiento del PIB es cero:
+   #+begin_export latex
+   \[
+     E(\Delta \unemp_t|\, \gY_t = 0) = \alpha.
+   \]
+   #+end_export
+   En ausencia de crecimiento del PIB, la tasa de paro aumentaría
+   $0.25$ puntos porcentuales cada trimestre.  La estimación del
+   parámetro $\beta$ muestra que un aumento de 1 punto porcentual en
+   la tasa de crecimiento del PIB se asocia, en promedio, con una
+   reducción de aproximadamente $0.43$ puntos porcentuales en la
+   variación de la tasa de paro en el mismo trimestre.
+   #+latex: \vspace*{1ex}
+
+   A partir de las estimaciones de $\alpha$ y $\beta$ es posible
+   calcular la /tasa de crecimiento natural/ que en
+   [cite:@leon-ledesmaEndogeneityNaturalRate2002] se define como
+   aquella que mantiene constante el desempleo. Se obtiene
+   resolviendo:
+   #+begin_export latex
+   \[
+     0 = \alpha + \beta \gY^*,
+   \]
+   #+end_export
+   Por lo que, $\gY^* = -\alpha / \beta$. De acuerdo con las
+   estimaciones del modelo estático: $\gY^* = 0.247 / 0.432 =
+   0.572$. Por tanto, el PIB debería crecer un \pct{0.57} cada
+   trimestre para que la tasa de paro permanezca constante.
+
    #+end_answer
 
 d) Obtenga un gráfico de series temporales de los residuos del modelo
@@ -124,11 +149,13 @@ d) Obtenga un gráfico de series temporales de los residuos del modelo
 
    Los residuos del modelo estático no parecen comportarse como ruido
    blanco. En el gráfico de series temporales se observan rachas de
-   valores positivos y negativos, lo que sugiere persistencia. El
-   correlograma refuerza esta impresión: las autocorrelaciones son
-   positivas y relativamente elevadas en varios retardos iniciales,
-   varias de ellas por encima de las bandas aproximadas de
-   significación.
+   valores positivos y negativos, lo que sugiere la existencia de
+   autocorrelación positiva en el término de error. El correlograma
+   refuerza esta impresión: las autocorrelaciones son positivas y
+   relativamente elevadas en varios retardos iniciales. El
+   comportamiento de los residuos sugiere que el modelo estático no
+   captura adecuadamente la dinámica temporal de la relación entre
+   crecimiento y desempleo.
    #+end_answer
 
 e) Estime por MCO los parámetros del siguiente modelo de retardos
@@ -147,20 +174,6 @@ e) Estime por MCO los parámetros del siguiente modelo de retardos
 
    #+begin_answer
    #+latex: \gretl[firstline=2, lastline=21]{unemp-dl.txt}
-
-   En el modelo de retardos distribuidos con cinco retardos, los
-   coeficientes contemporáneo y del primer retardo, $\beta_0=-0.3432$
-   y $\beta_1=-0.2926$, son negativos y claramente significativos. El
-   segundo retardo también es negativo, aunque su significación es
-   mucho más débil (valor $p=0.0728$). En cambio, los retardos
-   tercero, cuarto y quinto no resultan estadísticamente
-   significativos. Esto sugiere que el efecto del crecimiento del PIB
-   sobre la variación del paro se concentra sobre todo en el trimestre
-   actual y en el siguiente, con un posible efecto adicional menor al
-   cabo de dos trimestres. El ajuste mejora con respecto al modelo
-   estático: el $R^2$ aumenta hasta $0.530$. Por tanto, introducir
-   retardos del crecimiento del PIB permite captar mejor la dinámica
-   de corto plazo entre ambas variables.
    #+end_answer
 
 f) Utilice los criterios de información AIC (Akaike) y BIC (Schwarz)
@@ -170,38 +183,48 @@ f) Utilice los criterios de información AIC (Akaike) y BIC (Schwarz)
    de retardos seleccionado por ambos criterios de información?
 
    #+begin_answer
-   #+latex: \gretl{unemp-lags.txt}
+   En el siguiente cuadro se recogen los criterios de información
+   calculados a partir de la estimación de modelos de retardos
+   distribuidos, usando un máximo de 5 retardos del crecimiento del
+   PIB, $\gY$:
+   #+latex: \gretl[lastline=6]{unemp-lags.txt}
+   #+latex: \vspace*{1ex}
 
    Los dos criterios de información no seleccionan el mismo número de
    retardos. El AIC alcanza su mínimo con 2 retardos
    ($\text{AIC}=154.01$), mientras que el BIC se minimiza con 1
-   retardo ($\text{BIC}=165.51$). Por tanto, el AIC favorece una
-   especificación algo más amplia, mientras que el BIC, al penalizar
-   con mayor intensidad la complejidad, prefiere un modelo más
-   parsimonioso.
+   retardo ($\text{BIC}=165.51$). Por tanto, como suele ocurrir en la
+   práctica, el AIC favorece una especificación con un retardo más que
+   el BIC.
    #+end_answer
 
-g) Guarde los residuos del modelo de retardos distribuidos que
-   minimiza el BIC. ¿Cuál es la interpretación de los parámetros
-   $\beta_j$? Represente el gráfico de series temporales y el
-   correlograma de los residuos. ¿Se comportan como ruido blanco? ¿Hay
-   indicios de no estacionariedad o de dependencia fuerte?
+g) ¿Cuál es la interpretación de los parámetros $\beta_j$ en el modelo
+   de retardos distribuidos que minimiza el BIC?  Represente el
+   gráfico de series temporales y el correlograma de los residuos. ¿Se
+   comportan como ruido blanco? ¿Hay indicios de no estacionariedad o
+   de dependencia fuerte?
 
    #+begin_answer
    #+latex: \gretl[firstline=2, lastline=17]{unemp-dlstar.txt}
 
    El modelo de retardos distribuidos seleccionado por el BIC es el
-   que incluye un retardo de \gY. En este modelo, los dos coeficientes
-   estimados son negativos y muy significativos: $\beta_0=-0.3588$ y
-   $\beta_1=-0.2924$. La interpretación económica es la siguiente: un
-   mayor crecimiento del PIB reduce la variación de la tasa de paro
-   tanto en el trimestre corriente como, adicionalmente, en el
-   trimestre siguiente. La suma de ambos coeficientes, aproximadamente
-   $-0.651$, sugiere un efecto acumulado negativo de cierta magnitud
-   en el corto plazo. El ajuste del modelo sigue siendo claramente
-   mejor que el del modelo estático ($R^2=0.504$ frente a $0.352$),
-   aunque algo inferior al del modelo con cinco retardos, lo que es
-   natural dado que aquí se impone mayor parsimonia.
+   que incluye un retardo de \gY. Tanto $\beta_0=-0.359$ como
+   $\beta_1=-0.292$ son negativos y significativos al \pct{5}. Un
+   mayor crecimiento del PIB reduce la variación de la tasa de paro en
+   el trimestre corriente y en el siguiente. El multiplicador de largo
+   plazo, que mide el efecto total de un aumento permanente del
+   crecimiento del PIB sobre la variación de la tasa de paro, se
+   obtiene con la suma de ambos coeficientes y es, aproximadamente,
+   $\beta_L = -0.651$. La tasa de crecimiento natural se obtiene
+   dividiendo el término constante por el valor absoluto del
+   multiplicador de largo plazo:
+   #+begin_export latex
+   \[
+     \gY^* = 0.375/0.651 = 0.573,
+   \]
+   #+end_export
+   que es un valor prácticamente idéntico al calculado a partir del
+   modelo estático.
 
    #+ATTR_LATEX: :options [c]{0.5\textwidth}
    #+begin_minipage
@@ -217,16 +240,11 @@ g) Guarde los residuos del modelo de retardos distribuidos que
    #+end_minipage
    #+ATTR_LATEX: :options [c]{0.55\textwidth}
 
-   En cuanto a los residuos, tampoco parecen comportarse como ruido
-   blanco. El gráfico temporal sigue mostrando cierta persistencia, y
-   el correlograma presenta autocorrelaciones positivas relativamente
-   elevadas en los primeros retardos, varias de ellas por encima de
-   las bandas de referencia. Además, el estadístico Durbin-Watson es
-   0.914, compatible con autocorrelación positiva importante. No se
-   aprecian tendencias claras en los residuos, por lo que no hay
-   indicios fuertes de no estacionariedad en media; el problema
-   principal parece ser la dependencia temporal que todavía permanece
-   en los errores.
+   Los residuos no parecen comportarse como ruido blanco. El gráfico
+   temporal y el correlograma muestran pocas diferencias con respecto
+   a lo que se observó en el modelo estático: aunque no hay tendencias
+   u otros síntomas de no estacionariedad, los errores presentan
+   autocorrelación positiva.
    #+end_answer
 
 h) Estime los parámetros del modelo ARDL(1, 1):
@@ -248,14 +266,16 @@ h) Estime los parámetros del modelo ARDL(1, 1):
    #+begin_answer
    #+latex: \gretl[firstline=2, lastline=18]{unemp-ardl.txt}
 
-   El modelo ARDL(1,1) mejora de forma muy notable respecto al modelo
-   de retardos distribuidos seleccionado en el apartado anterior. El
-   $R^2$ aumenta hasta $0.701$ y la suma de cuadrados residual cae
-   hasta $14.435$, muy por debajo de la del modelo anterior. También
-   los criterios de información mejoran de manera contundente: el AIC
-   pasa de $156.44$ a $81.52$ y el BIC de $165.51$ a $93.61$. Por
-   tanto, según estas medidas, el ARDL(1,1) proporciona una
-   descripción mucho mejor de los datos.
+   El $R^2 = 0.70$ muestra que el ajuste del modelo ARDL(1,1) es
+   notablemente superior al del modelo de retardos
+   distribuidos. También los criterios de información mejoran
+   considerablemente. Según estos indicadores, el ARDL(1,1)
+   proporciona una mejor descripción de los datos.
+
+   A pesar de que la dinámica en este modelo es muy diferente a la de
+   los otros modelos que se han considerado, no hay cambios
+   apreciables en la estimación de la tasa de crecimiento natural:
+   $\gY^* = 0.127/(0.164 + 0.062) = 0.562$.
 
    #+ATTR_LATEX: :options [c]{0.5\textwidth}
    #+begin_minipage
@@ -270,28 +290,17 @@ h) Estime los parámetros del modelo ARDL(1, 1):
    [[file:unemp-corrgm-ardl.pdf]]
    #+end_minipage
 
-   Además, los residuos del ARDL(1,1) sí parecen mucho más cercanos a
-   ruido blanco. En el gráfico temporal no se observan rachas tan
-   persistentes como en los modelos anteriores, y en el correlograma
-   las autocorrelaciones son pequeñas y quedan, en general, dentro de
-   las bandas de referencia. El valor estimado de $\rho$ es muy
-   próximo a cero y negativo ($-0.034$), lo que también apunta en la
-   misma dirección. En comparación con el modelo de retardos
-   distribuidos, el ARDL(1,1) parece capturar mucho mejor la
-   dependencia temporal presente en los datos.
-
-   Desde el punto de vista de los coeficientes, el término
-   autorregresivo de la variable dependiente rezagada, $\Delta
-   unemp_{t-1}$, es positivo, grande y altamente significativo
-   ($0.6397$), lo que indica una fuerte inercia en la dinámica del
-   cambio del desempleo. El coeficiente contemporáneo de gY sigue
-   siendo negativo y significativo, mientras que el de $\gY_{t-1}$ ya
-   no resulta significativo al 5 %. Esto sugiere que, una vez
-   introducida la dinámica propia de la variable dependiente, buena
-   parte del ajuste adicional proviene de esa persistencia interna más
-   que de añadir muchos retardos del crecimiento del PIB.
+   Los residuos del ARDL(1,1) se asemejan mucho más a un ruido
+   blanco. En el gráfico temporal no se observan rachas tan
+   persistentes como en los modelos anteriores, y los coeficientes de
+   autocorrelación son pequeños. Este modelo parece capturar
+   adecuadamente las relaciones dinámicas entre las variaciones de la
+   tasa de paro y la tasa de crecimiento del PIB.
    #+end_answer
 
+#+latex:\ifbool{answers}{%
+#+print_bibliography:
+#+latex: }{}
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
