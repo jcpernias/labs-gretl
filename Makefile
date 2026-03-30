@@ -25,7 +25,8 @@ ans-files := \
 	wagegap \
 	outliers \
 	cons \
-	unemp
+	unemp \
+	phillips
 
 ## Directories
 ## ================================================================================
@@ -179,53 +180,12 @@ include $(auto-deps)
 endif
 
 
-# unemp gretl output -----------------------------------------
-# unemp-gretl-output := \
-# 	$(addsuffix .txt,\
-# 		$(addprefix $(build-dir)/unemp-, \
-# 			static covid dl dyn-mult lr-mult cum-mult nat-rate)) \
-# 	$(addsuffix .plt,\
-# 		$(addprefix $(build-dir)/unemp-,\
-# 			d_unemp gY gYalt uhat corrgm-1))
-
-
-# $(unemp-gretl-output): unemp-gretl-output.intermediate
-# 	@:
-
-# .INTERMEDIATE: unemp-gretl-output.intermediate
-# unemp-gretl-output.intermediate: \
-# 	$(gretl-dir)/unemp.inp $(data-dir)/unemp.csv
-# 	gretlcli -b -e $(realpath $<)
-
-# $(pdf-dir)/unemp-sol.pdf: $(patsubst %.plt,%.pdf,$(unemp-gretl-output))
-
 
 # phillips figure -----------------------------------------------
-$(pdf-dir)/phillips.pdf: $(build-dir)/phillips-fig.csv
+$(pdf-dir)/phillips.pdf $(pdf-dir)/phillips-ans.pdf: $(build-dir)/phillips-fig.csv
 $(build-dir)/phillips-fig.csv: \
 	$(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
 	gretlcli -b -e $(realpath $<)
-
-# phillips gretl output -----------------------------------------
-phillips-gretl-output := \
-	$(addsuffix .txt,\
-		$(addprefix $(build-dir)/phillips-, \
-			adf-infl adf-d_infl adf-paro adf-paroc \
-			static lags dyn lr-mult lr-mult-0)) \
-	$(addsuffix .plt,\
-		$(addprefix $(build-dir)/phillips-,infl d_infl paro paroc))
-
-
-$(phillips-gretl-output): phillips-gretl-output.intermediate
-	@:
-
-.INTERMEDIATE: phillips-gretl-output.intermediate
-phillips-gretl-output.intermediate: \
-	$(gretl-dir)/phillips.inp $(data-dir)/phillips.csv
-	gretlcli -b -e $(realpath $<)
-
-$(pdf-dir)/phillips-sol.pdf: $(patsubst %.plt,%.pdf,$(phillips-gretl-output))
-
 
 
 
