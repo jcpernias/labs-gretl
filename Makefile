@@ -20,11 +20,12 @@ src-files := \
 ans-files := \
 	hprice1 \
 	loanapp \
-	exports \
 	engel \
 	wagegap \
 	outliers \
 	cons \
+	exports \
+	traffic2 \
 	unemp \
 	phillips
 
@@ -190,24 +191,24 @@ $(build-dir)/phillips-fig.csv: \
 
 
 # traffic2 gretl output -----------------------------------------
-traffic2-gretl-output := \
-	$(addsuffix .txt,\
-		$(addprefix $(build-dir)/traffic2-, \
-			adf-l_total adf-unem \
-			mco seas rho1 bgaux bgaux-hc bgaux-ar2 bg-ar2 pw)) \
-	$(addsuffix .plt,\
-		$(addprefix $(build-dir)/traffic2-,l_total unem))
+# traffic2-gretl-output := \
+# 	$(addsuffix .txt,\
+# 		$(addprefix $(build-dir)/traffic2-, \
+# 			adf-l_total adf-unem \
+# 			mco seas rho1 bgaux bgaux-hc bgaux-ar2 bg-ar2 pw)) \
+# 	$(addsuffix .plt,\
+# 		$(addprefix $(build-dir)/traffic2-,l_total unem))
 
 
-$(traffic2-gretl-output): traffic2-gretl-output.intermediate
-	@:
+# $(traffic2-gretl-output): traffic2-gretl-output.intermediate
+# 	@:
 
-.INTERMEDIATE: traffic2-gretl-output.intermediate
-traffic2-gretl-output.intermediate: \
-	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
-	gretlcli -b -e $(realpath $<)
+# .INTERMEDIATE: traffic2-gretl-output.intermediate
+# traffic2-gretl-output.intermediate: \
+# 	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
+# 	gretlcli -b -e $(realpath $<)
 
-$(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
+# $(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 
 
 .NOTPARALLEL:

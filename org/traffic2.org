@@ -70,10 +70,65 @@ circulación en California y algunas otras variables relacionadas:
    necesario incluir una tendencia lineal en los contrastes. Use el
    AIC para determinar el número óptimo de retardos, considerando como
    máximo 6 retardos.
+   #+latex: \ClearPage
+
+   #+begin_answer
+     /=l_total=/:\par
+     #+ATTR_LATEX: :options [c]{0.42\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.45
+     [[file:traffic2-l_total.pdf]]
+     #+end_minipage
+     #+ATTR_LATEX: :options [c]{0.58\textwidth}
+     #+begin_minipage
+     #+latex: \gretl[fontsize=\scriptsize, firstline=2, lastline=14]{traffic2-adf-l_total.txt}
+     #+end_minipage
+
+     El gráfico muestra una tendencia creciente en el logaritmo del
+     número de accidentes, por lo que se incluye una tendencia lineal
+     en el contraste. El AIC selecciona 2 retardos. El estadístico $t$
+     del contraste de Dickey-Fuller aumentado, ADF, es $-3.60$, menor
+     que el valor crítico al \pct{5} ($-3.43$), por lo que se rechaza
+     la hipótesis nula de raíz unitaria.
+     #+latex: \medskip
+
+     /=unem=/:\par
+     #+ATTR_LATEX: :options [c]{0.42\textwidth}
+     #+begin_minipage
+     #+latex: \vspace{0pt}
+     #+ATTR_LATEX: :scale 0.45
+     [[file:traffic2-unem.pdf]]
+     #+end_minipage
+     #+ATTR_LATEX: :options [c]{0.58\textwidth}
+     #+begin_minipage
+     #+latex: \gretl[fontsize=\scriptsize, firstline=2, lastline=14]{traffic2-adf-unem.txt}
+     #+end_minipage
+
+     El gráfico sugiere una tendencia decreciente del desempleo, por
+     lo que se incluye una tendencia lineal. El AIC selecciona 6
+     retardos. El estadístico ADF es $-3.61$, inferior al valor
+     crítico al \pct{5} ($-3.43$), por lo que se rechaza la hipótesis
+     nula de raíz unitaria.
+     #+latex: \smallskip
+
+     No hay evidencia de raíces unitarias en ~l_total~ ni en
+     ~unem~. Ambas variables muestran tendencias deterministas, por lo
+     que se incluirá una tendencia lineal en las regresiones
+     posteriores.
+   #+end_answer
 
 4. ¿Por qué no tiene sentido aplicar los contrastes de raíz unitaria a
    las variables ~weekends~, ~beltlaw~ y ~speedlaw~?
-   #+latex: \clearpage
+   #+latex: \ifbool{answers}{}{\clearpage}
+
+   #+begin_answer
+   La variable ~weekends~ es determinista y los valores que toma están
+   acotados y dependen exclusivamente del calendario. Las variables
+   ~beltlaw~ y ~speedlaw~ son variables ficticias que cambian de $0$ a
+   $1$ cuando entra en vigor cada ley. En ninguno de los tres casos
+   tiene sentido contrastar la presencia de raíces unitarias.
+   #+end_answer
 
 5. Para determinar la influencia de las leyes aprobadas durante el
    periodo muestral sobre los accidentes de tráfico, se plantea el
@@ -107,231 +162,119 @@ circulación en California y algunas otras variables relacionadas:
    modelo por MCO usando errores típicos robustos a
    heteroscedasticidad y autocorrelación.
 
+   #+begin_answer
+     #+latex: \gretl[firstline=2, lastline=32]{traffic2-mco.txt}
+   #+end_answer
+
 6. Responda a las siguientes preguntas a partir de las estimaciones
    del modelo de regresión:
 
    - ¿Qué interpretación tiene la estimación del parámetro $\beta_5$?
 
+     #+begin_answer
+       El coeficiente estimado indica que el número de accidentes
+       aumenta aproximadamente un \pct{0.13} mensual, manteniendo
+       constantes las demás variables.
+     #+end_answer
+
    - ¿Qué interpretación tienen las variables estacionales ficticias?
      En concreto, ¿cuál es la interpretación del parámetro de $\feb$?
      ¿Y el de $\aug$?
 
+     #+begin_answer
+       Las variables ficticias estacionales miden la diferencia media
+       en el número de accidentes entre cada mes y enero, que es la
+       categoría omitida.  El coeficiente de ~dm2~ indica que en
+       febrero hay aproximadamente un \pct{2.5} menos de accidentes
+       que en enero.  El coeficiente de ~dm8~ indica que en agosto hay
+       un \pct{6.9} más de accidentes, /ceteris paribus/.
+     #+end_answer
+     #+latex: \ClearPage
+
    - Contraste la significación conjunta de las variables
      estacionales. ¿Qué conclusión se extrae de este contraste?
 
+     #+begin_answer
+       #+latex: \gretl[lastline=5]{traffic2-seas.txt}
+
+       El valor del contraste $F$ es $8.76$ con un valor $p$
+       prácticamente igual a 0. Por tanto, se rechaza la hipótesis
+       nula de que todos los parámetros de las variables estacionales
+       sean iguales a 0 para un nivel de significación del $5\%$. Las
+       variables ficticias estacionales son conjuntamente
+       significativas.
+     #+end_answer
+
    - Interprete y evalúe la significación individual de los parámetros
      de $\weekends$ y $\unem$.
+
+     #+begin_answer
+       El parámetro de \weekends es positivo, lo que sugiere que hay
+       más accidentes en meses con más días de fin de semana. Sin
+       embargo, el efecto es pequeño y no significativo al $5\%$
+       (valor $p = 0.26$).
+       #+latex: \smallskip
+
+       El coeficiente de ~unem~ es negativo y significativo (valor $p
+       < 0.05$): un aumento de $1$ punto porcentual en el desempleo
+       reduce los accidentes en aproximadamente un \pct{1.9}, /ceteris
+       paribus/.
+     #+end_answer
 
    - De acuerdo con los objetivos expuestos anteriormente, las
      variables más importantes son $\beltlaw$ y
      $\speedlaw$. Interprete y determine la significación individual
      de sus parámetros. ¿Cómo pueden explicarse los signos obtenidos?
 
+     #+begin_answer
+       El coeficiente de ~beltlaw~ indica que, tras la introducción de
+       la ley que hacía obligatorio el uso del cinturón de seguridad,
+       el número de accidentes aumentó aproximadamente un \pct{9.4}, y
+       el efecto es estadísticamente significativo para $\alpha =
+       \pct{5}$.
+       #+latex: \smallskip
+
+       El coeficiente de ~speedlaw~ sugiere una reducción de un
+       \pct{5.7} en los accidentes tras el aumento del límite de
+       velocidad, también significativa al \pct{5}.
+       #+latex: \smallskip
+
+       Estos signos podrían explicarse por cambios en el
+       comportamiento de los conductores como consecuencia de la
+       entrada en vigor de las leyes. El signo positivo del
+       coeficiente de \beltlaw sería compatible con la hipótesis de
+       que los conductores adoptan comportamientos más arriesgados si
+       perciben que están más protegidos en caso de accidente. De
+       manera análoga, el signo negativo estimado para \speedlaw
+       podría deberse a una mayor precaución por parte de los
+       conductores tras la elevación del límite de velocidad,
+       conscientes de que un accidente a mayor velocidad puede tener
+       consecuencias más graves.
+     #+end_answer
+
    - ¿Es razonable suponer que las variables explicativas son
      estrictamente exógenas en esta regresión? Justifique la
      respuesta.
 
+     #+begin_answer
+       El supuesto de exogeneidad estricta de las variables
+       explicativas parece razonable. La regresión no incluye retardos
+       de la variable dependiente, y no parece necesario incorporar
+       retardos de las variables explicativas, aunque esta posibilidad
+       podría explorarse mediante extensiones del modelo. Además, no
+       existen indicios de que el número de accidentes influya en los
+       valores futuros de las variables explicativas. Muchas de ellas
+       están determinadas por el calendario o el paso del tiempo, por
+       lo que no se verían afectadas por la evolución pasada de los
+       accidentes. Tampoco hay motivos claros para pensar que los
+       accidentes incidan sobre las tasas futuras de desempleo. En
+       cuanto a la legislación sobre tráfico, si bien podría responder
+       a la evolución de los accidentes, este efecto no sería
+       sistemático ni inmediato, ya que las leyes no se aprueban ni
+       modifican continuamente en función de las fluctuaciones en
+       las cifras de siniestralidad.
+     #+end_answer
 
-
-* COMMENT Contrastes de raíces unitarias
-
-Se contrasta la presencia de raíces unitarias en las variables
-=l_total= y =unem=. No es necesario realizar los contrastes para las
-restantes variables, ya que su variación depende del calendario. En
-las regresiones del contraste se incluye una tendencia lineal y se usa
-el AIC para determinar el número óptimo de retardos, considerando como
-máximo 6 retardos.
-
-** Logaritmo del número de accidentes
-
-
-#+ATTR_LATEX: :options [c]{0.45\textwidth}
-#+begin_minipage
-#+latex: \vspace{0pt}
-#+ATTR_LATEX: :scale 0.5
-[[file:traffic2-l_total.pdf]]
-#+end_minipage
-#+ATTR_LATEX: :options [c]{0.55\textwidth}
-#+begin_minipage
-#+latex: \gretl{traffic2-adf-l_total.txt}
-#+end_minipage
-
-El gráfico muestra una evolución ascendente del número de accidentes
-totales durante el periodo analizado, lo que justifica la inclusión de
-una tendencia lineal en la regresión utilizada para el contraste. El
-AIC se minimiza cuando se incluyen dos retardos. El estadístico $t$
-del contraste de Dickey-Fuller aumentado es $-3.60$, valor inferior
-al valor crítico de $-3.43$ para un nivel de significación del
-\pct{5}. En consecuencia, se rechaza la hipótesis nula de raíz unitaria
-para la variable =l_total=.
-
-** Tasa de paro
-
-#+ATTR_LATEX: :options [c]{0.45\textwidth}
-#+begin_minipage
-#+latex: \vspace{0pt}
-#+ATTR_LATEX: :scale 0.5
-[[file:traffic2-unem.pdf]]
-#+end_minipage
-#+ATTR_LATEX: :options [c]{0.55\textwidth}
-#+begin_minipage
-#+latex: \gretl{traffic2-adf-unem.txt}
-#+end_minipage
-
-En la regresión del contraste se incluyen tanto una tendencia lineal,
-dado que el gráfico muestra una marcada tendencia decreciente del
-desempleo, como 6 retardos de la variable dependiente, número
-seleccionado con el AIC.  La hipótesis nula de raíz unitaria se
-rechaza a un nivel de significación del $5\%$ ya que el valor del
-contraste, $-3.61$, es inferior al valor crítico, $-3.43$.
-
-En conclusión, no hay evidencias de raíces unitarias en las variables
-=l_total= y =unem=. Por otro lado, se ha detectado una tendencia
-creciente en el número de accidentes totales y una tendencia
-decreciente en la tasa de desempleo. Por consiguiente, para evitar
-obtener resultados espurios, se incluirá una tendencia lineal en las
-regresiones de las siguientes secciones.
-
-* COMMENT Regresión
-
-Para determinar la influencia sobre los accidentes de tráfico de las
-leyes aprobadas durante el periodo muestral, se plantea el siguiente
-modelo de regresión:
-#+begin_export latex
-\begin{equation*}
-  \begin{multlined}
-    \log(\total_t) =
-    \beta_{0} +
-    \beta_{1}\, \beltlaw_{t} +
-    \beta_{2}\, \speedlaw_{t} +
-    \beta_{3}\, \unem_{t} +
-    \beta_{4}\, \weekends_{t} + \\
-    \beta_{5}\, t +
-    \beta_{6}\, \feb_{t} +
-    \beta_{8}\, \mar_{t} +
-    \beta_{9}\, \apr_{t} +
-    \beta_{10}\, \may_{t} +
-    \beta_{11}\, \jun_{t} +
-    \beta_{12}\, \jul_{t} + \\
-    \beta_{13}\, \aug_{t} +
-    \beta_{14}\, \sep_{t} +
-    \beta_{15}\, \oct_{t} +
-    \beta_{16}\, \nov_{t} +
-    \beta_{17}\, \dec_{t} +
-    u_{t},
-  \end{multlined}
-\end{equation*}
-#+end_export
-donde $u_t$ es el término de error. A continuación se muestran los
-resultados de la estimación MCO con errores típicos robustos a
-autocorrelación y heteroscedasticidad.
-
-#+latex: \gretl{traffic2-mco.txt}
-
-A partir de estas estimaciones, se responde a las siguientes
-preguntas:
-
-#+ATTR_LATEX: :options [parsep=0.5ex, itemsep=0.5ex]
-1. /¿Qué interpretación tiene la estimación del parámetro $\beta_5$?/
-
-   De acuerdo con la estimación de $\beta_5$, el número de accidentes
-   totales crece un $0.13\%$ cada mes, manteniendo constantes los
-   efectos de las restantes variables.
-
-2. /¿Qué interpretación tienen las variables estacionales ficticias?
-   En concreto, ¿cuál es la interpretación del parámetro de $\feb$?
-   ¿Y el de $\aug$?/
-
-   Los parámetros de las variables ficticias muestran la diferencia
-   media entre el número de accidentes en cada mes y los accidentes
-   ocurridos en enero del mismo año (enero es la categoría omitida en
-   la regresión). La estimación del parámetro de =dm2= muestra que el
-   número de accidentes en febrero suele ser un $2.5\%$ inferior al
-   número de accidentes de enero. El valor de la pendiente de =dm8=
-   indica que, por término medio, en agosto hay un $6.9\%$ más de
-   accidentes que en enero del mismo año, /ceteris paribus/.
-
-3. /Contraste la significación conjunta de las variables
-   estacionales. ¿Qué conclusión se extrae de este contraste?/
-
-   #+begin_export latex
-   \vspace*{1ex}
-   \gretl{traffic2-seas.txt}
-   \vspace*{1ex}
-   #+end_export
-
-   El valor del contraste $F$ es $8.76$ con un valor $p$ prácticamente
-   igual a 0, por lo que se rechaza la hipótesis nula de que todos los
-   parámetros de las variables estacionales sean iguales a 0 para un
-   nivel de significación del $5\%$. Por tanto, estas variables
-   ficticias capturan las variaciones estacionales presentes en las
-   variables incluidas en la regresión.
-
-4. /Interprete y evalúe la significación individual de los parámetros
-   de $\weekends$ y $\unem$/.
-
-   El parámetro de \weekends es positivo, lo que mostraría que el
-   número de accidentes tiende a ser mayor en aquellos meses en que
-   hay más días de fin de semana. Sin embargo, el efecto es pequeño y
-   no significativo al $5\%$ (el valor $p$ es $0.26$).
-
-   Las estimaciones del modelo de regresión muestran que los
-   accidentes disminuyen en los periodos con mayor desempleo. En
-   concreto, los accidentes disminuyen un $1.9\%$ por cada punto
-   porcentual que se incremente la tasa de desempleo, /ceteris
-   paribus/. El efecto es significativamente distinto de $0$ (el valor
-   $p$ es inferior al \pct{5}).
-
-5. /De acuerdo con los objetivos expuestos anteriormente, las
-   variables más importantes son $\beltlaw$ y $\speedlaw$. Interprete
-   y determine la significación individual de sus parámetros. ¿Cómo
-   pueden explicarse los signos obtenidos?/
-
-   El coeficiente estimado para la variable \beltlaw indica que la
-   introducción de la ley que obligaba al uso del cinturón de
-   seguridad se asocia con un incremento del \pct{9.4} en el número de
-   accidentes, manteniendo constante el efecto del resto de
-   variables. El valor $p$ asociado al parámetro es prácticamente
-   cero, por lo que resulta estadísticamente significativo para
-   $\alpha = 5\%$.
-
-   Por su parte, la pendiente correspondiente a \speedlaw sugiere que
-   el aumento del límite de velocidad se relaciona con una reducción
-   del \pct{5.7} en los accidentes. Este efecto también es
-   estadísticamente significativo para un nivel de significación del
-   \pct{5}, dado que el valor $p = 0.0002 < \alpha$.
-
-   Aunque el signo positivo del coeficiente de \beltlaw puede parecer
-   contrario a la intuición, sería compatible con la hipótesis de que
-   los conductores adoptan comportamientos más arriesgados si perciben
-   que están más protegidos en caso de accidente. En ese caso, la
-   obligación del uso del cinturón de seguridad se traduciría en un
-   aumento en la frecuencia de accidentes.
-
-   De manera análoga, el signo negativo estimado para \speedlaw podría
-   deberse a una mayor precaución por parte de los conductores tras la
-   elevación del límite de velocidad, conscientes de que un accidente
-   a mayor velocidad puede tener consecuencias más graves.
-
-6. /¿Es razonable el supuesto de exogeneidad estricta de las
-   explicativas de esta regresión? ¿Por qué?/
-
-   El supuesto de exogeneidad estricta de las variables explicativas
-   resulta razonable en este contexto. La especificación no incluye
-   retardos de la variable dependiente, y no parece necesario
-   incorporar retardos de las variables explicativas, aunque esta
-   posibilidad podría explorarse mediante extensiones del
-   modelo. Además, no existen indicios de que el número de accidentes
-   influya en los valores futuros de las variables
-   explicativas. Muchas de ellas están determinadas por el calendario
-   o el paso del tiempo, por lo que no se verían afectadas por la
-   evolución pasada de los accidentes. Tampoco hay razones sólidas
-   para pensar que los accidentes incidan sobre las tasas futuras de
-   desempleo. En cuanto a la legislación sobre tráfico, si bien podría
-   responder a la evolución de los accidentes, este efecto no sería
-   sistemático ni inmediato, ya que las leyes no se aprueban ni
-   modifican continuamente en función de pequeñas fluctuaciones en las
-   cifras de siniestralidad.
 
 * COMMENT Contrastes de autocorrelación
 
@@ -486,6 +429,6 @@ estimaciones son muy parecidas a las obtenidas con MCO.
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  Gretl Fuller Dickey beltlaw speedlaw MCG AR cuasi
+#  LocalWords:  Gretl Fuller Dickey beltlaw speedlaw MCG AR cuasi AIC
 #  LocalWords:  ceteris paribus Breusch Godfrey Durbin Watson MCGF
-#  LocalWords:  Wooldridge Prais Winsten muestral
+#  LocalWords:  Wooldridge Prais Winsten muestral ADF
