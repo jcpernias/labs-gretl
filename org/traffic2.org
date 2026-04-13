@@ -25,23 +25,23 @@
 
 
 Evaluar los efectos de la introducción de leyes en California sobre el
-número de accidentes de tráfico. En concreto, se examinan los casos de
-la obligatoriedad del uso del cinturón de seguridad y la modificación
-de los límites de velocidad.
+número de accidentes de tráfico. En concreto, se analizan dos leyes
+que introdujeron la obligación de usar el cinturón de seguridad y
+modificaron el límite de velocidad.
 
 * Datos
 
-El archivo =traffic2.csv= contiene 108 observaciones mensuales que
+El archivo ~traffic2.csv~ contiene 108 observaciones mensuales que
 cubren el periodo que va desde enero de 1981 hasta diciembre
-de 1989. Este archivo incluye información sobre accidentes
-automovilísticos en California y algunas otras variables relacionadas:
+de 1989. Este archivo incluye información sobre accidentes de
+circulación en California y algunas otras variables relacionadas:
 
 - =total=: número total de accidentes de tráfico.
 
+- =unem=: tasa de desempleo en California (porcentaje).
+
 - =weekends=: número de días de fin de semana (viernes, sábados y
   domingos) en cada mes.
-
-- =unem=: tasa de desempleo en California (porcentaje).
 
 - =beltlaw=: ficticia que toma el valor $1$ desde enero de 1986,
   cuando se introdujo la obligación de usar el cinturón de seguridad.
@@ -51,28 +51,89 @@ automovilísticos en California y algunas otras variables relacionadas:
   millas por hora.
 
 
-Para llevar a cabo el análisis de las siguientes secciones es
-necesario crear las siguientes variables:
+* Instrucciones
 
-- =l_total=: logaritmo del número total de accidentes (en Gretl se
-  obtiene con el menú =Añadir | Logaritmos de las variables
-  seleccionadas=).
+#+ATTR_LATEX: :options [a)]
+1. Cree las siguientes variables:
+   - ~l_total~: logaritmo del número total de accidentes de tráfico.
+   - ~time~: tendencia lineal que toma valores $1, 2, \dots$
+   - ~dm2, dm3, ..., dm12~: variables ficticias estacionales. La
+     variable ~dm2~ toma el valor $1$ únicamente en febrero, ~dm3~
+     toma el valor $1$ en marzo, etc.
 
-- =time=: tendencia lineal que toma valores $1, 2, \dots, 108$ (se
-  obtiene con el menú =Añadir | Tendencia temporal=).
+2. Restrinja la muestra al periodo comprendido entre junio de 1981 y
+   diciembre de 1989, de modo que queden disponibles hasta 6 retardos
+   en los contrastes de raíz unitaria y en las regresiones.
 
-- =dm2, dm3, ..., dm12=: variables ficticias estacionales. La variable
-  =dm2= solo toma el valor $1$ en los meses de febrero, =dm3= solo es
-  $1$ en las observaciones que corresponden a marzo, etc. (se crean
-  con =Añadir | Variables ficticias estacionales=).
+3. Contraste la presencia de raíces unitarias en las variables
+   ~l_total~ y ~unem~. Utilice gráficos para determinar si es
+   necesario incluir una tendencia lineal en los contrastes. Use el
+   AIC para determinar el número óptimo de retardos, considerando como
+   máximo 6 retardos.
+
+4. ¿Por qué no tiene sentido aplicar los contrastes de raíz unitaria a
+   las variables ~weekends~, ~beltlaw~ y ~speedlaw~?
+   #+latex: \clearpage
+
+5. Para determinar la influencia de las leyes aprobadas durante el
+   periodo muestral sobre los accidentes de tráfico, se plantea el
+   siguiente modelo de regresión:
+   #+begin_export latex
+   \begin{equation*}
+     \begin{multlined}
+       \log(\total_t) =
+       \beta_{0} +
+       \beta_{1}\, \beltlaw_{t} +
+       \beta_{2}\, \speedlaw_{t} +
+       \beta_{3}\, \unem_{t} +
+       \beta_{4}\, \weekends_{t} + \\
+       \beta_{5}\, t +
+       \beta_{6}\, \feb_{t} +
+       \beta_{7}\, \mar_{t} +
+       \beta_{8}\, \apr_{t} +
+       \beta_{9}\, \may_{t} +
+       \beta_{10}\, \jun_{t} +
+       \beta_{11}\, \jul_{t} + \\
+       \beta_{12}\, \aug_{t} +
+       \beta_{13}\, \sep_{t} +
+       \beta_{14}\, \oct_{t} +
+       \beta_{15}\, \nov_{t} +
+       \beta_{16}\, \dec_{t} +
+       u_{t},
+     \end{multlined}
+   \end{equation*}
+   #+end_export
+   donde $u_t$ es el término de error. Estime los parámetros del
+   modelo por MCO usando errores típicos robustos a
+   heteroscedasticidad y autocorrelación.
+
+6. Responda a las siguientes preguntas a partir de las estimaciones
+   del modelo de regresión:
+
+   - ¿Qué interpretación tiene la estimación del parámetro $\beta_5$?
+
+   - ¿Qué interpretación tienen las variables estacionales ficticias?
+     En concreto, ¿cuál es la interpretación del parámetro de $\feb$?
+     ¿Y el de $\aug$?
+
+   - Contraste la significación conjunta de las variables
+     estacionales. ¿Qué conclusión se extrae de este contraste?
+
+   - Interprete y evalúe la significación individual de los parámetros
+     de $\weekends$ y $\unem$.
+
+   - De acuerdo con los objetivos expuestos anteriormente, las
+     variables más importantes son $\beltlaw$ y
+     $\speedlaw$. Interprete y determine la significación individual
+     de sus parámetros. ¿Cómo pueden explicarse los signos obtenidos?
+
+   - ¿Es razonable suponer que las variables explicativas son
+     estrictamente exógenas en esta regresión? Justifique la
+     respuesta.
 
 
-Finalmente restringiremos la muestra al periodo comprendido entre
-junio de 1981 y diciembre de 1989, reservando 6 observaciones para
-retardos en los contrastes de raíz unitaria y en las regresiones.
 
-
-* Contrastes de raíces unitarias
+* COMMENT Contrastes de raíces unitarias
 
 Se contrasta la presencia de raíces unitarias en las variables
 =l_total= y =unem=. No es necesario realizar los contrastes para las
@@ -131,7 +192,7 @@ decreciente en la tasa de desempleo. Por consiguiente, para evitar
 obtener resultados espurios, se incluirá una tendencia lineal en las
 regresiones de las siguientes secciones.
 
-* Regresión
+* COMMENT Regresión
 
 Para determinar la influencia sobre los accidentes de tráfico de las
 leyes aprobadas durante el periodo muestral, se plantea el siguiente
@@ -272,7 +333,7 @@ preguntas:
    modifican continuamente en función de pequeñas fluctuaciones en las
    cifras de siniestralidad.
 
-* Contrastes de autocorrelación
+* COMMENT Contrastes de autocorrelación
 
 Se han propuesto muchos contrastes para detectar la violación del
 supuesto de no autocorrelación. En esta sección consideramos tres
@@ -397,7 +458,7 @@ contraste son suficientemente elevados como para rechazar la hipótesis
 nula, lo que sugiere evidencia robusta de autocorrelación en los
 residuos del modelo.
 
-* Estimación eficiente
+* COMMENT Estimación eficiente
 
 Si las variables explicativas son estrictamente exógenas y se conoce
 la estructura de la autocorrelación, es posible obtener un estimador
@@ -427,4 +488,4 @@ estimaciones son muy parecidas a las obtenidas con MCO.
 
 #  LocalWords:  Gretl Fuller Dickey beltlaw speedlaw MCG AR cuasi
 #  LocalWords:  ceteris paribus Breusch Godfrey Durbin Watson MCGF
-#  LocalWords:  Wooldridge Prais Winsten
+#  LocalWords:  Wooldridge Prais Winsten muestral
