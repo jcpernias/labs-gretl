@@ -13,7 +13,6 @@ src-files := \
 	cons \
 	unemp \
 	phillips \
-	phillips-sol \
 	exports \
 	traffic2
 
@@ -187,28 +186,6 @@ $(pdf-dir)/phillips.pdf $(pdf-dir)/phillips-ans.pdf: $(build-dir)/phillips-fig.c
 $(build-dir)/phillips-fig.csv: \
 	$(gretl-dir)/phillips-fig.inp $(data-dir)/phillips.csv
 	gretlcli -b -e $(realpath $<)
-
-
-
-# traffic2 gretl output -----------------------------------------
-# traffic2-gretl-output := \
-# 	$(addsuffix .txt,\
-# 		$(addprefix $(build-dir)/traffic2-, \
-# 			adf-l_total adf-unem \
-# 			mco seas rho1 bgaux bgaux-hc bgaux-ar2 bg-ar2 pw)) \
-# 	$(addsuffix .plt,\
-# 		$(addprefix $(build-dir)/traffic2-,l_total unem))
-
-
-# $(traffic2-gretl-output): traffic2-gretl-output.intermediate
-# 	@:
-
-# .INTERMEDIATE: traffic2-gretl-output.intermediate
-# traffic2-gretl-output.intermediate: \
-# 	$(gretl-dir)/traffic2.inp $(data-dir)/traffic2.csv
-# 	gretlcli -b -e $(realpath $<)
-
-# $(pdf-dir)/traffic2.pdf: $(patsubst %.plt,%.pdf,$(traffic2-gretl-output))
 
 
 .NOTPARALLEL:
