@@ -8,11 +8,9 @@
 
 * Objetivo
 
-Se investigará la existencia de una relación de intercambio entre
-inflación y desempleo en España durante el periodo 1965--2023. Se
-estimará una curva de Phillips con expectativas y tasa natural de
-desempleo variable en el tiempo. También se explorarán las relaciones
-dinámicas entre la inflación y el desempleo.
+Se investigará la existencia de la relación entre inflación y
+desempleo en España durante el periodo 1965--2023. Se estimarán
+distintas especificaciones de la curva de Phillips.
 
 * La curva de Phillips
 
@@ -215,8 +213,10 @@ Cree las siguientes variables:
   restantes años.
 
 - =paroc=: tasa de paro cíclico calculada a partir de la aplicación
-  del filtro de Hodrick-Prescott ($\lambda = 6.25$) a la tasa de
-  desempleo observada. En Gretl, se obtiene añadiendo una nueva variable definida como =paroc = hpfilt(paro, 6.25)=.
+  del filtro de Hodrick-Prescott ($\lambda = 6.25$ xes el valor
+  comunmente utilizado para datos anuales) a la tasa de desempleo
+  observada. En Gretl, se obtiene añadiendo una nueva variable
+  definida como =paroc = hpfilt(paro, 6.25)=.
 
 - =d_paroc=: diferencia de =paroc=.
 
@@ -226,11 +226,11 @@ Una vez creadas las variables, *establezca el rango muestral al periodo comprend
 ** Contrastes de raíces unitarias
 
 Contraste la existencia de una raíz unitaria en las variables =infl=,
-=dinfl=, =paro= y =paroc=. En todos los casos:
+=d_infl=, =paro= y =paroc=. En todos los casos:
 
 #+ATTR_LATEX: :options [a)]
-1. Determine mediante la inspección de un gráfico de series
-   temporales si es necesario incluir una tendencia lineal en la
+1. Determine, a partir de la inspección del gráfico de la serie
+   temporal, si es necesario incluir una tendencia lineal en la
    regresión de Dickey-Fuller.
 
 2. Seleccione con el AIC el número de retardos a incluir en la
@@ -283,8 +283,8 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   #+end_minipage
 
   No se observan claras tendencias crecientes o decrecientes a lo
-  largo de todo el periodo en los gráficos de la inflación, =inf=, la
-  diferencia de la inflación, =d_inf=, la tasa de paro observada,
+  largo de todo el periodo en los gráficos de la inflación, =infl=, la
+  diferencia de la inflación, =d_infl=, la tasa de paro observada,
   =paro=, y el paro cíclico, =paroc=, por lo que se incluye únicamente
   un término constante en las regresiones de Dickey-Fuller.
 
@@ -297,8 +297,10 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   Los resultados de los contrastes no permiten rechazar, al 5% de
   significación, la existencia de una raíz unitaria en las series
   =infl= y =paro=. La hipótesis de una raíz unitaria se rechaza en los
-  casos de la primera diferencia de la inflación, =d_inf=, y del paro
-  cíclico, =paroc=.
+  casos de la primera diferencia de la inflación, =d_infl=, y del paro
+  cíclico, =paroc=. Por tanto, la inflación y el paro parecen ser
+  procesos integrados de orden uno, mientras que la inflación en
+  diferencias y el paro cíclico son I(0).
 #+end_answer
 
 ** Curva de Phillips estática
@@ -310,6 +312,11 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
 
   #+begin_answer
     #+latex: \gretl{phillips-static.txt}
+
+    El coeficiente estimado del paro es negativo y estadísticamente
+    significativo. Esto indica que un aumento de un punto porcentual
+    en la tasa de paro se asocia, en promedio, con una reducción de
+    aproximadamente $0.33$ puntos porcentuales en la inflación.
   #+end_answer
 
 - Atendiendo a los resultados obtenidos con los contrastes de raíces
@@ -321,9 +328,9 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
     Las variables =infl= y =paro= presentan raíces unitarias por lo
     que se incumple el supuesto *ST.1'*, que requiere la
     estacionariedad y la dependencia débil de las series incluidas en
-    la regresión. En esas condiciones, es muy probable que los
-    resultados de la estimación sean espurios y no reflejen una
-    relación genuina entre las variables.
+    la regresión.  Dado que ambas variables parecen tener raíz
+    unitaria, la estimación en niveles podría producir una regresión
+    espuria.
   #+end_answer
 
 ** Curva de Phillips con expectativas
@@ -341,13 +348,18 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
   autocorrelación del modelo seleccionado con el BIC.
 
   #+begin_answer
-    El valor del BIC se minimiza cuando solo se incluye 1 retardo en
-    el modelo.
+    El valor del BIC se minimiza cuando se incluye 1 retardo en el
+    modelo. Por tanto, el modelo seleccionado incluye el paro cíclico
+    contemporáneo y un retardo.
 
     #+latex: \gretl{phillips-lags.txt}
 
     #+latex: \gretl{phillips-dyn.txt}
 
+    El coeficiente contemporáneo del paro cíclico es negativo,
+    mientras que el retardo es positivo. Esto sugiere que una
+    reducción del paro cíclico aumenta inicialmente la inflación, pero
+    parte de ese efecto se revierte en el periodo siguiente.
   #+end_answer
 
 ** Estimación del multiplicador de largo plazo
@@ -375,19 +387,25 @@ Contraste la existencia de una raíz unitaria en las variables =infl=,
     En la regresión mostrada en el punto anterior, se obtuvo una
     estimación del multiplicador de largo plazo, $\hat{\delta}_1 =
     0.09$, y de su error típico, $\hat{\sigma}_{\hat{\delta}_1} =
-    0.13$. El estadístico $t$ resultante es $0.66$, por lo que no se
-    rechaza al 5% la hipótesis de que el multiplicador de largo plazo
-    es igual a 0 (valor $p = 0.51$).
+    0.13$. El estadístico $t$ resultante es $0.66$ y el valor $p =
+    0.51$, por lo que no se rechaza al 5% la hipótesis de que el
+    multiplicador de largo plazo es igual a 0.
 
     La siguiente tabla muestra la estimación del modelo bajo la
     hipótesis nula de ausencia de efectos de largo plazo del paro
     cíclico sobre la inflación.
 
     #+latex: \gretl{phillips-lr-mult-0.txt}
+
+    En conjunto, los resultados sugieren que no existe una relación
+    estable de largo plazo entre inflación y desempleo en España
+    durante el periodo analizado. Sin embargo, sí se observan efectos
+    de corto plazo del desempleo cíclico sobre los cambios en la
+    inflación.
   #+end_answer
 
 # Local Variables:
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  Hodrick Prescott Fuller Dickey BIC
+#  LocalWords:  Hodrick Prescott Fuller Dickey BIC Schwarz
