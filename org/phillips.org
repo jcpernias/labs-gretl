@@ -213,7 +213,7 @@ Cree las siguientes variables:
   restantes años.
 
 - =paroc=: tasa de paro cíclico calculada a partir de la aplicación
-  del filtro de Hodrick-Prescott ($\lambda = 6.25$ xes el valor
+  del filtro de Hodrick-Prescott ($\lambda = 6.25$ es el valor
   comunmente utilizado para datos anuales) a la tasa de desempleo
   observada. En Gretl, se obtiene añadiendo una nueva variable
   definida como =paroc = hpfilt(paro, 6.25)=.
