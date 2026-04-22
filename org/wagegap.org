@@ -429,7 +429,7 @@ Los modelos considerados hasta ahora no admiten la posibilidad de que
 determinadas características de los trabajadores tengan una influencia
 en el salario que sea diferente para hombres y para mujeres.
 
-- Amplíe el modelo \eqref{eq-mod1} de forma que la experiencia laboral
+- Amplíe el modelo \eqref{eq-mod2} de forma que la experiencia laboral
   pueda tener efectos diferentes para hombres y para
   mujeres. Contraste la hipótesis de que no hay diferencias en la
   valoración de la experiencia laboral de hombres y mujeres.  ¿Qué
