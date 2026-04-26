@@ -26,7 +26,9 @@ ans-files := \
 	exports \
 	traffic2 \
 	unemp \
-	phillips
+	phillips \
+	traffic2b
+
 
 ## Directories
 ## ================================================================================
@@ -209,6 +211,7 @@ $(zip-dir)/unemp.zip: $(data-dir)/unemp.csv
 $(zip-dir)/phillips.zip: $(data-dir)/phillips.csv
 $(zip-dir)/exports.zip: $(data-dir)/exports.csv
 $(zip-dir)/traffic2.zip: $(data-dir)/traffic2.csv
+
 
 
 ## Create directories

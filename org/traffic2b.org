@@ -1,0 +1,252 @@
+#+TITLE: Accidentes de tráfico y leyes de circulación: autocorrelación
+#+SETUPFILE: ../setup.org
+
+# Define macros for the variable names
+#+LATEX_HEADER: % \newcommand*{\weight}{\Var{weight}}
+#+LATEX_HEADER: \newcommand*{\total}{\Var{total}}
+#+LATEX_HEADER: \newcommand*{\unem}{\Var{unem}}
+#+LATEX_HEADER: \newcommand*{\weekends}{\Var{weekends}}
+#+LATEX_HEADER: \newcommand*{\beltlaw}{\Var{beltlaw}}
+#+LATEX_HEADER: \newcommand*{\speedlaw}{\Var{speedlaw}}
+#+LATEX_HEADER: \newcommand*{\feb}{\Var{dm2}}
+#+LATEX_HEADER: \newcommand*{\mar}{\Var{dm3}}
+#+LATEX_HEADER: \newcommand*{\apr}{\Var{dm4}}
+#+LATEX_HEADER: \newcommand*{\may}{\Var{dm5}}
+#+LATEX_HEADER: \newcommand*{\jun}{\Var{dm6}}
+#+LATEX_HEADER: \newcommand*{\jul}{\Var{dm7}}
+#+LATEX_HEADER: \newcommand*{\aug}{\Var{dm8}}
+#+LATEX_HEADER: \newcommand*{\sep}{\Var{dm9}}
+#+LATEX_HEADER: \newcommand*{\oct}{\Var{dm10}}
+#+LATEX_HEADER: \newcommand*{\nov}{\Var{dm11}}
+#+LATEX_HEADER: \newcommand*{\dec}{\Var{dm12}}
+
+
+* Objetivos
+
+Contrastar la presencia de autocorrelación en la regresión de los
+accidentes de tráfico en California. También se considera la
+estimación eficiente en presencia de autocorrelación.
+
+* Datos
+
+El archivo ~traffic2.csv~ contiene 108 observaciones mensuales que
+cubren el periodo que va desde enero de 1981 hasta diciembre
+de 1989. Este archivo incluye información sobre accidentes de
+circulación en California y algunas otras variables relacionadas:
+
+- =total=: número total de accidentes de tráfico.
+
+- =unem=: tasa de desempleo en California (porcentaje).
+
+- =weekends=: número de días de fin de semana (viernes, sábados y
+  domingos) en cada mes.
+
+- =beltlaw=: ficticia que toma el valor $1$ desde enero de 1986,
+  cuando se introdujo la obligación de usar el cinturón de seguridad.
+
+- =speedlaw=: ficticia que toma el valor $1$ desde mayo de 1987,
+  cuando se elevó el límite de velocidad en California de $50$ a $65$
+  millas por hora.
+
+
+* Regresión
+
+En un laboratorio anterior se planteó la siguiente regresión para
+determinar la influencia sobre los accidentes de tráfico de las leyes
+aprobadas durante el periodo muestral (junio de 1981 hasta diciembre
+de 1989):
+#+begin_export latex
+\begin{equation*}
+  \begin{multlined}
+    \log(\total_t) =
+    \beta_{0} +
+    \beta_{1}\, \beltlaw_{t} +
+    \beta_{2}\, \speedlaw_{t} +
+    \beta_{3}\, \unem_{t} +
+    \beta_{4}\, \weekends_{t} + \\
+    \beta_{5}\, t +
+    \beta_{6}\, \feb_{t} +
+    \beta_{7}\, \mar_{t} +
+    \beta_{8}\, \apr_{t} +
+    \beta_{9}\, \may_{t} +
+    \beta_{10}\, \jun_{t} +
+    \beta_{11}\, \jul_{t} + \\
+    \beta_{12}\, \aug_{t} +
+    \beta_{13}\, \sep_{t} +
+    \beta_{14}\, \oct_{t} +
+    \beta_{15}\, \nov_{t} +
+    \beta_{16}\, \dec_{t} +
+    u_{t},
+  \end{multlined}
+\end{equation*}
+#+end_export
+donde $\feb_{t}, \mar_{t}, \dots, \dec_{t}$ son variables ficticias
+estacionales y $u_t$ es el término de error. En la tabla siguiente
+se muestran las estimaciones por MCO de los parámetros del modelo
+usando errores típicos robustos a heteroscedasticidad y
+autocorrelación.
+
+#+latex: \gretl[firstline=2, lastline=32]{traffic2b-mco.txt}
+
+
+* Contrastes de autocorrelación
+
+Se han propuesto muchos contrastes para detectar la violación del
+supuesto de no autocorrelación. En esta sección consideramos tres
+alternativas, aunque, con carácter general, solo es recomendable la
+propuesta de Breusch y Godfrey.
+
+** Contraste Durbin-Watson
+
+A pesar de ser uno de los primeros contrastes de autocorrelación
+ampliamente utilizados, el contraste de Durbin-Watson presenta varias
+limitaciones que desaconsejan su uso en la práctica:
+
+- Solo es válido si se cumple el supuesto de normalidad del término de
+  error.
+
+- No es válido si no se cumple el supuesto de exogeneidad estricta de
+  las variables explicativas. En concreto, no es aplicable en modelos
+  con variable dependiente retardada.
+
+- No es posible extender el contraste a patrones de autocorrelación
+  más complejos que un AR(1).
+
+- La distribución bajo la hipótesis nula es difícil de obtener y
+  depende de muchos detalles del modelo (número de observaciones,
+  presencia de constante, número de regresores, etc.). Aunque hay
+  tablas de valores críticos, estas presentan zonas de indeterminación
+  que, frecuentemente, impiden decidir con certeza si se debe rechazar
+  o no la hipótesis nula.
+
+
+Todas estas razones y la existencia de contrastes que no sufren de esos
+problemas hacen que no sea recomendable el uso del contraste de
+Durbin-Watson.
+
+** Coeficiente de autocorrelación de los residuos
+
+Un contraste asintótico para detectar autocorrelación de orden 1 puede
+basarse en una regresión de los residuos MCO sobre su primer retardo:
+#+begin_export latex
+\[
+  \hat{u}_{t} = \alpha + \rho \hat{u}_{t - 1} + \text{error}.
+\]
+#+end_export
+Bajo la hipótesis nula de no autocorrelación, se tiene que $\rho = 0$,
+hipótesis que puede contrastarse mediante un test $t$ de significación
+individual. Este procedimiento es válido siempre que los regresores
+del modelo original sean estrictamente exógenos, lo que lo hace
+aplicable en contextos donde el contraste de Durbin-Watson no lo es.
+
+En el caso de la regresión sobre el número de accidentes de tráfico en
+California, se ha estimado la siguiente regresión auxiliar:
+
+#+latex: \gretl[firstline=2, lastline=10]{traffic2b-rho1.txt}
+
+Según estos resultados, se rechaza la hipótesis nula de ausencia de
+autocorrelación, ya que el estadístico $t$ toma el valor $3.95$, que
+supera el valor crítico al nivel del \pct{5} de significación (valor
+$p = 0.0001$).
+
+Aunque este tipo de contraste puede extenderse a esquemas de
+autocorrelación de orden superior y adaptarse para ser robusto frente
+a heteroscedasticidad, su validez sigue dependiendo críticamente del
+supuesto de exogeneidad estricta.  Por esta razón, su uso no es
+recomendable en general.
+
+
+** Contraste Breusch-Godfrey
+
+Breusch y Godfrey propusieron un contraste de autocorrelación basado
+en el principio de multiplicadores de Lagrange. A diferencia de otras
+propuestas, este contraste es asintóticamente válido incluso si no se
+cumple el supuesto de exogeneidad estricta de los regresores o si el
+término de error no sigue una distribución normal.
+
+En su versión más simple, se contrasta la hipótesis nula de no
+autocorrelación frente a la alternativa de que los errores siguen un
+proceso AR(1). Para calcular el estadístico de contraste, se estima
+una regresión auxiliar en la que los residuos del modelo original se
+utilizan como variable dependiente, mientras que como regresores se
+incluyen las variables explicativas originales junto con un retardo de
+los propios residuos. Bajo la hipótesis nula, el coeficiente del
+retardo de los residuos debe ser cero, lo que puede evaluarse mediante
+un contraste $t$ de significación individual.
+
+En el caso de los accidentes de tráfico de California, la regresión
+auxiliar estimada es:
+
+#+latex: \gretl[firstline=2, lastline=26]{traffic2b-bgaux.txt}
+
+El cociente $t$ del retardo de los residuos es $3.7$ y el valor $p$
+correspondiente es $0.0004$, lo que permite rechazar la hipótesis nula
+de ausencia de autocorrelación para $\alpha = \pct{5}$.
+#+latex: \ClearPage
+
+Si se sospecha que la varianza condicional del término de error no es
+constante, puede usarse un contraste $t$ robusto a
+heteroscedasticidad:
+
+#+latex: \gretl[firstline=2, lastline=27]{traffic2b-bgaux-hc.txt}
+
+También en este caso, el valor $p$ es inferior a $\alpha = 5\%$ por lo
+que se rechaza la hipótesis nula de no autocorrelación a un nivel de
+significación del \pct{5}.
+#+latex: \ClearPage
+
+El contraste Breusch-Godfrey se puede extender para contrastar
+autocorrelación de orden superior añadiendo retardos adicionales de
+los residuos a la regresión auxiliar. Por ejemplo, la siguiente
+especificación permite contrastar autocorrelación de orden 2:
+
+#+latex: \gretl[firstline=2, lastline=28]{traffic2b-bgaux-ar2.txt}
+
+El contraste de autocorrelación se lleva a cabo examinando la
+significación conjunta de los retardos de los residuos mediante un
+estadístico $F$ robusto a heteroscedasticidad:
+
+#+latex: \gretl[firstline=2, lastline=4]{traffic2b-bg-ar2.txt}
+
+De acuerdo con estos resultados, se rechaza la hipótesis de no
+autocorrelación a un nivel de significación del \pct{5}.
+
+En todas las variantes del contraste de Breusch-Godfrey aplicadas en
+este análisis, los valores obtenidos para los estadísticos de
+contraste son suficientemente elevados como para rechazar la hipótesis
+nula, lo que sugiere evidencia robusta de autocorrelación en los
+residuos del modelo.
+
+* Estimación eficiente
+
+Si las variables explicativas son estrictamente exógenas y se conoce
+la estructura de la autocorrelación, es posible obtener un estimador
+más eficiente que MCO en presencia de autocorrelación. El estimador de
+mínimos cuadrados generalizados factibles, MCGF, consiste en
+transformar el modelo para eliminar la autocorrelación y estimar por
+MCO el modelo transformado. Si se supone que los errores siguen un
+proceso AR(1), la transformación se realiza mediante cuasi diferencias
+utilizando una estimación previa del parámetro autorregresivo (ver la
+sección 12.3 del libro de Wooldridge).
+
+Existen diferentes propuestas para obtener el estimador MCGF. A
+continuación se reproducen los resultados obtenidos con el
+procedimiento de Prais-Winsten, que utiliza una transformación de las
+variables que conserva todas las observaciones de la muestra
+original. En el caso de la regresión de los accidentes de tráfico, las
+estimaciones son muy parecidas a las obtenidas con MCO.  No obstante,
+la validez de este procedimiento depende de que la especificación
+AR(1) sea adecuada y de que las variables explicativas sean
+estrictamente exógenas.
+
+#+latex: \gretl[firstline=2, lastline=45]{traffic2b-pw.txt}
+
+
+
+# Local Variables:
+# ispell-local-dictionary: "spanish"
+# End:
+
+#  LocalWords:  Gretl Fuller Dickey beltlaw speedlaw MCG AR cuasi AIC
+#  LocalWords:  ceteris paribus Breusch Godfrey Durbin Watson MCGF
+#  LocalWords:  Wooldridge Prais Winsten muestral ADF

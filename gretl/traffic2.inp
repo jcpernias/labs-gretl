@@ -29,29 +29,3 @@ end outfile
 outfile traffic2-seas.txt
   omit dm2 dm3 dm4 dm5 dm6 dm7 dm8 dm9 dm10 dm11 dm12 --quiet
 end outfile
-
-series uhat1 = $uhat
-
-outfile traffic2-rho1.txt
-  ols uhat1 0 uhat1(-1) --simple-print
-end outfile
-
-outfile traffic2-bgaux.txt
-  ols uhat1 0 X uhat1(-1) --simple-print
-end outfile
-
-outfile traffic2-bgaux-hc.txt
-  ols uhat1 0 X uhat1(-1) --robust --simple-print
-end outfile
-
-outfile traffic2-bgaux-ar2.txt
-  ols uhat1 0 X uhat1(-1 to -2) --robust --simple-print
-end outfile
-
-outfile traffic2-bg-ar2.txt
-  omit uhat1_1 uhat1_2 --quiet
-end outfile
-
-outfile traffic2-pw.txt
-ar1 l_total 0 X --pwe
-end outfile
