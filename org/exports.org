@@ -21,12 +21,12 @@ de las series es trimestral y, por lo general, se han corregido de
 estacionalidad y efecto calendario.  Las variables a precios
 constantes tienen como referencia el año 2015.
 
-El fichero =exports.csv= contiene dos de las series de BDREMS:
+El fichero ~exports.csv~ contiene dos de las series de BDREMS:
 
-- =PIBpm= es el PIB a precios de mercado en millones de euros
+- ~PIBpm~ es el PIB a precios de mercado en millones de euros
   constantes, y
 
-- =exports= son las exportaciones de bienes y servicios, en millones
+- ~exports~ son las exportaciones de bienes y servicios, en millones
   de euros constantes.
 
 
@@ -49,44 +49,38 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
 
 ** Transformación de las variables
 
-- Cree las variables =lx= y =ly= correspondientes al logaritmo de las
+- Cree las variables ~lx~ y ~ly~ correspondientes al logaritmo de las
   exportaciones y del PIB, respectivamente.
 
-- A partir de las diferencias de =lx= y =ly=, cree las variables =gx=
-  y =gy= que son, respectivamente, las tasas de crecimiento trimestral
+- A partir de las diferencias de ~lx~ y ~ly~, cree las variables ~gx~
+  y ~gy~ que son, respectivamente, las tasas de crecimiento trimestral
   de las exportaciones y del PIB en tantos por 100.
 
-- Cree =covid=, una variable de impulso para el inicio del
+- Cree ~covid~, una variable de impulso para el inicio del
   confinamiento de la pandemia de la COVID-19 que sólo toma el valor 1
   en el segundo trimestre de 2020. *Además, añada la primera
-  diferencia de =covid= a la base de datos*.
+  diferencia de ~covid~ a la base de datos*.
 
 ** Contrastes de raíces unitarias
 
-- Contraste la presencia de raíces unitarias en las variables =lx=,
-  =gx=, =ly= y =gy=.
+- Contraste la presencia de raíces unitarias en las variables ~lx~,
+  ~gx~, ~ly~ y ~gy~.
 
 - ¿Qué problemas podrían aparecer si se estima un modelo de regresión
-  de =ly= con =lx= como variable explicativa? Si, en lugar de usar las
-  variables en niveles, se emplean las tasas de crecimiento =gy= y
-  =gx=, ¿seguirían presentándose los mismos problemas?
+  de ~ly~ con ~lx~ como variable explicativa? Si, en lugar de usar las
+  variables en niveles, se emplean las tasas de crecimiento ~gy~ y
+  ~gx~, ¿seguirían presentándose los mismos problemas?
 
 #+begin_answer
   Los gráficos de series temporales muestran marcadas tendencias
-  crecientes en =ly= y en =lx=, por lo que se incluye una tendencia
-  lineal en las regresiones auxiliares de estas dos variables. El
-  número óptimo de retardos se determina con el AIC, incluyéndose un
-  retardo en las regresiones de =ly= y =lx= y ninguno en las de =gy= y
-  =gx=. En los casos de =ly= y =lx= no es posible rechazar la
-  hipótesis nula de raíz unitaria al \pct{5}. En los casos de =gy= y
-  =gx= se rechaza la presencia de raíces unitarias al \pct{5}.
-
-  Un modelo de regresión de =ly= sobre =lx= incumpliría el supuesto de
-  estacionariedad y dependencia débil, ya que estas variables
-  presentan raíces unitarias, por lo que sería muy probable obtener
-  resultados espurios. No hay evidencia de raíces unitarias en =gy= y
-  =gx=, por lo que una regresión que incluya estas variables no
-  produciría, en principio, resultados espurios.
+  crecientes en ~ly~ y en ~lx~, por lo que se incluye una tendencia
+  lineal en las regresiones auxiliares de los contrastes para estas
+  dos variables. El número óptimo de retardos se determina con el AIC,
+  seleccionándose un retardo en las regresiones de ~ly~ y ~lx~ y
+  ninguno en las de ~gy~ y ~gx~. En los casos de ~ly~ y ~lx~ no se
+  rechaza la hipótesis nula de raíz unitaria al \pct{5}. En los casos
+  de ~gy~ y ~gx~ se rechaza la presencia de raíces unitarias al
+  \pct{5}.
 
   #+ATTR_LATEX: :options [c]{0.40\textwidth}
   #+begin_minipage
@@ -97,7 +91,7 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   #+ATTR_LATEX: :options [c]{0.60\textwidth}
   #+begin_minipage
   #+latex: \vspace{0pt}
-  #+latex: \gretl{exports-adf-ly.txt}
+  #+latex: \gretl[firstline=2,lastline=13]{exports-adf-ly.txt}
   #+end_minipage
 
 
@@ -110,7 +104,7 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   #+ATTR_LATEX: :options [c]{0.60\textwidth}
   #+begin_minipage
   #+latex: \vspace{0pt}
-  #+latex: \gretl{exports-adf-gy.txt}
+  #+latex: \gretl[firstline=2,lastline=13]{exports-adf-gy.txt}
   #+end_minipage
 
 
@@ -123,7 +117,7 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   #+ATTR_LATEX: :options [c]{0.60\textwidth}
   #+begin_minipage
   #+latex: \vspace{0pt}
-  #+latex: \gretl{exports-adf-lx.txt}
+  #+latex: \gretl[firstline=2,lastline=13]{exports-adf-lx.txt}
   #+end_minipage
 
   #+ATTR_LATEX: :options [c]{0.40\textwidth}
@@ -135,16 +129,24 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   #+ATTR_LATEX: :options [c]{0.60\textwidth}
   #+begin_minipage
   #+latex: \vspace{0pt}
-  #+latex: \gretl{exports-adf-gx.txt}
+  #+latex: \gretl[firstline=2,lastline=13]{exports-adf-gx.txt}
   #+end_minipage
+
+  Un modelo de regresión de ~ly~ sobre ~lx~ incumpliría el supuesto de
+  estacionariedad y dependencia débil, ya que estas variables
+  presentan raíces unitarias, por lo que sería muy probable obtener
+  resultados espurios. No hay evidencia de raíces unitarias en ~gy~ y
+  ~gx~, por lo que una regresión que incluya estas variables no
+  produciría, en principio, resultados espurios.
+
 #+end_answer
 
 ** Selección del número de retardos
 
 - Determine el número óptimo de retardos en un modelo de retardos
-  distribuidos con variable dependiente =gy= y variable explicativa
-  =gx=. *Incluya en todas las regresiones que realice la primera
-  diferencia de =covid=*.
+  distribuidos con variable dependiente ~gy~ y variable explicativa
+  ~gx~. *Incluya en todas las regresiones que realice la primera
+  diferencia de ~covid~*.
 
 - Presente los resultados de la estimación del modelo seleccionado en
   el punto anterior. Emplee errores típicos robustos a
@@ -155,21 +157,22 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
 
 #+begin_answer
   En la siguiente tabla se presenta el BIC para especificaciones que
-  incluyen hasta 8 retardos de =gx=. El BIC se minimiza cuando se
+  incluyen hasta 8 retardos de ~gx~. El BIC se minimiza cuando se
   incluyen dos retardos.
   #+latex: \gretl{exports-lags.txt}
+  #+latex: \ClearPage
 
   Resultados de la estimación del modelo de retardos distribuidos con
   dos retardos.
-  #+latex: \gretl{exports-dl.txt}
+  #+latex: \gretl[firstline=2,lastline=20]{exports-dl.txt}
 
   A continuación se muestran los resultados de un modelo de regresión
   que, además de los dos retardos de la explicativa, incluye un
   retardo de la variable dependiente. No parece necesario incluir este
   retardo ya que, por un lado, su coeficiente no es significativamente
-  distinto de 0 (valor $p = 0.20$) y, por otro lado, el BIC aumenta al
-  incluir el retardo de =gy=.
-  #+latex: \gretl{exports-ardl.txt}
+  distinto de 0 (valor $p ~ 0.20$) y, por otro lado, el BIC aumenta al
+  incluir el retardo de ~gy~.
+  #+latex: \gretl[firstline=2,lastline=21]{exports-ardl.txt}
 #+end_answer
 
 ** Multiplicadores dinámicos
@@ -199,15 +202,16 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   errores típicos:
   #+latex: \gretl{exports-dyn-mult.txt}
 
-  Los tres multiplicadores son significativamente distintos de 0 a un
-  nivel del \pct{5}. El multiplicador de corto plazo muestra que, como
-  consecuencia de un aumento de 1 punto porcentual en la tasa de
-  crecimiento de las exportaciones, se produce, en el mismo trimestre,
-  un incremento en la tasa de crecimiento del PIB de $0.15$ puntos
-  porcentuales. También son positivos los multiplicadores dinámicos
-  correspondientes a los dos trimestres siguientes, aunque la magnitud
-  del efecto se reduce considerablemente (en cada trimestre el efecto
-  es, aproximadamente, un tercio del multiplicador a corto plazo).
+  Los tres multiplicadores son significativamente distintos de $0$ a
+  un nivel de significación del \pct{5}. El multiplicador de corto
+  plazo muestra que, como consecuencia de un aumento de 1 punto
+  porcentual en la tasa de crecimiento de las exportaciones, se
+  produce, en el mismo trimestre, un incremento en la tasa de
+  crecimiento del PIB de $0.15$ puntos porcentuales. También son
+  positivos los multiplicadores dinámicos correspondientes a los dos
+  trimestres siguientes, aunque la magnitud del efecto se reduce
+  considerablemente (en cada trimestre el efecto es, aproximadamente,
+  un tercio del multiplicador a corto plazo).
 
   Los multiplicadores acumulados ($\theta_0$, $\theta_1$, $\theta_2$),
   y sus errores típicos, se obtienen estimando una reparametrización
@@ -227,13 +231,13 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   La tabla siguiente muestra los resultados de la estimación por MCO
   del modelo anterior usando errores típicos robustos a
   autocorrelación y heteroscedasticidad:
-  #+latex: \gretl{exports-mult.txt}
+  #+latex: \gretl[firstline=2,lastline=20]{exports-mult.txt}
 
   A continuación se muestran los multiplicadores acumulados (y sus
   errores típicos):
   #+latex: \gretl{exports-cum-mult.txt}
 
-  Un cambio permanente en la tasa de crecimiento de las exportaciones,
+  Un cambio permanente en la tasa de crecimiento de las exportaciones
   provocaría un aumento progresivo en la tasa de crecimiento del PIB
   en el trimestre en que se produce el cambio y en los dos
   siguientes. El último de los multiplicadores acumulados es el
@@ -243,7 +247,7 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   un cuarto de punto porcentual ($0.24$). El error típico del
   multiplicador de largo plazo es relativamente pequeño ($0.05$), por
   lo que el efecto de la exportaciones sobre el crecimiento a largo
-  plazo es significativo al nivel de significación del \pct{5}.
+  plazo es significativo al \pct{5}.
 #+end_answer
 
 ** Cambio estructural
@@ -252,9 +256,9 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   comience con la Gran Recesión. Con este propósito, cree una variable
   de intervención de tipo escalón que tome el valor 1 en el primer
   trimestre de 2008 y en todos los posteriores. Cree también la
-  interacción de esta variable ficticia con la variable =gx=.
+  interacción de esta variable ficticia con la variable ~gx~.
 
-- Añada la variable de escalón y su interacción con =gx= y sus
+- Añada la variable de escalón y su interacción con ~gx~ y sus
   retardos al modelo de retardos distribuidos que obtuvo en la sección
   [[*Selección del número de retardos]]. Estime este modelo ampliado por
   MCO usando errores típicos robustos a heteroscedasticidad y
@@ -264,22 +268,19 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
   anterior. Interprete los resultados obtenidos.
 
 #+begin_answer
-  Estimación por MCO con la variable escalón, =s08=, y las
-  interacciones, =gx08=, =gx08_1=, =gx08_2=.  Se usan errores típicos
+  Estimación por MCO con la variable escalón, ~s08~, y las
+  interacciones, ~gx08~, ~gx08_1~, ~gx08_2~.  Se usan errores típicos
   válidos en presencia de autocorrelación y heteroscedasticidad.
-  #+latex: \gretl{exports-chow.txt}
+  #+latex: \gretl[firstline=2,lastline=24]{exports-chow.txt}
 
   Contraste de significación conjunta de los parámetros de las
-  variables añadidas en la regresión anterior: =s08=, =gx08=, =gx08_1=
-  y =gx08_2=:
-  #+latex: \gretl{exports-chow2.txt}
+  variables añadidas en la regresión anterior: ~s08~, ~gx08~, ~gx08_1~
+  y ~gx08_2~:
+  #+latex: \gretl[firstline=3,lastline=5]{exports-chow2.txt}
 
-  El contraste de estabilidad estructural rechaza la hipótesis nula de
-  que los parámetros del modelo de regresión permanecen constantes a
-  lo largo de todo el periodo. En concreto, los resultados de la
-  estimación mostrarían que las exportaciones tendrían un efecto
-  significativo únicamente en el periodo posterior a la crisis
-  financiera de 2008.
+  El contraste de estabilidad estructural rechaza al \pct{5} la
+  hipótesis nula de que los parámetros del modelo de regresión
+  permanecen constantes a lo largo de todo el periodo.
 #+end_answer
 
 
@@ -287,4 +288,5 @@ Tenga en cuenta las siguientes indicaciones en sus respuestas:
 # ispell-local-dictionary: "spanish"
 # End:
 
-#  LocalWords:  PIB COVID autocorrelación
+#  LocalWords:  PIB COVID autocorrelación reparametrización MCO
+#  LocalWords:  heteroscedasticidad
